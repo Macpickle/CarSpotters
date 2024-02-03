@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <title>CarSpotters</title>
+    <meta name="theme-color" content="rgb(218, 218, 218)">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrs-parnuHMzRbcrhOoYX7NPpbNa0exuQ&callback=initMap" async defer></script>
+</head>
+
+<body>
+    <div class = "navBar">
+        <img src = "assets/CARSPOTTERIMG.png"> 
+        <ul>
+            <li><a href="#map">Map</a></li>
+            <li><a href="about">About</a></li>
+            <% if (isAuthenticated) { %>
+                <form action="/logout?_method=DELETE" method="POST">
+                    <button type="submit">Logout</button>
+                    
+                </form>
+            <% } else { %>
+            <li><a href="Login">Login</a></li>
+            <% } %>
+            
+        </ul>
+
+        <div id="myLinks">
+            <a href="#map" onclick="myFunction()">Map</a>
+            <a href="about">About</a>
+            <% if (isAuthenticated) { %>
+                <form action="/logout?_method=DELETE" method="POST">
+                    <button type="submit">Logout</button>
+                    
+                </form>
+            <% } else { %>
+            <a href="Login">Login</a>
+            <% } %>
+
+        </div>
+        <div id = "voidFunc">
+            <a href="javascript:void(0);" onclick="myFunction()">
+                <div class = "hamburger-menu">
+                    <input type="checkbox"></input>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class = "mainContent">
+        <h1>Trending Cars</h1>
+        <div class = "mainContent-wrapper">
+            <button>
+                <figure>
+                    <img src="assets/Pagani Zonda F.jpg" alt="Car 1">
+                    <figcaption id="carSlot1">Pagani Zonda F</figcaption>
+                    <figcaption>Likes: </figcaption>
+                </figure>
+            </button>
+            <button>
+                <figure>
+                    <img src="assets/Pagani Zonda F.jpg" alt="Car 1">
+                    <figcaption id="carSlot1">Pagani Zonda F</figcaption>
+                    <figcaption>Likes: </figcaption>
+                </figure>
+            </button>
+            <button>
+                <figure>
+                    <img src="assets/Pagani Zonda F.jpg" alt="Car 1">
+                    <figcaption id="carSlot1">Pagani Zonda F</figcaption>
+                    <figcaption>Likes: </figcaption>
+                </figure>
+        </div>
+
+        <h1>Latest Posts</h1>
+        <div class = "mainContent-wrapper">
+            <button>
+                <figure>
+                    <img src="assets/Pagani Zonda F.jpg" alt="Car 1">
+                    <figcaption id="carSlot1">Pagani Zonda F</figcaption>
+                    <figcaption>Likes: </figcaption>
+                </figure>
+            </button>
+            <button>
+                <figure>
+                    <img src="assets/Pagani Zonda F.jpg" alt="Car 1">
+                    <figcaption id="carSlot1">Pagani Zonda F</figcaption>
+                    <figcaption>Likes: </figcaption>
+                </figure>
+            </button>
+            <button>
+                <figure>
+                    <img src="assets/Pagani Zonda F.jpg" alt="Car 1">
+                    <figcaption id="carSlot1">Pagani Zonda F</figcaption>
+                    <figcaption>Likes: </figcaption>
+                </figure>
+
+        </div>
+
+    <div class = "map-wrapper">
+        <h1>Map</h1>
+        <div id="map"></div>
+    </div>
+
+    <script src="/javascript/script.js"></script>
+</body>
+    <footer>
+        <p>@CarSpotters</p>
+        <p>Created by <a href="https://github.com/Macpickle">Macpickle</a></p>
+        <p>Version: 1.1 - Last Updated: January 28th 2024</p>
+    </footer>
+</html>

@@ -1,0 +1,419 @@
+:root {
+    --textColour: rgb(0,0,0);
+    --outlineColour: rgb(204, 204, 204);
+    --barWidth: 25px;
+    --barHeight: 5px;
+    --barGap: 5px;
+}
+
+html{
+    scroll-behavior:smooth
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(241, 241, 241);
+    color: var(--textColour);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navBar {
+    background-color: rgb(218, 218, 218);
+    border-bottom: 1px solid rgb(204, 204, 204);
+    height: 5em;
+    width: 100%;
+    display: flex;
+    border-bottom: 2px solid var(--outlineColour);
+    justify-content: flex-end; 
+}
+
+.navBar ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.navBar li a {
+    font-size: 1.2em;
+    color: var(--textColour);
+    margin-right: 25px;
+    text-decoration: none;
+}
+
+.navBar ul button[type="submit"] {
+    font-size: 1.2em;
+    font-weight: normal;
+    color: var(--textColour);
+    margin-right: 25px;
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.navBar ul button[type="submit"]:hover {
+    color: rgb(104, 14, 189);
+    animation: borderAnimation 1s;
+}
+
+.hamburger-menu {
+    display:flex;
+    flex-direction: column;
+    gap: var(--barGap);
+    display: none;
+    margin-top:1em;
+    width: fit-content;
+}
+
+.hamburger-menu:hover {
+    cursor: pointer;
+}
+
+.hamburger-menu::before,
+.hamburger-menu::after, 
+.hamburger-menu input {
+    content: '';
+    display: block;
+    width: var(--barWidth);
+    height: var(--barHeight);
+    background-color: var(--textColour);
+    border-radius: 5px;
+}
+
+.hamburger-menu input {
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    pointer-events: none;
+}
+
+.navBar #myLinks {
+    display: none;
+    left: 0;
+    top: 3.1em;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    background-color: rgb(243, 243, 243);
+}
+
+.navBar #myLinks a {
+    padding: 5px 16px;
+    text-decoration: none;
+    color: var(--textColour);
+    font-size: 2em;
+    display: block;
+}
+
+.navBar #myLinks a:hover {
+    background-color: rgb(226, 226, 226);
+    color: rgb(94, 44, 141);
+}
+
+.navBar #myLinks form {
+    display: flex;
+    flex-direction: column;
+}
+
+.navBar #myLinks button[type="submit"] {
+    padding: 5px 16px;
+    text-decoration: none;
+    color: var(--textColour);
+    font-size: 2em;
+    display: block;
+    border: none;
+    background: none;
+    cursor: pointer;
+    position: absolute;
+    width: 100%;
+    z-index: 5;
+    text-align: left;
+    background-color: rgb(243, 243, 243);
+    border-bottom: 2px solid var(--outlineColour);
+}
+
+.navBar #myLinks button[type="submit"]:hover {
+    background-color: rgb(226, 226, 226);
+    color: rgb(94, 44, 141);
+}
+
+
+.navBar li a:hover {
+    color: rgb(104, 14, 189);
+    animation: borderAnimation 1s;
+}
+
+.navBar #hambuger-menu {
+    display: none;
+}
+
+@keyframes borderAnimation {
+    0% {
+        border-bottom: 2px solid rgb(204, 204, 204);
+    }
+    100% {
+        border-bottom: 2px solid rgb(0, 0, 0);
+    }
+}
+
+.mainContent{
+    width: 90%;
+    margin: 0 auto;
+}
+
+.mainContent-wrapper {
+    display: flex;
+    gap: 1%;
+    justify-content: center;
+    margin-top: 2em;
+}
+
+.mainContent h1 {
+    margin-top: 1em;
+}
+
+.mainContent figure {
+    display:inline-block;
+    position: relative;
+    background-color: rgb(226, 226, 226);
+    outline: 1px solid var(--outlineColour);
+    border-radius: 10px;
+}
+
+.mainContent figure img {
+    border-radius: inherit;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+}
+
+.mainContent figcaption {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-left: 1em;
+    text-align: left;
+    color: var(--textColour);
+    top:0;
+}
+
+.mainContent figure:hover {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.mainContent button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.map-wrapper {
+    height: 100%;
+    margin: auto auto;
+}
+
+.map-wrapper #map {
+    margin-top:2em;
+    height: 45em;
+    width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    .navBar #myLinks a {
+        display: none;
+    }
+
+    .navBar #myLinks {
+        display: none;
+        border-bottom: none;
+    }
+}
+
+@media screen and (max-height: 768px) {
+    .navBar #myLinks {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .map-wrapper #map {
+        height: 30em;
+    }
+
+    .mainContent-wrapper {
+        flex-direction: column;
+        gap: 10px;
+    } 
+
+    .mainContent h1 {
+        text-align: center;
+    }
+
+    .navBar {
+        height: 3em;
+    }
+
+    .navBar ul a {
+        display: none;
+    }
+
+    .navBar button[type="submit"] {
+        display: none;
+        font-weight: normal;
+    }
+
+    .hamburger-menu {
+        display: flex;
+        margin-right:1em;
+    }
+
+    @media screen and (max-width: 450px) {
+        .map-wrapper #map {
+            height: 20em;
+        } 
+    }
+}
+
+footer {
+    margin-top:2em;
+    position:absolute;
+    border-top: 2px solid var(--outlineColour);;
+    left:0;
+    right:0;
+    background-color: rgb(218, 218, 218);   
+    height: 5em;
+    line-height: 1.25em;
+    padding: .5em;
+}
+
+.login-wrapper{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1em;
+    margin: 0 auto;
+    height: 40em;
+    width: 30%;
+    border-radius: 10px;
+    outline: 1px solid var(--outlineColour);
+    background-color: rgb(236, 236, 236);
+}
+
+.login-wrapper img {
+    display: block;
+    padding-top: 3em;
+    margin: 0 auto;
+    width: 50%;
+}
+
+.login-wrapper input[type="username"],
+.login-wrapper input[type="email"],
+.login-wrapper input[type="password"] {
+    display: block;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 1.5em;
+    color: rgb(66, 56, 56);
+    border-radius: .5em;
+    margin: 1em 0;
+    box-sizing: border-box; 
+}
+
+
+.login-wrapper input[type="submit"],
+.login-wrapper input[type="button"]{
+    display: block;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 0.5em;
+    border-radius: .5em;
+    margin: .5em 0;
+    box-sizing: border-box; 
+    font-size: 1.5em;
+    background-color: rgb(216, 216, 216);
+}
+
+.login-wrapper input[type="submit"]:hover,
+.login-wrapper input[type="button"]:hover {
+    background-color: rgb(196, 196, 196);
+    cursor: pointer;
+}
+
+.login-wrapper h1 {
+    text-align: center;
+    margin-top: 2em;
+    padding-bottom: .5em;
+    font-size: 2em;
+    color: var(--textColour);
+}
+
+.login-wrapper a {
+    text-decoration: none;
+    color: rgb(77, 77, 77);
+    text-align: center;
+    display: block;
+    font-size: .75em;
+}
+
+.login-wrapper a:hover {
+    color: rgb(104, 14, 189);
+}
+
+.login-wrapper input[type="username"]{
+    animation: smoothDrop 1s;
+    --webkit-appearence: none;
+}
+
+.login-wrapper input[type="email"]{
+    animation: smoothDrop 1s;
+}
+
+.login-wrapper input[type="password"]{
+    animation: smoothDrop 1s;
+}
+
+.login-wrapper input[type="submit"]{
+    animation: smoothDrop 1.5s;
+}
+
+.login-wrapper input[type="text"]:focus,
+.login-wrapper input[type="password"]:focus,
+.login-wrapper input[type="email"]:focus{
+    box-shadow: 0 5px 5px 0 rgba(126, 126, 126, 0.5);
+}
+
+@keyframes smoothDrop {
+    0% {
+        transform: translateY(-25%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .login-wrapper {
+        width: 60%;
+        height:45em;
+    }
+
+    @media screen and (max-width: 1000px) {
+        .login-wrapper {
+            top:20em;
+            width: 90%;
+            height: 40em;
+            outline: none;
+            background-color: transparent;
+        }
+    }
+}
