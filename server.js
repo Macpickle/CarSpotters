@@ -29,8 +29,9 @@ app.use(function(req, res, next){
 });
 
 app.use(express.json());
-app.set('views', './views');
-app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 app.use(express.urlencoded({extended: false}));
 
 app.use(express.static(path.join(__dirname, 'src')));
@@ -44,6 +45,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
+
 
 app.get('/', (req, res) => {
    res.render('', { isAuthenticated: req.isAuthenticated() })
