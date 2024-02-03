@@ -15,3 +15,8 @@
     - Search bar for searching local cars, brands, events
     - Events tab (eg. local car meets)
     - News from major racing series
+# Current Features
+## Home/Login/Register files
+  - Main website running on a local server, including proper registration and login protocols along with encryption
+  - aesthetically pleasing, and works as intended
+  - Google Maps API to store markers and posts of users (WIP)
