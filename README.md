@@ -2,7 +2,7 @@
 - A website designed for car enthusiasts that wish to discuss, contribute and learn within the community.
 
 # About
-  Designed and created by Macpickle
+  Designed and created by [Macpickle](https://github.com/Macpickle)
   This website is currently work in progress as I still have many features to add.
   There will be constant updates as I progress in learning new technologies that can be used to benefit this project.
   Feel free to give pointers, comments and suggestions.
