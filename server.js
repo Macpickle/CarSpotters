@@ -36,6 +36,11 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(express.static(path.join(__dirname, 'src')));
 
+<<<<<<< HEAD
+=======
+app.use(express.static(path.join(__dirname, 'src')));
+
+>>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
 app.use(flash());
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -46,7 +51,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
 app.get('/', (req, res) => {
    res.render('', { isAuthenticated: req.isAuthenticated() })
 });

@@ -1,0 +1,164 @@
+.login-wrapper{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1em;
+    margin: 0 auto;
+    height: 40em;
+    width: 30%;
+    border-radius: 10px;
+    outline: 1px solid var(--outlineColour);
+    background-color: rgb(236, 236, 236);
+}
+
+.login-wrapper img {
+    display: block;
+    padding-top: 3em;
+    margin: 0 auto;
+    width: 50%;
+}
+
+.login-wrapper input[type="username"]::placeholder,
+.login-wrapper input[type="email"]::placeholder,
+.login-wrapper input[type="password"]::placeholder {
+    color: var(--textColourLight);
+}
+
+.login-wrapper input[type="username"],
+.login-wrapper input[type="email"],
+.login-wrapper input[type="password"] {
+    display: block;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 1.5em;
+    background-color: rgb(216, 216, 216);
+    border-radius: .5em;
+    margin: 1em 0;
+    box-sizing: border-box; 
+}
+
+
+.login-wrapper input[type="submit"],
+.login-wrapper input[type="button"]{
+    display: block;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 0.5em;
+    border-radius: .5em;
+    margin: .5em 0;
+    box-sizing: border-box; 
+    font-size: 1.5em;
+    background-color: rgb(216, 216, 216);
+}
+
+.login-wrapper input[type="submit"]:hover,
+.login-wrapper input[type="button"]:hover {
+    background-color: rgb(196, 196, 196);
+    cursor: pointer;
+}
+
+.login-wrapper h1 {
+    text-align: center;
+    margin-top: 2em;
+    padding-bottom: .5em;
+    font-size: 2em;
+    color: var(--textColour);
+}
+
+.login-wrapper a {
+    text-decoration: none;
+    color: rgb(77, 77, 77);
+    text-align: center;
+    display: block;
+    font-size: .75em;
+}
+
+.login-wrapper a:hover {
+    color: rgb(104, 14, 189);
+}
+
+.login-wrapper input[type="username"]{
+    animation: smoothDrop 1s;
+    --webkit-appearence: none;
+}
+
+.login-wrapper input[type="email"]{
+    animation: smoothDrop 1s;
+}
+
+.login-wrapper input[type="password"]{
+    animation: smoothDrop 1s;
+}
+
+.login-wrapper input[type="submit"]{
+    animation: smoothDrop 1.5s;
+}
+
+.login-wrapper input[type="username"]:focus,
+.login-wrapper input[type="password"]:focus,
+.login-wrapper input[type="email"]:focus{
+    box-shadow: 0 5px 5px 0 rgba(126, 126, 126, 0.5);
+}
+
+@keyframes smoothDrop {
+    0% {
+        transform: translateY(-25%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .login-wrapper {
+        width: 60%;
+        height:45em;
+    }
+
+    @media screen and (max-width: 1000px) {
+        .login-wrapper {
+            top:20em;
+            width: 90%;
+            height: 40em;
+            outline: none;
+            background-color: transparent;
+        }
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .login-wrapper {
+        background-color: var(--backColourDark);
+        color: var(--textColourDark);
+    }
+
+    .login-wrapper input[type="username"]::placeholder,
+    .login-wrapper input[type="email"]::placeholder,
+    .login-wrapper input[type="password"]::placeholder {
+        color: var(--textColourDark);
+    }
+
+    .login-wrapper input[type="username"],
+    .login-wrapper input[type="email"],
+    .login-wrapper input[type="password"] {
+        background-color: rgb(19, 19, 19);
+        color: var(--textColourDark);
+    }
+
+    .login-wrapper input[type="submit"],
+    .login-wrapper input[type="button"]{
+        background-color: rgb(19, 19, 19);
+        color: var(--textColourDark);
+    }
+
+    .login-wrapper input[type="submit"]:hover,
+    .login-wrapper input[type="button"]:hover {
+        background-color: rgb(39, 39, 39);
+    }
+
+}

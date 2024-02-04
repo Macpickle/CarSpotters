@@ -1,0 +1,220 @@
+:root {
+    --textColourLight: rgb(0,0,0);
+    --backColourLight: rgb(241, 241, 241);
+    --outlineColourLight: rgb(169, 169, 169);
+
+    --hoverColour: rgb(69, 69, 69);
+
+    --textColourDark: rgb(216, 216, 216);
+    --backColourDark: rgb(8, 8, 8);
+    --outlineColourDark: rgb(75, 75, 75);
+
+    --barWidth: 25px;
+    --barHeight: 5px;
+    --barGap: 5px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+    font-family: Helvetica;
+}
+
+.navbar {
+    height: 5em;
+    width: 100%;
+    background-color: var(--backColourLight);
+    border-bottom: 1px solid var(--outlineColour);
+    justify-content: flex-end; 
+}
+
+.navbar ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    margin-right: 1em;
+}
+
+.navbar ul li {
+    margin: 0 1em;
+}
+
+.navbar ul  a {
+    text-decoration: none;
+    color: var(--textColourLight);
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.navbar ul button {
+    background-color: transparent;
+    border: none;
+    font-size: 1em;
+    color: var(--textColourLight);
+}
+
+.navbar ul li a:hover{
+    background-color: var(--hoverColour);
+    border-radius: 10em;
+    padding: 10px;
+    margin: -10px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    font-size: .75em;
+    position: absolute;
+    width: fit-content;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    transition: all 0.4s 1s ease;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltip:not(:hover) .tooltiptext {
+    visibility: hidden;
+    transition: visibility 0s;
+}
+
+.mainContent{
+    width: 90%;
+    margin: 0 auto;
+}
+
+.mainContent-wrapper {
+    display: flex;
+    gap: 1%;
+    justify-content: center;
+    margin-top: 2em;
+}
+
+.mainContent h1 {
+    margin-top: 1em;
+}
+
+.mainContent figure {
+    display:inline-block;
+    position: relative;
+    background-color: var(--backColourLight);
+    color: var(--textColourLight);
+    outline: 1px solid var(--outlineColourLight);
+    border-radius: 10px;
+}
+
+.mainContent figure img {
+    border-radius: inherit;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+}
+
+.mainContent figcaption {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-left: 1em;
+    text-align: left;
+    background-color: transparent;
+    color: var(--textColourLight);
+    top:0;
+}
+
+.mainContent figure:hover {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.mainContent button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.map-wrapper {
+    height: 100%;
+    margin: auto auto;
+}
+
+.map-wrapper #map {
+    margin-top:2em;
+    height: 45em;
+    width: 100%;
+    border: 2px solid var(--outlineColourLight);
+}
+
+footer {
+    margin-top:2em;
+    position:absolute;
+    border-top: 1px solid var(--outlineColourLight);
+    left:0;
+    right:0;
+    height: 5em;
+    line-height: 1.25em;
+    padding: .5em;
+}
+
+@media screen and (max-width: 768px){
+    .map-wrapper #map {
+        height: 30em;
+    }
+}
+
+@media screen and (min-width: 786px) {
+    .navbar {
+        display: flex;
+    }
+
+    .mobile-container {
+        display:none;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--backColourDark);
+        color: var(--textColourDark);
+    }
+
+    .navbar {
+        background-color: var(--backColourDark);
+        color: var(--textColourDark);
+        outline: 1px solid var(--outlineColourDark);
+    }
+    
+    .navbar ul li a {
+        color: var(--textColourDark);
+    }
+
+    .navbar ul button {
+        color: var(--textColourDark);
+    }
+
+    .mainContent figure {
+        background-color: var(--backColourDark);
+        color: var(--textColourDark);
+        outline: 1px solid var(--outlineColourDark);
+    }
+
+    .mainContent figcaption {
+        color: var(--textColourDark);
+    }
+
+    footer {
+        border-top: 1px solid var(--outlineColourDark);
+    }
+
+}

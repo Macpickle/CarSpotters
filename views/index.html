@@ -2,14 +2,24 @@
 <html lang="eng">  
 <head>
     <title>CarSpotters</title>
+<<<<<<< HEAD
     <meta name="theme-color" content="rgb(218, 218, 218)">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/x-icon" href="CARSPOTTERIMGLOGO.png">
     <link rel="stylesheet" type="text/css" href="/stylesheet/style.css">
+=======
+    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
+>>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrs-parnuHMzRbcrhOoYX7NPpbNa0exuQ&callback=initMap" async defer></script>
 </head>
 
 <body>
+<<<<<<< HEAD
     <div class = "navBar">
         <img src = "assets/CARSPOTTERIMG.png"> 
         <ul>
@@ -48,6 +58,69 @@
         </div>
     </div>
 
+=======
+    <div class = "navbar">
+        <img src = "/assets/CARSPOTTERIMG.png"> 
+        <ul>
+            <% if (isAuthenticated) { %>
+                <div class = "tooltip">
+                    <form action="/logout?_method=DELETE" method="POST">
+                        <li><a><button><i class="fa-solid fa-user"></i></button></a></li>
+                        <span class = "tooltiptext">Logout</span>
+                    </form>
+                </div>
+            <% } else { %>
+                <div class = "tooltip">
+                    <li><a href="login"><i class="fa-solid fa-user"></i></a></li>
+                    <span class = "tooltiptext">Login</span>
+                </div>
+            <% } %>
+            <div class = "tooltip">
+                <li><a href = "about"><i class="fa-solid fa-info"></i></a></li>
+                <span class = "tooltiptext">About</span>
+            </div>
+
+            <div class = "tooltip">
+                <li><a href = "#map"><i class="fa-solid fa-search"></i></a></li>
+                <span class = "tooltiptext">Search</span>
+            </div>
+
+            <div class = "tooltip">
+                <li><a href = "messages"><i class="fa-solid fa-envelope"></i></a></li>
+                <span class = "tooltiptext">Messages</span>
+            </div>
+        </ul>  
+    </div>
+
+    <!--mobile container-->
+    <div class = "mobile-container">
+        <ul>
+            <% if (isAuthenticated) { %>
+                <form action="/logout?_method=DELETE" method="POST">
+                    <li><a><button><i class="fa-solid fa-user"></i></button></a></li>
+                </form>
+
+            <% } else { %>
+                <div class = "tooltip">
+                    <li><a href="login"><i class="fa-solid fa-user"></i></a></li>
+                </div>
+            <% } %>
+            <div class = "tooltip">
+                <li><a href = "about"><i class="fa-solid fa-info"></i></a></li>
+            </div>
+
+            <div class = "tooltip">
+                <li><a href = "#map"><i class="fa-solid fa-search"></i></a></li>
+            </div>
+
+            <div class = "tooltip">
+                <li><a href = "messages"><i class="fa-solid fa-envelope"></i></a></li>
+            </div>
+        </ul> 
+    </div>
+
+
+>>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
     <div class = "mainContent">
         <h1>Trending Cars</h1>
         <div class = "mainContent-wrapper">
@@ -103,11 +176,22 @@
         <div id="map"></div>
     </div>
 
+<<<<<<< HEAD
     <script src="/javascript/script.js"></script>
 </body>
+=======
+    <script src = /javascript/script.js></script>
+
+>>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
     <footer>
         <p>@CarSpotters</p>
         <p>Created by <a href="https://github.com/Macpickle">Macpickle</a></p>
         <p>Version: 1.1 - Last Updated: January 28th 2024</p>
     </footer>
+<<<<<<< HEAD
 </html>
+=======
+</body>
+
+</html>
+>>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
