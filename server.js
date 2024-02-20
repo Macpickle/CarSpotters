@@ -1,119 +1,39 @@
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
-}
+require('dotenv').config(); // Load environment variables from .env file
 
-//constants
+// Initialize express router
 const express = require('express');
 const app = express();
-const bcrypt = require('bcrypt');
-const initpassport = require('./passport-config');
-const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
-const methodOverride = require('method-override');
 const path = require('path');
+const mongoose = require('mongoose');
 
-initpassport(passport,
-    username => users.find(user => user.username === username),
-    id => users.find(user => user.id === id)
-);
+// Set up mongoose connection
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+const db = mongoose.connection
 
-//need to attach database
-const users = [];
+db.on('error', (error) => console.error(error))
+db.once('open', () => console.log('Connected to Database'))
 
-//middleware
-app.use(function(req, res, next){
-    res.locals.session = req.session;
-    res.locals.isAuthenticated = req.isAuthenticated;
-    next();
-});
-
+// Set up express app
 app.use(express.json());
-app.set('views', path.join(__dirname, 'views'));
+app.use(flash());
+app.use(session
+    ({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false
+    }));
+
+// view ports (styling)
+app.use(express.static(path.join(__dirname, 'views')));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(express.urlencoded({extended: false}));
 
 app.use(express.static(path.join(__dirname, 'src')));
 
-<<<<<<< HEAD
-=======
-app.use(express.static(path.join(__dirname, 'src')));
-
->>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
-app.use(flash());
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(methodOverride('_method'));
-
-<<<<<<< HEAD
-
-=======
->>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
-app.get('/', (req, res) => {
-   res.render('', { isAuthenticated: req.isAuthenticated() })
-});
-
-app.get('/register', checkNotAuthenticated, (req, res) => {
-    res.render('register');
-});
-
-app.get('/login', checkNotAuthenticated, (req, res) => {
-    res.render('login', { showLoginButton: true });
-});
-
-app.get('/users', checkAuthenticated, (req, res) => {
-    res.json(users);
-});
-
-app.post('/register', checkNotAuthenticated, async (req, res) => {
-    try{
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        users.push({
-            id: Date.now().toString(),
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPassword
-        });
-        res.redirect('/login')
-    } catch {
-        res.render('/register", {message: "username already exists!"}')
-    }
-
-    console.log(users);
-});
-
-
-app.post('/login', checkNotAuthenticated,  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-}));
-
-app.delete('/logout', (req, res) => {
-    req.logout(function(err) {
-        if (err) { return next(err); }
-        res.redirect('/');
-      });
-});
-
-function checkAuthenticated(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect('/login');
-}
-
-function checkNotAuthenticated(req, res, next){
-    if(req.isAuthenticated()){
-        return res.redirect('/');
-    }
-    next();
-}
+var index = require('./routes/index');
+app.use('/', index);
 
 app.listen(3000);

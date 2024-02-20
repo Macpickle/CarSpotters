@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-function myFunction() {
-  var x = document.getElementById("myLinks");
-  if (x.style.display === "block") {
-    x.style.display = "none";
-  }  
-  
-  else {
-    x.style.display = "block";
-  }
-}
-
-//used to create a google map
-function initMap() {
-  var map;
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 0, lng: 0},
-    zoom: 2.5
-=======
 document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
 document.body.scrollTop = 0; // For Safari
@@ -30,7 +11,6 @@ function initMap() {
     streetViewControl: false,
     //remove map type (eg. satellite, terrain, etc.)
     mapTypeControl: false
->>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
   });
 
   var marker = new google.maps.Marker({
@@ -53,8 +33,3 @@ function initMap() {
 }
 
 initMap();
-<<<<<<< HEAD
-=======
-
-
->>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)

@@ -45,7 +45,6 @@
     margin: -10px;
 }
 
-
 @media screen and (max-width: 768px){
     body {
         padding-bottom: 10em;
@@ -59,39 +58,12 @@
         display: none;
     }
 
-    .mainContent-wrapper {
-        flex-direction: column;
-    } 
-
-    .mainContent h1 {
-        text-align: center;
+    .sidenav {
+        display: none;
     }
 
-    .mainContent figure {
-        margin-top: 1em;
+    .main-container{
+        padding-left: 5%;
+        width: 95%;
     }
-
-    .mainContent figcaption {
-        background-color: var(--backColourLight);
-        color: var(--textColourLight);
-        border-radius: 10px;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    .mobile-container {
-        background-color: var(--backColourDark);
-        color: var(--textColourDark);
-        outline: 1px solid var(--outlineColourDark);
-    }
-
-    .mobile-container li a {
-        color: var(--textColourDark);
-    }
-
-    .mobile-container ul button {
-        color: var(--textColourDark);
-    }
-
-    
 }

@@ -1,33 +1,25 @@
 <!DOCTYPE html>
 <html lang="eng">  
 
-<% if (messages.error) { %>
-    <%= messages.error %>
-<% } %>
-
 <head>
     <title>CarSpotters</title>
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/x-icon" href="assets/CARSPOTTERIMGLOGO.png">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="/stylesheet/style.css" type="text/css">
-=======
     <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
     <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
     <link rel="stylesheet" type="text/css" href="/stylesheet/loginStyle.css">
->>>>>>> c3cabd4 (UI update for mobile, dark mode/light mode, and cleaner icons)
 </head>
 
 <body>
-    <div class = "login-wrapper">
-        <img src = "assets/CARSPOTTERIMG.png">
+    <div class="login-wrapper">
+        <img src="assets/CARSPOTTERIMG.png">
         <form action="/login" method="POST">
-            <h1 class = "login-header">Login</h1>
-            <input id = "username" name = "username" type = "username" placeholder = "Username">
-            <input id = "password" name = "password" type = "password" placeholder = "Password">
+            <h1 class="login-header">Login</h1>
+            <input id="username" name="username" type="username" placeholder="Username">
+            <input id="password" name="password" type="password" placeholder="Password">
             <input class="button" type="submit" value="Login">
         </form>
-        <a href = "register">Don't have an account? Register here</a>
+        <a href="register">Don't have an account? Register here!</a>
     </div>
 
     <script src="script.js"></script>

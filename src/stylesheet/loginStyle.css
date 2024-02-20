@@ -9,7 +9,6 @@
     width: 30%;
     border-radius: 10px;
     outline: 1px solid var(--outlineColour);
-    background-color: rgb(236, 236, 236);
 }
 
 .login-wrapper img {
@@ -33,15 +32,13 @@
     outline: 0;
     width: 100%;
     padding: 1.5em;
-    background-color: rgb(216, 216, 216);
+    background-color: var(--textboxbackground);
     border-radius: .5em;
     margin: 1em 0;
     box-sizing: border-box; 
 }
 
-
-.login-wrapper input[type="submit"],
-.login-wrapper input[type="button"]{
+.login-wrapper input[type="submit"]{
     display: block;
     border: 0;
     outline: 0;
@@ -52,12 +49,6 @@
     box-sizing: border-box; 
     font-size: 1.5em;
     background-color: rgb(216, 216, 216);
-}
-
-.login-wrapper input[type="submit"]:hover,
-.login-wrapper input[type="button"]:hover {
-    background-color: rgb(196, 196, 196);
-    cursor: pointer;
 }
 
 .login-wrapper h1 {
@@ -100,7 +91,11 @@
 .login-wrapper input[type="username"]:focus,
 .login-wrapper input[type="password"]:focus,
 .login-wrapper input[type="email"]:focus{
-    box-shadow: 0 5px 5px 0 rgba(126, 126, 126, 0.5);
+    box-shadow: 0 5px 5px 0 var(--loginHover);
+}
+
+.login-wrapper .button:hover {
+    box-shadow: 0 5px 5px 0 var(--loginHover);
 }
 
 @keyframes smoothDrop {
@@ -129,36 +124,4 @@
             background-color: transparent;
         }
     }
-}
-
-@media (prefers-color-scheme: dark) {
-    .login-wrapper {
-        background-color: var(--backColourDark);
-        color: var(--textColourDark);
-    }
-
-    .login-wrapper input[type="username"]::placeholder,
-    .login-wrapper input[type="email"]::placeholder,
-    .login-wrapper input[type="password"]::placeholder {
-        color: var(--textColourDark);
-    }
-
-    .login-wrapper input[type="username"],
-    .login-wrapper input[type="email"],
-    .login-wrapper input[type="password"] {
-        background-color: rgb(19, 19, 19);
-        color: var(--textColourDark);
-    }
-
-    .login-wrapper input[type="submit"],
-    .login-wrapper input[type="button"]{
-        background-color: rgb(19, 19, 19);
-        color: var(--textColourDark);
-    }
-
-    .login-wrapper input[type="submit"]:hover,
-    .login-wrapper input[type="button"]:hover {
-        background-color: rgb(39, 39, 39);
-    }
-
 }
