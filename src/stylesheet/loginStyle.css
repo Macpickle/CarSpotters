@@ -8,7 +8,7 @@
     height: 40em;
     width: 30%;
     border-radius: 10px;
-    outline: 1px solid var(--outlineColour);
+    outline: 1px solid var(--outline);
 }
 
 .login-wrapper img {
@@ -16,6 +16,13 @@
     padding-top: 3em;
     margin: 0 auto;
     width: 50%;
+}
+
+p {
+    text-align: center;
+    color: var(--textColour);
+    font-size: 1em;
+    margin-top: 1em;
 }
 
 .login-wrapper input[type="username"]::placeholder,
@@ -38,7 +45,7 @@
     box-sizing: border-box; 
 }
 
-.login-wrapper input[type="submit"]{
+.login-wrapper button[type="submit"]{
     display: block;
     border: 0;
     outline: 0;
@@ -63,8 +70,14 @@
     text-decoration: none;
     color: rgb(77, 77, 77);
     text-align: center;
-    display: block;
+    display: inline-block;
     font-size: .75em;
+    margin-left: 0.5em;
+}
+
+.login-wrapper .forgot-password-link {
+    position: absolute;
+    right: 2em;
 }
 
 .login-wrapper a:hover {
@@ -84,7 +97,7 @@
     animation: smoothDrop 1s;
 }
 
-.login-wrapper input[type="submit"]{
+.login-wrapper button[type="submit"]{
     animation: smoothDrop 1.5s;
 }
 
@@ -94,7 +107,7 @@
     box-shadow: 0 5px 5px 0 var(--loginHover);
 }
 
-.login-wrapper .button:hover {
+.login-wrapper button:hover {
     box-shadow: 0 5px 5px 0 var(--loginHover);
 }
 

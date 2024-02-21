@@ -15,11 +15,17 @@
         <img src="assets/CARSPOTTERIMG.png">
         <form action="/login" method="POST">
             <h1 class="login-header">Login</h1>
-            <input id="username" name="username" type="username" placeholder="Username">
-            <input id="password" name="password" type="password" placeholder="Password">
-            <input class="button" type="submit" value="Login">
-        </form>
+            <div>
+                <input type="username" id="username" name="username" placeholder="Username..." required>
+            </div>
+            <div>
+                <input type="password" id="password" name="password" placeholder="Password..." required>
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
         <a href="register">Don't have an account? Register here!</a>
+        <a class= "forgot-password-link" href="forgotpassword">Forgot your password?</a>
     </div>
 
     <script src="script.js"></script>
