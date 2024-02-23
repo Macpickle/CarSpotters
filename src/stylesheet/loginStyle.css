@@ -111,6 +111,11 @@ p {
     box-shadow: 0 5px 5px 0 var(--loginHover);
 }
 
+.login-wrapper p {
+    animation: smoothDrop 1.5s;
+    font-size: 0.75em;
+}
+
 @keyframes smoothDrop {
     0% {
         transform: translateY(-25%);

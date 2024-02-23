@@ -21,10 +21,20 @@
         </div>
 
         <ul>
+            <% if (!user) { %>
                 <div class = "tooltip">
                     <a href = "login"><i class="fa-solid fa-circle-user"></i></a>
                     <span class = "tooltiptext">Login</span>
                 </div>
+            <% } else { %>
+                <div class = "tooltip">
+                    <a href = "account"><i class="fa-solid fa-circle-user"></i></a>
+                    <span class = "tooltiptext">Account</span>
+                </div>
+                <form action="/logout?_method=DELETE" method="POST">
+                    <button type="submit">LOGOUT</button>
+            </form>
+            <% } %>
         </ul>
     </div>
 

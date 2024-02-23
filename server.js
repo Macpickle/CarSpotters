@@ -7,10 +7,13 @@ const flash = require('express-flash');
 const session = require('express-session');
 const path = require('path');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 // Set up mongoose connection
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
+
+app.use(passport.initialize());
 
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('Connected to Database'))

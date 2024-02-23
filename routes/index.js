@@ -21,12 +21,12 @@ app.use(methodOverride('_method'));
 
 //routes
 router.get('/', function(req, res) {
-    res.render('index');
+    res.render('index.ejs', {user: req.user});
 });
 
 router.get('/login', function(req, res) {
-    res.render('login');
-});
+    res.render('login', { error: '' });
+});  
 
 router.get('/register', function(req, res) {
     res.render('register', { error: '' });
@@ -34,41 +34,55 @@ router.get('/register', function(req, res) {
 
 router.post('/register', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
-        if (!username || !email || !password) {
-            return res.render('register', { error: 'Please fill in all fields...' });
-        }
-
-        const existingUser = await User.findOne({ $or: [{ username: username }, { email: email }] });
+        // Check if user already exists by username or email
+        const existingUser = await User.findOne({ 
+            $or: [
+                { username: req.body.username },
+                { email: req.body.email }
+            ]
+        });
         if (existingUser) {
-            return res.redirect('/register', { error: 'User already exists.' });
-        } else {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const user = new User({
-                id: Date.now().toString(),
-                username,
-                email,
-                password: hashedPassword
-            });
-            user.save();
-            return res.redirect('/login');
+            // User already exists
+            res.render('register', { error: 'User already exists!' });
+            return;
         }
-    } catch (error) {
-        return res.redirect('/register');
+        // Hash the password (bcrypt)
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        
+        // Create a new user
+        const newUser = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password: hashedPassword
+        });
+
+        // Save the user to the database
+        newUser.save();
+        res.redirect('/login');
+    } catch {
+        // catches any unexpected errors
+        res.render('register', { error: 'Error registering user' });
     }
 });
 
-router.post('/login',  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-}) );
-
-router.delete('/logout', (req, res) => {
-    req.logout(function(err) {
-        if (err) { return next(err); }
-        res.redirect('/');
-      });
+router.get('/error', (req, res) => {
+    res.render('login', { error: 'Invalid username or password'});
 });
+
+router.post('/login', passport.authenticate('local', {
+    failureRedirect: '/error',
+    failureMessage: true,
+    failureFlash: true,
+}), (req, res) => {
+    // If the user is authenticated, redirect to the home page
+    res.render('index.ejs', { user: req.user.username });
+});
+
+router.post('/logout', function(req, res, next) {
+    req.logout(function(err) {
+      if (err) { return next(err); }
+      res.redirect('/');
+    });
+  });
 
 module.exports = router;
