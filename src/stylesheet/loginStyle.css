@@ -1,0 +1,145 @@
+.login-wrapper{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1em;
+    margin: 0 auto;
+    height: 40em;
+    width: 30%;
+    border-radius: 10px;
+    outline: 1px solid var(--outline);
+}
+
+.login-wrapper img {
+    display: block;
+    padding-top: 3em;
+    margin: 0 auto;
+    width: 50%;
+}
+
+p {
+    text-align: center;
+    color: var(--textColour);
+    font-size: 1em;
+    margin-top: 1em;
+}
+
+.login-wrapper input[type="username"]::placeholder,
+.login-wrapper input[type="email"]::placeholder,
+.login-wrapper input[type="password"]::placeholder {
+    color: var(--textColourLight);
+}
+
+.login-wrapper input[type="username"],
+.login-wrapper input[type="email"],
+.login-wrapper input[type="password"] {
+    display: block;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 1.5em;
+    background-color: var(--textboxbackground);
+    border-radius: .5em;
+    margin: 1em 0;
+    box-sizing: border-box; 
+}
+
+.login-wrapper button[type="submit"]{
+    display: block;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 0.5em;
+    border-radius: .5em;
+    margin: .5em 0;
+    box-sizing: border-box; 
+    font-size: 1.5em;
+    background-color: rgb(216, 216, 216);
+}
+
+.login-wrapper h1 {
+    text-align: center;
+    margin-top: 2em;
+    padding-bottom: .5em;
+    font-size: 2em;
+    color: var(--textColour);
+}
+
+.login-wrapper a {
+    text-decoration: none;
+    color: rgb(77, 77, 77);
+    text-align: center;
+    display: inline-block;
+    font-size: .75em;
+    margin-left: 0.5em;
+}
+
+.login-wrapper .forgot-password-link {
+    position: absolute;
+    right: 2em;
+}
+
+.login-wrapper a:hover {
+    color: rgb(104, 14, 189);
+}
+
+.login-wrapper input[type="username"]{
+    animation: smoothDrop 1s;
+    --webkit-appearence: none;
+}
+
+.login-wrapper input[type="email"]{
+    animation: smoothDrop 1s;
+}
+
+.login-wrapper input[type="password"]{
+    animation: smoothDrop 1s;
+}
+
+.login-wrapper button[type="submit"]{
+    animation: smoothDrop 1.5s;
+}
+
+.login-wrapper input[type="username"]:focus,
+.login-wrapper input[type="password"]:focus,
+.login-wrapper input[type="email"]:focus{
+    box-shadow: 0 5px 5px 0 var(--loginHover);
+}
+
+.login-wrapper button:hover {
+    box-shadow: 0 5px 5px 0 var(--loginHover);
+}
+
+.login-wrapper p {
+    animation: smoothDrop 1.5s;
+    font-size: 0.75em;
+}
+
+@keyframes smoothDrop {
+    0% {
+        transform: translateY(-25%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .login-wrapper {
+        width: 60%;
+        height:45em;
+    }
+
+    @media screen and (max-width: 1000px) {
+        .login-wrapper {
+            top:20em;
+            width: 90%;
+            height: 40em;
+            outline: none;
+            background-color: transparent;
+        }
+    }
+}

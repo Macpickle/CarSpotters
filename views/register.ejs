@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <title>CarSpotters</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/loginStyle.css">
+</head>
+
+<body>
+    <div class = "login-wrapper">
+        <img src = "assets/CARSPOTTERIMG.png">
+        <form action="/register" method="POST">
+            <h1 class = "login-header">Welcome!</h1>
+            <% if (error) { %>
+                <p class="error"><%= error %></p>
+            <% } %>
+
+            <input id = "username" name = "username" type = "username" placeholder = "Username" required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
+            <input id = "email" name = "email" type = "email" placeholder = "Email" required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
+            <input id = "password" name = "password" type = "password" placeholder = "Password" required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
+            <div>
+                <button type="submit" value="register">Register</button>
+            </div>
+        </form>
+</div>
+
+    <script src="/src/javascript/script.js"></script>
+</body>
+</html>

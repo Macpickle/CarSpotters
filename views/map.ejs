@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <title>CarSpotters</title>
+    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>]
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+</head>
+
+<div class = "navbar">
+    <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+    <div class="search-container">
+    </div>
+</div>
+<div class = "sidenav">
+    <a href = "/"><i class="fa-solid fa-home"></i>Home</a>
+    <a href = "map" ><i class="fa-solid fa-map"></i>Explore</a>
+    <% if (userID) { %>
+    <a href = "notify"><i class ="fa-solid fa-bell"></i>Notifications</a>
+    <a href = "messages"><i class="fa-solid fa-envelope"></i>Messages</a>
+    <a href = "favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+    <a href="create"><i class="fa-solid fa-plus"></i>Create</a>
+    <% }%>
+
+</div>
+<div class = "main-container">
+    <div class = "map">
+        <div id="map"></div>
+    </div>
+</div>
+
+</html>

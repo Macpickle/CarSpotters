@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <title>CarSpotters</title>
+    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class = "navbar">
+        <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+        <div class="search-container">
+            <form action="search" method="POST">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" placeholder="Search..." name="search">
+            </form>
+        </div>
+
+        <ul>
+            <% if (!userID) { %>
+                <div class = "tooltip">
+                    <a href = "login" id="login"><i class="fa-solid fa-circle-user"></i></a>
+                    <span class = "tooltiptext">Login</span>
+                </div>
+            <% } else { %>
+                <div class = "tooltip">
+                    <a href = "account" id="account"><i class="fa-solid fa-circle-user"></i></a>
+                    <span class = "tooltiptext">Account</span>
+                </div>
+                <form id = "logout" method="post" action="/logout">
+                    <button type="submit">LOGOUT</button>
+            <% } %>
+            </form>
+        </ul>
+    </div>
+
+    <div class = "sidenav">
+        <a href = "/" class = "selected"><i class="fa-solid fa-home"></i>Home</a>
+        <a href = "map" ><i class="fa-solid fa-map"></i>Explore</a>
+        <% if (userID) { %>
+            <a href = "notify"><i class ="fa-solid fa-bell"></i>Notifications</a>
+            <a href = "messages"><i class="fa-solid fa-envelope"></i>Messages</a>
+            <a href = "favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+            <a href="create"><i class="fa-solid fa-plus"></i>Create</a>
+        <% } %>
+    </div>
+
+    <div class = "main-container">
+        <div id = "post-container">
+            <div id="loader">
+            </div>
+        </div>
+    </div>
+
+    <!--mobile container-->
+    <div class = "mobile-container">
+        <ul>
+            <div class = "tooltip">
+                <li><a><button><i class="fa-solid fa-user"></i></button></a></li>
+                <span class = "tooltiptext">Account</span>
+            </div>
+            <div class = "tooltip">
+                <li><a href="login"><i class="fa-solid fa-user"></i></a></li>
+            </div>
+            
+            <div class = "tooltip">
+                <li><a href = "about"><i class="fa-solid fa-info"></i></a></li>
+            </div>
+
+            <div class = "tooltip">
+                <li><a href = "map"><i class="fa-solid fa-search"></i></a></li>
+            </div>
+
+            <div class = "tooltip">
+                <li><a href = "messages"><i class="fa-solid fa-envelope"></i></a></li>
+            </div>
+
+            <div class = "tooltip">
+                <li><a href="index"><i class="fa-solid fa-home"></i></a></li>
+            </div>
+        </ul> 
+    </div>
+
+    <script src = "/javascript/script.js"></script>
+</body>
+
+</html>

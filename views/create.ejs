@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <title>CarSpotters</title>
+    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
+</head>
+
+<div class = "navbar">
+    <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+    <div class="search-container">
+    </div>
+
+    <ul>
+        <% if (!userID) { %>
+            <div class = "tooltip">
+                <a href = "login" id="login"><i class="fa-solid fa-circle-user"></i></a>
+                <span class = "tooltiptext">Login</span>
+            </div>
+        <% } else { %>
+            <div class = "tooltip">
+                <a href = "account" id="account"><i class="fa-solid fa-circle-user"></i></a>
+                <span class = "tooltiptext">Account</span>
+            </div>
+            <form id = "logout" method="post" action="/logout">
+                <button type="submit">LOGOUT</button>
+        <% } %>
+        </form>
+    </ul>
+</div>
+
+<div class = "sidenav">
+    <!-- userID is not needed as page is not accessible by non logged in user -->
+    <a href = "/"><i class="fa-solid fa-home"></i>Home</a>
+    <a href = "map" ><i class="fa-solid fa-map"></i>Explore</a>
+    <a href = "notify"><i class ="fa-solid fa-bell"></i>Notifications</a>
+    <a href = "messages"><i class="fa-solid fa-envelope"></i>Messages</a>
+    <a href = "favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+    <a href="create"><i class="fa-solid fa-plus"></i>Create</a>
+    </div>
+
+    <div class = "main-container">
+        <form action="/create" method="POST">
+            <div class="file-container">
+                <div class = "file-upload">
+                    <input type="file" id="img" name="img" accept="image/png, image/jpg" style="display:none;" onchange="loadFile(event)">
+                    <button type="button"><label for="img">Select an Image</label></button>
+                    <img id="output" name="output" style="display:none">
+                </div>
+                <div class = "information" id="information">
+                    <div class = "stack">
+                        <input type="text" id="carModel" name="carModel" placeholder="Car Model">
+                        <input type="text" id="carName" name="carName" placeholder="Car Name">
+                        <input type="text" id="location" name="location" placeholder="Car Location">
+                    </div>
+                    <div class="description">
+                        <textarea id="description" name="description" rows="1" cols="50" maxlength="75" placeholder="Enter description here..." style="resize: none;"></textarea>
+                    </div>
+                </div>
+                <div class = "button-container">
+                    <button id="submit" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/src/javascript/script.js"></script>
+    <script>
+        var loadFile = function(event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            image.style.display = "block";
+            document.getElementById('information').style.display = "flex";
+            document.getElementById('submit').style.display = "flex";
+        };
+    </script>
+</div>
+
+</html>

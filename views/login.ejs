@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="eng">  
+
+<head>
+    <title>CarSpotters</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/loginStyle.css">
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <img src="assets/CARSPOTTERIMG.png">
+        <form action="/login" method="POST">
+            <h1 class="login-header">Login</h1>
+            <% if (error) {%>
+                <p class="error"><%= error %></p>
+            <% } %>
+            
+            <div>
+                <input type="username" id="username" name="username" placeholder="Username..." required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
+            </div>
+            <div>
+                <input type="password" id="password" name="password" placeholder="Password..." required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+        <a href="register">Don't have an account? Register here!</a>
+        <a class= "forgot-password-link" href="forgotpassword">Forgot your password?</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

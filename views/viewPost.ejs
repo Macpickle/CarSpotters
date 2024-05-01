@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <title>CarSpotters</title>
+    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div class = "navbar">
+    <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+    <div class="search-container">
+    </div>
+</div>
+
+<div class = "main-container">
+    <div class = "post">
+    <div class = "post-container">
+        <div class="post-header">
+            <div class="post-header-left">
+                <div class="profile-picture">
+                    <i class="fa-solid fa-circle-user"></i>
+                </div>
+                  <h3 id="postHeader"><%=post.username%></h3>
+                  <p class = "cardetails"><%=post.carModel%>, <%=post.carTitle%></p>
+                <p id="description"><%=post.description%></p>
+            </div>
+            <div class="post-header-right">
+                <p id="date"><%=post.date%></p>
+            </div>
+        </div>
+        <img id="img" src="<%=post.photo%>" alt="Car Image" id="carImage">
+      </div>
+    </div>
+</div>
+
+</div>
+</body>
+</html>
