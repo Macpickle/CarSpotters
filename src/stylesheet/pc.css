@@ -27,6 +27,7 @@ html{
 }
 
 .navbar {
+    z-index: 99;
     top: 0;
     height: 5em;
     width: 100%;
@@ -115,7 +116,7 @@ html{
 }
 
 .sidenav {
-    width:20em;
+    width:20%;
     height: fit-content;
     position: fixed;
     z-index: 1;
@@ -157,90 +158,127 @@ html{
 }
 
 .main-container {
-    margin: 6em 0;
-}
-
-.main-container .post {
-    width: 100%;
-    margin-bottom: 1em;
-    border-radius: 1em;
-    background-color: var(--postBackground);
-    outline: 1px solid var(--outline);
+    margin: 6.5em 0;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-.main-container .post .post-header {
-    width: fit-content;
-    padding: 1em;
-    padding-bottom: 0.5em;
+.main-container #post-container{
     width:100%;
-    height: 1%;
-    display: inline-block;
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.main-container .post {
+    display: flex;
+    justify-content: flex-start;
+    align-items: top;
+    outline: 1px solid var(--outline);
+    border-radius: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    margin-bottom: 2em;
+    width: 45%;
+    height:50%;
+}
+
+.main-container .post-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 5em;
+    width: 100%;
     border-bottom: 1px solid var(--outline);
-    background-color: var(--navbarColour);
-    border-radius: 1em 1em 0 0;
 }
 
-.main-container .post .post-header h3,
-.main-container .post .profile-picture {
-    display: inline;
+.main-container .post-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 100%;
+    width: 70%;
+    flex-direction: column;
+}
+
+.main-container .post-header-upper {
+    margin: 1em;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0em;
+}
+
+.main-container .post-header-lower {
+    margin: 2.5em;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0em;
+}
+
+.main-container .profile-picture {
+    width: fit-content;
+    justify-self: center;
+    margin-right: 1em;
+}
+
+.main-container .fa-solid  {
     font-size: 1.5em;
-    width: fit-content;
-    margin-left: 1em;
+    color: rgb(0, 0, 0);
 }
 
-.main-container .post .post-header p {
-    color: var(--textColour);
-    padding: 1em;
-    padding-top: .5em;
+.main-container .carInformation {
+    font-size: 0.8em;
+    color: rgb(85, 85, 85);
+    margin-left: 0.5em;
 }
 
-.main-container .post .post-header-left{
-    float: left;
-    width:fit-content;
-    display: inline-block;
-}
-
-.main-container .post .post-header-right {
-    width: 100%;
-    justify-self: flex-end;
-    display: inline-block;
-    margin-left: flex-end;
-    margin-right: 0;
+.main-container .post-header-lower p {
+    text-align: left;
     font-size: 0.75em;
-    text-align: right;
+    color: rgb(146, 146, 146);
 }
 
-.main-container .post .post-header .information {
-    background-color: red;
-}
-
-.main-container .post #description{
-    padding-bottom: 0;
-}
-
-.main-container .post .post-header .cardetails {
-    display: inline;
-    width: fit-content;
-    padding: 0em;
-    margin-left: 1em;
-    font-size: 1em;
-}
-
-.main-container .post img {
-    width: 100%;
-    overflow-y: hidden;
-    border-radius: 0 0 10px 10px;
-    min-height: 20em;
-    max-height: 30em;
-}
-
-.main-container .post .like-button {
-    display:flex;
+.main-container .post-date {
+    display: flex;
     justify-content: flex-end;
-    align-self: flex-end;
+    align-items: flex-end;
+    height: 100%;
+    width: 30%;
+    margin: -1em;
+    color: rgb(85, 85, 85);
+    font-size: 0.75em;
+}
+
+.main-container .post-image {
+    border-radius: 0 0 1em 1em;
+}
+
+.main-container img {
+    width: 100%;
+    height:55%;
+    min-height:30em;
+    max-height:30em;
+    object-fit: contain;
+    border-radius: 0 0 1em 1em;
+    background-color: rgb(207, 207, 207);
+}
+
+.main-container button {
+    border: none;
+    width:100%;
+    border-radius: 1em;
+}
+
+.main-container button:hover {
+    transform: scale(1.01);
+    box-shadow: 0 5px 5px 0 var(--loginHover);
+}
+
+.main-container button:active {
+    box-shadow: 0 0 0 0 var(--loginHover);
 }
 
 .main-container .file-container{
@@ -375,27 +413,6 @@ html{
     width: 100%;
 }
 
-.main-container .post-container {
-    display: flex;
-    align-items: left;
-    justify-content: left;
-    flex-direction: column;
-    width: 100%;
-}
-
-.main-container .post-container button {
-    border: none;
-    border-radius: 1em;
-}
-
-.main-container .post-container button:hover {
-    box-shadow: 0 5px 5px 0 var(--loginHover);
-}
-
-.main-container .post-container button:active {
-    box-shadow: 0 0 0 0 var(--loginHover);
-}
-
 @media screen and (min-width: 786px) {
     .navbar {
         display: flex;
@@ -408,13 +425,7 @@ html{
     .sidenav {
         display: block;
     }
-
-    .main-container{
-        margin-left: 25em;
-        width: 45%;
-    }
 }
-
 @keyframes fade-down {
     from {
         opacity: 0;

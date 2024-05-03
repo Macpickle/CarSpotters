@@ -18,26 +18,30 @@
 </div>
 
 <div class = "main-container">
-    <div class = "post">
     <div class = "post-container">
-        <div class="post-header">
-            <div class="post-header-left">
-                <div class="profile-picture">
-                    <i class="fa-solid fa-circle-user"></i>
+        <div class = "post" style="width:100%">
+            <div class = "post-header">
+                <div class = "post-content">
+                    <div class = "post-header-upper">
+                        <div class="profile-picture">
+                            <i class="fa-solid fa-circle-user"></i>
+                        </div>
+                        <h3><%=post.username%></h3>
+                        <p class = "carInformation"><%=post.carModel%>,<%=post.carTitle%></p>
+                    </div>
+                    <div class = "post-header-lower">
+                        <p><%=post.description%></p>
+                    </div>
                 </div>
-                  <h3 id="postHeader"><%=post.username%></h3>
-                  <p class = "cardetails"><%=post.carModel%>, <%=post.carTitle%></p>
-                <p id="description"><%=post.description%></p>
+                <div class = "post-date">
+                    <p><%=post.date%></p>
+                </div>
             </div>
-            <div class="post-header-right">
-                <p id="date"><%=post.date%></p>
+            <div class = "post-image">
+                <img src = <%=post.photo%> alt = "Pagani Zonda F">
             </div>
         </div>
-        <img id="img" src="<%=post.photo%>" alt="Car Image" id="carImage">
-      </div>
     </div>
-</div>
-
 </div>
 </body>
 </html>

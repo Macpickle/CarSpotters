@@ -40,26 +40,32 @@ const createCard = (index) => {
     const post = document.createElement("div");
     post.className = "post";
     post.innerHTML = `
-    <div class = "post-container">
-      <form action="/viewPost/${randomData._id}" method="GET">
-        <button>
-          <div class="post-header">
-              <div class="post-header-left">
-                  <div class="profile-picture">
-                      <i class="fa-solid fa-circle-user"></i>
-                  </div>
-                    <h3 id="postHeader">${randomData.username}</h3>
-                    <p class = "cardetails">${randomData.carModel}, ${randomData.carTitle}</p>
-                  <p id="description">${randomData.description}</p>
-              </div>
-              <div class="post-header-right">
-                  <p id="date">${randomData.date}</p>
-              </div>
-          </div>
-          <img id="img" src="${randomData.photo}" alt="Car Image" id="carImage">
-        </button>
-      </form>
-    </div>
+    <form action="/viewPost/${randomData._id}" method="GET">
+      <button>
+        <div class = "post-header">
+            <div class = "post-content">
+                <div class = "post-header-upper">
+                    <div class="profile-picture">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </div>
+                    <h3>${randomData.username}</h3>
+                    <p class = "carInformation">${randomData.carModel}, ${randomData.carTitle}</p>
+                </div>
+                <div class = "post-header-lower">
+                    <p>${randomData.description}</p>
+                </div>
+            </div>
+            <div class = "post-date">
+                <p>${randomData.date}</p>
+            </div>
+        </div>
+        <div class = "post-image">
+            <img src = "${randomData.photo}" alt = "Pagani Zonda F">
+        </div>
+      </div>
+      </button>
+    </form>
+
     `;
     console.log("created card");
 
