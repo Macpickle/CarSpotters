@@ -23,11 +23,15 @@
             <div class = "post-header">
                 <div class = "post-content">
                     <div class = "post-header-upper">
-                        <div class="profile-picture">
-                            <i class="fa-solid fa-circle-user"></i>
-                        </div>
-                        <h3><%=post.username%></h3>
-                        <p class = "carInformation"><%=post.carModel%>,<%=post.carTitle%></p>
+                        <form action = "/account/<%=post.usernameID%>" method = "GET">
+                            <button class = "viewProfile">
+                                <div class="profile-picture">
+                                    <i class="fa-solid fa-circle-user"></i> 
+                                </div>
+                                <h3><%=post.username%></h3>
+                            </button>
+                        </form>
+                            <p class = "carInformation"><%=post.carModel%>,<%=post.carTitle%></p>
                     </div>
                     <div class = "post-header-lower">
                         <p><%=post.description%></p>

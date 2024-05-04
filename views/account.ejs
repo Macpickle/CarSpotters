@@ -12,10 +12,7 @@
 
 <div class = "navbar">
     <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
-    <div class="search-container">
-    </div>
-
-    
+    <div class="search-container"></div>
 </div>
 
 <div class = "sidenav">
@@ -29,6 +26,7 @@
 
 <div class = "main-container">
     <div class = "account-container">
+        <% if (JSON.stringify(user._id) == JSON.stringify(userID._id)) { %>
         <div class = "settings-icon-container">
             <form action = "/settings/<%=user._id%>" method = "GET">
                 <button>
@@ -38,8 +36,22 @@
                 </button>
             </form>
         </div>
+        <% } else { %>
+            <div class = "settings-icon-container" style="height: 8.44%"></div> <!--very bad practice, fix later-->
+        <% } %>
         <div class = "account-details">
             <div class="profile-picture">
+                <% if (JSON.stringify(user._id) == JSON.stringify(userID._id)) { %>
+                <a href = "/change-profile-picture" style="text-decoration: none;">
+                    <button for = "editProfilePicture">
+                        <div class = "gears">
+                            <i class="fa-solid fa-gear"></i>
+                            <i class="fa-solid fa-gear" id = "outline"></i>
+                        </div>
+                        <i class="fa-solid fa-circle" id = "inner"></i>
+                    </button>
+                </a>
+                <% } %>
                 <i class="fa-solid fa-circle-user"></i>
             </div>
             <h3><%=user.username%></h3>
@@ -60,14 +72,16 @@
         <form action = "/viewAllPosts/<%=user.username%>" method = "GET" id = "viewPosts" >
         </form>
         <div class = "preview-container">
+            <% if (user.postIDs.length > 0) { %>
             <button form="viewPosts">
             <div class = "hover-container">
                 <h3>Click to View Posts</h3>
                 <div class = "arrow"></div>
             </div>
+            <% } %>
             <% if (user.postIDs.length > 0) { %>
                 <div class = "post-preview">
-                    <% for (let i = 0; i < 4; i++) { %>
+                    <% for (let i = 0; i <=3; i++) { %>
                         <% if (user.postIDs[i] != undefined) { %>
                             <div class = "post-item">
                                 <img class = "img-preview"src = "<%=user.postIDs[i]%>" alt = "Post">

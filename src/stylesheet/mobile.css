@@ -69,4 +69,12 @@
     .main-container .account-container {
         width: 90%;
     }
+
+    .navbar .search-container {
+        display: none;
+    }
+
+    .navbar ul, .navbar ul a, .navbar button {
+        display: none;
+    }
 }

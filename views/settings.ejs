@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
     <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
 </head>
-
+<body style="overflow-y: hidden;">
 <div class = "navbar">
     <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
     <div class="search-container">
@@ -45,20 +45,29 @@
 
     <div class = "main-container">
         <div class = "settings-container">
+            <div class = "settings-back-button">
+                <form action = "/account/<%=userID._id%>" method = "GET">
+                    <button>
+                        <div class = "settings-back-icon">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                    </button>
+                </form>
+            </div>
             <h2 class = "settings-title">Settings</h2>
             <div class = "settings">
                 <div class = "settings-option">
                     <h3>Change Bio</h3>
                     <form id = "change-bio" method="post" action="/change-bio">
                         <input type="text" name="bio" placeholder="New Bio" maxlength = "25" required>
-                        <button type="submit">Change Bio</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <div class = "settings-option">
                     <h3>Change Username</h3>
                     <form id = "change-username" method="post" action="/change-username">
                         <input type="text" name="username" placeholder="New Username" required>
-                        <button type="submit">Change Username</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <div class = "settings-option">
@@ -66,7 +75,7 @@
                     <form id = "change-password" method="post" action="/change-password">
                         <input type="password" name="password" placeholder="Current Password" required>
                         <input type="password" name="newPassword" placeholder="New Password" required>
-                        <button type="submit">Change Password</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <div class = "settings-option">
@@ -74,14 +83,14 @@
                     <form id = "change-email" method="post" action="/change-email">
                         <input type="email" name="email" placeholder="Current Email" required>
                         <input type="email" name="newEmail" placeholder="New Email" required>
-                        <button type="submit">Change Email</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <div class = "settings-option">
                     <h3>Delete Account</h3>
                     <form id = "delete-account" method="post" action="/delete-account">
                         <input type="password" name="password" placeholder="Password" required>
-                        <button type="submit">Delete Account</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
             </div>
@@ -94,7 +103,7 @@
                             <option value="dark">Dark</option>
                             <option value="system">System</option>
                         </select>
-                        <button type="submit">Change Theme</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <div class = "settings-option">
@@ -105,7 +114,7 @@
                             <option value="friends">Friends</option>
                             <option value="noone">No One</option>
                         </select>
-                        <button type="submit">Change Message Privacy</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <div class = "settings-option">
@@ -116,7 +125,7 @@
                             <option value="friends">Friends</option>
                             <option value="noone">No One</option>
                         </select>
-                        <button type="submit">Change Post Privacy</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <div class = "settings-option">
@@ -127,7 +136,7 @@
                             <option value="friends">Friends</option>
                             <option value="noone">No One</option>
                         </select>
-                        <button type="submit">Change Following Privacy</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <div class = "settings-option">
@@ -138,7 +147,7 @@
                             <option value="friends">Friends</option>
                             <option value="noone">No One</option>
                         </select>
-                        <button type="submit">Change Account Privacy</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
             </div>
@@ -147,5 +156,6 @@
 
     <script src="/src/javascript/script.js"></script>
 </div>
+</body>
 
 </html>

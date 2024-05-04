@@ -97,8 +97,13 @@ app.post('/data', async (req,res) => {
 });
 
 app.get('/account/:id', isLoggedIn, async (req,res) => {
-    const user = await User.findOne({ _id: req.params.id });
-    res.render('account', {user});
+    try {
+        const user = await User.findOne({ _id: req.params.id });
+        const userID = req.user;
+        res.render('account', {user, userID});
+    } catch {
+        res.redirect('/');
+    }
 });
 
 app.get('/login', (req,res) => {
@@ -117,7 +122,7 @@ app.get('/create', isLoggedIn, (req,res) => {
 app.get('/viewPost/:id', async (req,res) => {
     const userID = req.user;
     const post = await Post.findOne({ _id: req.params.id });
-    res.render('viewPost', {post});
+    res.render('viewPost', {post, userID});
 });
 
 app.get('/viewAllPosts/:id', async (req,res) => {
@@ -157,6 +162,7 @@ app.post('/create', async (req,res) => {
     try{
         const newPost = new Post({
             username: req.user.username,
+            usernameID: req.user._id,
             location:  req.body.location,
             description: req.body.description,
             photo: req.body.img,  
@@ -223,8 +229,15 @@ app.post('/change-bio', async (req,res) => {
 
 app.post('/change-username', async (req,res) => {
     req.user.username = req.body.username;
-    req.user.save();
-    res.redirect(`/account/${req.user._id}`);
+
+    const validUsername = await User.findOne({ username: req.body.username });
+
+    if (validUsername) {
+        res.redirect(`/settings/${req.user._id}`);
+    } else {
+        req.user.save();
+        res.redirect(`/account/${req.user._id}`);
+    }
 });
 
 app.post('/change-password', async (req,res) => {
@@ -243,10 +256,12 @@ app.post('/change-password', async (req,res) => {
 
 app.post('/change-email', async (req,res) => {
     const validEmail = (req.body.email === req.user.email)
-    if (!validEmail || req.body.newEmail === req.user.email) {
+    const existingEmail = await User.findOne({email: req.body.newEmail});
+
+    if (!validEmail || req.body.newEmail === req.user.email || existingEmail) {
         res.redirect(`/settings/${req.user._id}`);
     } else {
-        req.user.email = req.body.email;
+        req.user.email = req.body.newEmail;
         req.user.save();
         res.redirect(`/account/${req.user._id}`);
     }
@@ -258,6 +273,9 @@ app.post('/delete-account', async (req,res) => {
         res.redirect(`/settings/${req.user._id}`);
     } else {
         await User.deleteOne({ _id: req.user._id });
+
+        await Post.deleteMany({ username: req.user.username });
+
         req.logout(() => {
             req.session.destroy();
             res.clearCookie('sid')
