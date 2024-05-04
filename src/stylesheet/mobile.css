@@ -62,8 +62,11 @@
         display: none;
     }
 
-    .main-container{
-        padding-left: 5%;
-        width: 95%;
+    .settings-container {
+        width:90%;
+    }
+
+    .main-container .account-container {
+        width: 90%;
     }
 }

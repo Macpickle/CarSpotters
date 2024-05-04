@@ -28,7 +28,7 @@
                 </div>
             <% } else { %>
                 <div class = "tooltip">
-                    <a href = "account" id="account"><i class="fa-solid fa-circle-user"></i></a>
+                    <a href = "/account/<%=userID._id%>" method="GET" id="account"><i class="fa-solid fa-circle-user"></i></a>
                     <span class = "tooltiptext">Account</span>
                 </div>
                 <form id = "logout" method="post" action="/logout">

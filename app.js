@@ -96,9 +96,9 @@ app.post('/data', async (req,res) => {
     res.send(posts);
 });
 
-app.get('/account', isLoggedIn, (req,res) => {
-    const userID = req.user;
-    res.render('account', { userID });
+app.get('/account/:id', isLoggedIn, async (req,res) => {
+    const user = await User.findOne({ _id: req.params.id });
+    res.render('account', {user});
 });
 
 app.get('/login', (req,res) => {
@@ -117,9 +117,12 @@ app.get('/create', isLoggedIn, (req,res) => {
 app.get('/viewPost/:id', async (req,res) => {
     const userID = req.user;
     const post = await Post.findOne({ _id: req.params.id });
-    console.log(post.description);
-    console.log(post);
     res.render('viewPost', {post});
+});
+
+app.get('/settings/:id', isLoggedIn, async (req,res) => {
+    const userID = req.user;
+    res.render('settings', {userID});
 });
 
 app.post('/login', passport.authenticate('local', {
@@ -156,14 +159,18 @@ app.post('/create', async (req,res) => {
             date: (new Date()).toDateString().substring(0,10),
             carModel: req.body.carModel,
             carTitle: req.body.carName,
-            _id: new mongoose.Types.ObjectId()
+            _id: new mongoose.Types.ObjectId().value
         });
+            req.user.postIDs.push(newPost); // should probably be post ID's instead of creating a copy of post, fix later
+            req.user.postCount += 1;
+            req.user.save();
             newPost.save();
-            console.log(req.body.img);
+
             console.log("Post created successfully!")
             res.redirect('/');
     } catch {
-        const userID = req.user;
+        const userID = req.user; 
+        console.log("Error creating post")
         res.render('create', {userID});
     }
 });
@@ -200,6 +207,97 @@ app.post('/register', async (req, res) => {
         // catches any unexpected errors
         res.render('register', { error: 'Error registering user' });
     }
+});
+
+app.post('/change-bio', async (req,res) => {
+    req.user.bio = req.body.bio;
+    req.user.save();
+    res.redirect(`/account/${req.user._id}`);
+});
+
+app.post('/change-username', async (req,res) => {
+    req.user.username = req.body.username;
+    req.user.save();
+    res.redirect(`/account/${req.user._id}`);
+});
+
+app.post('/change-password', async (req,res) => {
+    const validPassword = await bcrypt.compare(req.body.password, req.user.password);
+    if (!validPassword || req.body.newPassword === req.body.password) {
+        console.log("Incorrect password or SAME password");
+        res.redirect(`/settings/${req.user._id}`);
+    } else {
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+        req.user.password = hashedPassword;
+        req.user.save();
+        console.log("Password changed successfully!");
+        res.redirect(`/account/${req.user._id}`);
+    }
+});
+
+app.post('/change-email', async (req,res) => {
+    const validEmail = (req.body.email === req.user.email)
+    if (!validEmail || req.body.newEmail === req.user.email) {
+        res.redirect(`/settings/${req.user._id}`);
+    } else {
+        req.user.email = req.body.email;
+        req.user.save();
+        res.redirect(`/account/${req.user._id}`);
+    }
+});
+
+app.post('/delete-account', async (req,res) => {
+    const validPassword = await bcrypt.compare(req.body.password, req.user.password);
+    if (!validPassword) {
+        res.redirect(`/settings/${req.user._id}`);
+    } else {
+        await User.deleteOne({ _id: req.user._id });
+        req.logout(() => {
+            req.session.destroy();
+            res.clearCookie('sid')
+            res.redirect('/');
+        });
+    }
+});
+
+//handing settings changes 
+function updateSetting(req, res, settingType, settingValue) {
+    const update = { $set: {} };
+    update.$set[`settings.${settingType}`] = settingValue;
+
+    User.findOneAndUpdate({ _id: req.user._id }, update, { new: true })
+        .then(doc => {
+            res.redirect(`/account/${req.user._id}`);
+        })
+        .catch(err => {
+            //unexpected error
+            res.redirect(`/settings/${req.user._id}`);
+        });
+}
+
+app.post('/change-theme', async (req,res) => {
+    const theme = req.body.theme;
+    updateSetting(req, res, 'appearence', theme);
+});
+
+app.post('/change-message-privacy', async (req,res) => {
+    const messagePrivacy = req.body.messagePrivacy;
+    updateSetting(req, res, 'messagePrivacy', messagePrivacy);
+});
+
+app.post('/change-post-privacy', async (req,res) => {
+    const postPrivacy = req.body.postPrivacy;
+    updateSetting(req, res, 'postPrivacy', postPrivacy);
+});
+
+app.post('/change-following-privacy', async (req,res) => {
+    const postPrivacy = req.body.followingPrivacy;
+    updateSetting(req, res, 'followingPrivacy', postPrivacy);
+});
+
+app.post('/change-account-privacy', async (req,res) => {
+    const postPrivacy = req.body.accountPrivacy;
+    updateSetting(req, res, 'accountPrivacy', postPrivacy);
 });
 
 app.listen((process.env.PORT) , () => {

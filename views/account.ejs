@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="eng">  
+<html lang="eng" style = "overflow-y: hidden;">  
 <head>
     <title>CarSpotters</title>
     <meta name="theme-color" content="">
@@ -24,7 +24,62 @@
     <a href = "notify"><i class ="fa-solid fa-bell"></i>Notifications</a>
     <a href = "messages"><i class="fa-solid fa-envelope"></i>Messages</a>
     <a href = "favourites"><i class="fa-solid fa-star"></i>Favourites</a>
-    <a href="create"><i class="fa-solid fa-plus"></i>Create</a>
+    <a href="/create"><i class="fa-solid fa-plus"></i>Create</a>
+</div>
+
+<div class = "main-container">
+    <div class = "account-container">
+        <div class = "settings-icon-container">
+            <form action = "/settings/<%=user._id%>" method = "GET">
+                <button>
+                    <div class = "settings-icon">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                </button>
+            </form>
+        </div>
+        <div class = "account-details">
+            <div class="profile-picture">
+                <i class="fa-solid fa-circle-user"></i>
+            </div>
+            <h3><%=user.username%></h3>
+            <p><%=user.bio%></p>
+        
+            <div class = "account-stats-container">
+                <div class = "account-stats">
+                    <p>Followers<br><%=user.followersCount%></p>
+                </div>
+                <div class = "account-stats">
+                    <p>Posts<br><%=user.postCount%></p>
+                </div>
+                <div class = "account-stats">
+                    <p>Following<br><%=user.followingCount%></p>
+                </div>
+            </div>
+        </div>
+        <div class = "preview-container">
+            <% if (user.postIDs.length > 0) { %>
+                <% user.postIDs.forEach(function(post) { %>
+                    <div class = "post-preview">
+                        <div class = "post">
+
+                        </div>
+                        <div class = "post">
+                            
+                        </div>
+                        <div class = "post">
+                            
+                        </div>
+                        <div class = "post">
+                            
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <h3 class = "no-post-preview">No posts yet!</h3>
+            <% } %>
+        </div>
+    </div>
 </div>
 
 </html>

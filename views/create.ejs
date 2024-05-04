@@ -23,7 +23,7 @@
             </div>
         <% } else { %>
             <div class = "tooltip">
-                <a href = "account" id="account"><i class="fa-solid fa-circle-user"></i></a>
+                <a href = "/account/<%=userID._id%>" id="account"><i class="fa-solid fa-circle-user"></i></a>
                 <span class = "tooltiptext">Account</span>
             </div>
             <form id = "logout" method="post" action="/logout">
@@ -44,29 +44,30 @@
     </div>
 
     <div class = "main-container">
-        <form action="/create" method="POST">
-            <div class="file-container">
-                <div class = "file-upload">
-                    <input type="file" id="img" name="img" accept="image/png, image/jpg" style="display:none;" onchange="loadFile(event)">
-                    <button type="button"><label for="img">Select an Image</label></button>
-                    <img id="output" name="output" style="display:none">
+        <form class = "file-form" action="/create" method="POST">
+            <div class = "file-container">
+                <div class = "image-container">
+                        <input type="file" id="img" name="img" accept="image/png, image/jpg" style="display:none;" onchange="loadFile(event)" required>
+                        <img id="output" name="output" style="display:none">
+                        <button type="button"><label for="img" id = "button-img">Select an Image</label></button>
                 </div>
-                <div class = "information" id="information">
-                    <div class = "stack">
-                        <input type="text" id="carModel" name="carModel" placeholder="Car Model">
-                        <input type="text" id="carName" name="carName" placeholder="Car Name">
-                        <input type="text" id="location" name="location" placeholder="Car Location">
+                <div class = "text-input-container">
+                    <div class = "information-container">
+                        <div class = "stack">
+                            <input type="text" id="carModel" name="carModel" placeholder="Car Model" required>
+                            <input type="text" id="carName" name="carName" placeholder="Car Name" required>
+                            <input type="text" id="location" name="location" placeholder="Car Location">
+                        </div>
                     </div>
-                    <div class="description">
+                    <div class = "description-container">
                         <textarea id="description" name="description" rows="1" cols="50" maxlength="75" placeholder="Enter description here..." style="resize: none;"></textarea>
                     </div>
                 </div>
-                <div class = "button-container">
-                    <button id="submit" type="submit">Submit</button>
-                </div>
+                    <button type="submit" id="submit">Submit</button>
             </div>
         </form>
     </div>
+
     <script src="/src/javascript/script.js"></script>
     <script>
         var loadFile = function(event) {
