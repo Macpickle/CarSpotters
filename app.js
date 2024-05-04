@@ -120,6 +120,12 @@ app.get('/viewPost/:id', async (req,res) => {
     res.render('viewPost', {post});
 });
 
+app.get('/viewAllPosts/:id', async (req,res) => {
+    const userID = req.user;
+    const posts = await Post.find({username: req.params.id});
+    res.render('viewAllPosts', {posts, userID});
+});
+
 app.get('/settings/:id', isLoggedIn, async (req,res) => {
     const userID = req.user;
     res.render('settings', {userID});
@@ -147,6 +153,7 @@ app.post('/logout', (req,res) => {
 });
 
 app.post('/create', async (req,res) => {
+    //error? some reason it doesnt passs user session information (i believe) fix it later.
     try{
         const newPost = new Post({
             username: req.user.username,
@@ -161,16 +168,15 @@ app.post('/create', async (req,res) => {
             carTitle: req.body.carName,
             _id: new mongoose.Types.ObjectId().value
         });
-            req.user.postIDs.push(newPost); // should probably be post ID's instead of creating a copy of post, fix later
+            req.user.postIDs.push(newPost.photo); 
             req.user.postCount += 1;
             req.user.save();
             newPost.save();
 
             console.log("Post created successfully!")
-            res.redirect('/');
+            res.render('index', {userID: req.user});
     } catch {
         const userID = req.user; 
-        console.log("Error creating post")
         res.render('create', {userID});
     }
 });

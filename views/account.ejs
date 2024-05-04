@@ -57,27 +57,32 @@
                 </div>
             </div>
         </div>
+        <form action = "/viewAllPosts/<%=user.username%>" method = "GET" id = "viewPosts" >
+        </form>
         <div class = "preview-container">
+            <button form="viewPosts">
+            <div class = "hover-container">
+                <h3>Click to View Posts</h3>
+                <div class = "arrow"></div>
+            </div>
             <% if (user.postIDs.length > 0) { %>
-                <% user.postIDs.forEach(function(post) { %>
-                    <div class = "post-preview">
-                        <div class = "post">
-
-                        </div>
-                        <div class = "post">
-                            
-                        </div>
-                        <div class = "post">
-                            
-                        </div>
-                        <div class = "post">
-                            
-                        </div>
-                    </div>
-                <% }) %>
+                <div class = "post-preview">
+                    <% for (let i = 0; i < 4; i++) { %>
+                        <% if (user.postIDs[i] != undefined) { %>
+                            <div class = "post-item">
+                                <img class = "img-preview"src = "<%=user.postIDs[i]%>" alt = "Post">
+                            </div>
+                        <% } else { %>
+                            <div class = "post-item">
+                                <h2>?</h2>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
             <% } else { %>
                 <h3 class = "no-post-preview">No posts yet!</h3>
             <% } %>
+            </button>
         </div>
     </div>
 </div>
