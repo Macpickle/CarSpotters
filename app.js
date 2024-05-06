@@ -13,6 +13,7 @@ const fileUpload = require('express-fileupload')
 
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
+const { fail } = require('assert');
 
 const app = express();
 
@@ -122,7 +123,9 @@ app.get('/create', isLoggedIn, (req,res) => {
 app.get('/viewPost/:id', async (req,res) => {
     const userID = req.user;
     const post = await Post.findOne({ _id: req.params.id });
-    res.render('viewPost', {post, userID});
+    const admin = userID.admin;
+    const postOwner = (userID._id == post.usernameID);
+    res.render('viewPost', {post, admin, postOwner});
 });
 
 app.get('/viewAllPosts/:id', async (req,res) => {
@@ -136,25 +139,38 @@ app.get('/settings/:id', isLoggedIn, async (req,res) => {
     res.render('settings', {userID});
 });
 
+app.get('/failureLogin', (req,res) => {
+    res.render('login',{"error":"Invalid username or password"});
+});
+
 app.post('/login', passport.authenticate('local', {
-    failureRedirect: '/login',
+    failureRedirect:  '/failureLogin',
     failureMessage: true,
-    failureFlash: true,
+    failureFlash: true
 }), (req, res) => {
     // If the user is authenticated, redirect to the home page
-    app.use(function(req, res, next){
-        next();
-    });
-    const userID = req.user;
-    res.render('index', {userID});
+    res.redirect('/');
 });
 
 app.post('/logout', (req,res) => {
     req.logout(() => {
         req.session.destroy();
-        res.clearCookie('sid')
+        res.clearCookie('sid');
         res.redirect('/');
     });
+});
+
+app.post('/deletePost/:id', async (req,res) => {
+    const post = await Post.findOne({ _id: req.params.id });
+    const user = await User.findOne({ _id: post.usernameID });
+    const index = user.postIDs.indexOf(post.photo);
+    user.postIDs.splice(index, 1);
+    user.postPhotos.splice(index, 1);
+    user.postCount -= 1;
+    user.save();
+    
+    await Post.deleteOne({ _id: req.params.id });
+    res.redirect('/');
 });
 
 app.post('/create', async (req,res) => {
@@ -174,13 +190,14 @@ app.post('/create', async (req,res) => {
             carTitle: req.body.carName,
             _id: new mongoose.Types.ObjectId().value
         });
-            req.user.postIDs.push(newPost.photo); 
+            req.user.postPhotos.push(newPost.photo); 
+            req.user.postIDs.push(newPost._id);
             req.user.postCount += 1;
             req.user.save();
             newPost.save();
 
             console.log("Post created successfully!")
-            res.render('index', {userID: req.user});
+            res.redirect('/');
     } catch {
         const userID = req.user; 
         res.render('create', {userID});
@@ -217,7 +234,7 @@ app.post('/register', async (req, res) => {
         res.redirect('/login');
     } catch {
         // catches any unexpected errors
-        res.render('register', { error: 'Error registering user' });
+        res.render('register', {error: 'Error registering user' });
     }
 });
 

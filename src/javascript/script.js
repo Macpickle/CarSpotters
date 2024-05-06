@@ -116,15 +116,4 @@ window.onload = function () {
 
 window.addEventListener("scroll", handleInfiniteScroll);
 
-// check if full
-document.querySelector('form').addEventListener('submit', function(event) {
-  var carModel = document.getElementById('carModel').value;
-  var carName = document.getElementById('carName').value;
-  var location = document.getElementById('location').value;
-  var description = document.getElementById('description').value;
-  
-  if (carModel.trim() === '' || carName.trim() === '' || location.trim() === '' || description.trim() === '') {
-      event.preventDefault();
-      alert('Please fill in all required fields.');
-  }
-});
+

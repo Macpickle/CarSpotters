@@ -13,12 +13,6 @@
 <body>
     <div class = "navbar">
         <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
-        <div class="search-container">
-            <form action="search" method="POST">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" placeholder="Search..." name="search">
-            </form>
-        </div>
 
         <ul>
             <% if (!userID) { %>
@@ -27,14 +21,23 @@
                     <span class = "tooltiptext">Login</span>
                 </div>
             <% } else { %>
-                <div class = "tooltip">
-                    <a href = "/account/<%=userID._id%>" method="GET" id="account"><i class="fa-solid fa-circle-user"></i></a>
-                    <span class = "tooltiptext">Account</span>
-                </div>
-                <form id = "logout" method="post" action="/logout">
-                    <button type="submit">LOGOUT</button>
+                    <div class = "dropdown">
+                        <button class = "dropbtn">
+                            <div class = "icon">
+                                <i class="fa-solid fa-circle-user"></i>
+                            </div>
+                        </button>
+                        <div class = "dropdown-content">
+                            <a href = "/account/<%=userID._id%>" method="GET" id="account">Account</a>
+                            <a href = "/settings/<%=userID._id%>" method="GET" id="settings">Settings</a>
+                            <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+                            
+                            <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+                        </div>
+                    </div>
+
+                
             <% } %>
-            </form>
         </ul>
     </div>
 

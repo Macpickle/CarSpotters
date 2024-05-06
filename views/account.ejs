@@ -79,12 +79,12 @@
                 <div class = "arrow"></div>
             </div>
             <% } %>
-            <% if (user.postIDs.length > 0) { %>
+            <% if (user.postPhotos.length > 0) { %>
                 <div class = "post-preview">
                     <% for (let i = 0; i <=3; i++) { %>
-                        <% if (user.postIDs[i] != undefined) { %>
+                        <% if (user.postPhotos[i] != undefined) { %>
                             <div class = "post-item">
-                                <img class = "img-preview"src = "<%=user.postIDs[i]%>" alt = "Post">
+                                <img class = "img-preview"src = "<%=user.postPhotos[i]%>" alt = "Post">
                             </div>
                         <% } else { %>
                             <div class = "post-item">

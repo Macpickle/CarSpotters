@@ -21,15 +21,31 @@
     <div class = "post-container">
         <div class = "post" style="width:100%">
             <div class = "post-header">
+                    <% if (admin == true || postOwner == true) { %>
+                        <div class = "adminOptions">
+                            <form action = "/deletePost/<%=post._id%>" method = "POST">
+                                <button class = "deletePost">
+                                    <div class = "tooltip">
+                                        <i class="fa-solid fa-trash"></i>
+                                        <span class = "tooltiptext">Delete Post</span>
+                                    </div>
+                                </button>
+                            </form>     
+                        </div>
+                    <% } %>
+
                 <div class = "post-content">
                     <div class = "post-header-upper">
                         <form action = "/account/<%=post.usernameID%>" method = "GET">
-                            <button class = "viewProfile">
-                                <div class="profile-picture">
-                                    <i class="fa-solid fa-circle-user"></i> 
-                                </div>
-                                <h3><%=post.username%></h3>
-                            </button>
+                            <div class = "tooltip">
+                                <button class = "viewProfile">
+                                    <div class="profile-picture">
+                                            <i class="fa-solid fa-circle-user"></i> 
+                                    </div>
+                                    <h3><%=post.username%></h3>
+                                </button>
+                                    <span class = "tooltiptext">View Profile</span>
+                            </div>
                         </form>
                             <p class = "carInformation"><%=post.carModel%>,<%=post.carTitle%></p>
                     </div>

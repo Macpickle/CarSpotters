@@ -19,11 +19,16 @@
 }
 
 p {
-    text-align: center;
+    position: absolute;
     color: var(--textColour);
-    font-size: 1em;
-    margin-top: 1em;
+    animation: none;
+    top:37.5%;
+    font-size: 0.75em;
+    animation: smoothDrop 1.5s;
+    width: 100%;
+    text-align: center;
 }
+
 
 .login-wrapper input[type="username"]::placeholder,
 .login-wrapper input[type="email"]::placeholder,
@@ -86,7 +91,6 @@ p {
 
 .login-wrapper input[type="username"]{
     animation: smoothDrop 1s;
-    --webkit-appearence: none;
 }
 
 .login-wrapper input[type="email"]{
@@ -118,11 +122,11 @@ p {
 
 @keyframes smoothDrop {
     0% {
-        transform: translateY(-25%);
+        -webkit-transform: translate3d(0, -25%, 0);
         opacity: 0;
     }
     100% {
-        transform: translateY(0);
+        -webkit-transform: translate3d(0, 0, 0);
         opacity: 1;
     }
 }

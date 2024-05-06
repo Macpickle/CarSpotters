@@ -52,6 +52,10 @@ const userSchema = new mongoose.Schema({
         type: Array,
         required: false
     },
+    postPhotos: {
+        type: Array,
+        required: false
+    },
     admin: {
         type: Boolean,
         required: false,
