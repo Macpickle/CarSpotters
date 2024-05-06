@@ -14,6 +14,7 @@ const fileUpload = require('express-fileupload')
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
 const { fail } = require('assert');
+const { create } = require('connect-mongo');
 
 const app = express();
 
@@ -174,22 +175,39 @@ app.post('/deletePost/:id', async (req,res) => {
 });
 
 app.post('/create', async (req,res) => {
-    //error? some reason it doesnt passs user session information (i believe) fix it later.
-    try{
-        const newPost = new Post({
-            username: req.user.username,
-            usernameID: req.user._id,
-            location:  req.body.location,
-            description: req.body.description,
-            photo: req.body.img,  
-            allowComments: true,
-            likes: 0,
-            comments: [],
-            date: (new Date()).toDateString().substring(0,10),
-            carModel: req.body.carModel,
-            carTitle: req.body.carName,
-            _id: new mongoose.Types.ObjectId().value
-        });
+    try {
+        //upload image to imgur
+        const img = req.files.img;
+        const formData = new FormData();
+        formData.append('image', img.data.toString('base64'));
+
+        fetch('https://api.imgur.com/3/image', {
+            method: 'POST',
+            headers: {
+                Authorization: "Client-ID " + process.env.IMGUR_CLIENT_ID,
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            const imageLink = data.data.link;
+
+            //create post
+            const newPost = new Post({
+                username: req.user.username,
+                usernameID: req.user._id,
+                location:  req.body.location,
+                description: req.body.description,
+                photo: imageLink, 
+                allowComments: true,
+                likes: 0,
+                comments: [],
+                date: (new Date()).toDateString().substring(0,10),
+                carModel: req.body.carModel,
+                carTitle: req.body.carName,
+                _id: new mongoose.Types.ObjectId().value
+            });
+
             req.user.postPhotos.push(newPost.photo); 
             req.user.postIDs.push(newPost._id);
             req.user.postCount += 1;
@@ -198,10 +216,15 @@ app.post('/create', async (req,res) => {
 
             console.log("Post created successfully!")
             res.redirect('/');
+        })
+        .catch(error => {
+            console.log(error);
+        });
     } catch {
         const userID = req.user; 
         res.render('create', {userID});
     }
+
 });
 
 app.post('/register', async (req, res) => {

@@ -44,7 +44,7 @@
     </div>
 
     <div class = "main-container">
-        <form class = "file-form" action="/create" method="POST">
+        <form class = "file-form" action="/create" method="POST" enctype="multipart/form-data">
             <div class = "file-container">
                 <div class = "image-container">
                         <input type="file" id="img" name="img" accept="image/png, image/jpg" style="display:none;" onchange="loadFile(event)" required>
