@@ -18,7 +18,6 @@ This website was created so that car enthusiasts could have a website dedicated 
 - Comments on posts, liking and whatnot
 - Maps to explore + search engine
 - Messages, Notifications, Favouriting
-- Account customization (profile picture, username change, etc)
 - Events tab
 - News tab
 ```
