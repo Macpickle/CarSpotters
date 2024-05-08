@@ -11,8 +11,10 @@
 </head>
 
 <body>
-    <div class = "navbar">
-        <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+    <div class = "navbar" id="navbar">
+        <div class = "web-logo">
+            <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+        </div>
 
         <ul>
             <% if (!userID) { %>
@@ -89,6 +91,21 @@
     </div>
 
     <script src = "/javascript/script.js"></script>
+    <script>
+        var screenWidth = window.innerWidth;
+        if (screenWidth < 768) {
+            var prevScrollpos = window.scrollY;
+            window.onscroll = function() {
+            var currentScrollPos = window.scrollY;
+              if (prevScrollpos > currentScrollPos) {
+                document.getElementById("navbar").style.top = "0";
+              } else {
+                document.getElementById("navbar").style.top = "-10em";
+              }
+              prevScrollpos = currentScrollPos;
+            }
+        }
+    </script>
 </body>
 
 </html>

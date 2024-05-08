@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config(); // for environment variables
 
 const express = require('express');
 const session = require('express-session'); 
@@ -13,26 +13,26 @@ const fileUpload = require('express-fileupload')
 
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
-const { fail } = require('assert');
-const { create } = require('connect-mongo');
 
 const app = express();
 
+//connects mongoose to the mongoDB database
 mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
 
+//creates a new session store to store sessions from users
 const store = new MongoDBStore({
     mongooseConnection: process.env.DATABASE_URL,
     databaseName: 'CarSpotters_DB',
     collection: 'sessions'
 });
 
+// allows the use of the ejs templating engine
 app.use(express.static(path.join(__dirname, 'src')));
 app.use(flash());
 app.use(fileUpload())
-
 
 // Catch errors
 store.on('error', function(error) {
@@ -42,9 +42,10 @@ store.on('error', function(error) {
 // Set the view engine to ejs
 app.set('view engine', 'ejs');
 
+// Check if the app is in production
 const IN_PRODUCTION = process.env.NODE_ENV === 'production';
 
-// Middleware
+// stores session data
 app.use(session({
     name: 'sid',
     resave: false,
@@ -59,6 +60,7 @@ app.use(session({
     }
 ));
 
+//function to determine if the session has a logged in account
 const isLoggedIn = (req, res, next) => {
     const userID = req.user;
     if (userID) {
@@ -67,12 +69,14 @@ const isLoggedIn = (req, res, next) => {
     res.redirect('/login');
 }
 
+// passport middleware, used to authenticate users
 initpassport(
     passport,
     async username => await User.findOne({ username: username }),
     async id => await User.findOne({ _id: id })
 );
 
+//passport initialization
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({extended: false}));
@@ -84,10 +88,15 @@ app.get('/', async (req,res) => {
 });
 
 app.get("/map", async (req,res) => {
-    const userID = req.user;
-    res.render('map', { userID });
+    try{
+        const userID = req.user;
+        res.render('map', { userID });
+    } catch {
+        res.redirect('/');
+    }
 });
 
+//sends all posts to request
 app.get('/data', async (req,res) => {
     const posts = await Post.find({});
     res.send(posts);
@@ -122,24 +131,44 @@ app.get('/create', isLoggedIn, (req,res) => {
 });
 
 app.get('/viewPost/:id', async (req,res) => {
-    const userID = req.user;
-    const post = await Post.findOne({ _id: req.params.id });
-    const admin = userID.admin;
-    const postOwner = (userID._id == post.usernameID);
-    res.render('viewPost', {post, admin, postOwner});
+    try {
+        // finds post by id
+        const userID = req.user;
+        const post = await Post.findOne({ _id: req.params.id });
+        if (userID) {
+            const admin = userID.admin;
+            const postOwner = (userID._id == post.usernameID);
+            res.render('viewPost', {post, admin, postOwner});
+        } else {
+            const admin = false;
+            const postOwner = false;
+            res.render('viewPost', {post, admin, postOwner});
+        }
+    } catch {
+        res.redirect('/');
+    }
 });
 
 app.get('/viewAllPosts/:id', async (req,res) => {
-    const userID = req.user;
-    const posts = await Post.find({username: req.params.id});
-    res.render('viewAllPosts', {posts, userID});
+    try{
+        const userID = req.user;
+        const posts = await Post.find({username: req.params.id});
+        res.render('viewAllPosts', {posts, userID});
+    } catch {
+        res.redirect('/');
+    }
 });
 
 app.get('/settings/:id', isLoggedIn, async (req,res) => {
-    const userID = req.user;
-    res.render('settings', {userID});
+    try {
+        const userID = req.user;
+        res.render('settings', {userID});
+    } catch {
+        res.redirect('/');
+    }
 });
 
+//used if user fails to login, used for error messages
 app.get('/failureLogin', (req,res) => {
     res.render('login',{"error":"Invalid username or password"});
 });
@@ -149,29 +178,33 @@ app.post('/login', passport.authenticate('local', {
     failureMessage: true,
     failureFlash: true
 }), (req, res) => {
-    // If the user is authenticated, redirect to the home page
+    // If the user is authenticated, redirect to the home page, session is saved
     res.redirect('/');
 });
 
 app.post('/logout', (req,res) => {
     req.logout(() => {
         req.session.destroy();
-        res.clearCookie('sid');
+        res.clearCookie('sid'); // sid: name of cookie, change to secret later
         res.redirect('/');
     });
 });
 
 app.post('/deletePost/:id', async (req,res) => {
-    const post = await Post.findOne({ _id: req.params.id });
-    const user = await User.findOne({ _id: post.usernameID });
-    const index = user.postIDs.indexOf(post.photo);
-    user.postIDs.splice(index, 1);
-    user.postPhotos.splice(index, 1);
-    user.postCount -= 1;
-    user.save();
-    
-    await Post.deleteOne({ _id: req.params.id });
-    res.redirect('/');
+    try {
+        const post = await Post.findOne({ _id: req.params.id });
+        const user = await User.findOne({ _id: post.usernameID });
+        const index = user.postIDs.indexOf(post.photo);
+        user.postIDs.splice(index, 1);
+        user.postPhotos.splice(index, 1);
+        user.postCount -= 1;
+        user.save();
+
+        await Post.deleteOne({ _id: req.params.id });
+        res.redirect('/');
+    } catch {
+        res.redirect('/');
+    }
 });
 
 app.post('/create', async (req,res) => {
@@ -190,9 +223,10 @@ app.post('/create', async (req,res) => {
         })
         .then(response => response.json())
         .then(data => {
+            //gets image link returned by JSON of imgur API
             const imageLink = data.data.link;
 
-            //create post
+            //create post via Schema
             const newPost = new Post({
                 username: req.user.username,
                 usernameID: req.user._id,
@@ -208,23 +242,19 @@ app.post('/create', async (req,res) => {
                 _id: new mongoose.Types.ObjectId().value
             });
 
+            //update user's post cound, postIDs, and postPhotos, then saves into database.
             req.user.postPhotos.push(newPost.photo); 
             req.user.postIDs.push(newPost._id);
             req.user.postCount += 1;
             req.user.save();
             newPost.save();
 
-            console.log("Post created successfully!")
             res.redirect('/');
-        })
-        .catch(error => {
-            console.log(error);
         });
     } catch {
         const userID = req.user; 
         res.render('create', {userID});
     }
-
 });
 
 app.post('/register', async (req, res) => {
@@ -262,69 +292,89 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/change-bio', async (req,res) => {
-    req.user.bio = req.body.bio;
-    req.user.save();
-    res.redirect(`/account/${req.user._id}`);
+    try {
+        req.user.bio = req.body.bio;
+        req.user.save();
+        res.redirect(`/account/${req.user._id}`);
+    } catch {
+        res.redirect(`/settings/${req.user._id}`);
+    }
 });
 
 app.post('/change-username', async (req,res) => {
-    req.user.username = req.body.username;
+    try {
+        req.user.username = req.body.username;
 
-    const validUsername = await User.findOne({ username: req.body.username });
+        const validUsername = await User.findOne({ username: req.body.username });
 
-    if (validUsername) {
+        if (validUsername) {
+            res.redirect(`/settings/${req.user._id}`);
+        } else {
+            req.user.save();
+            res.redirect(`/account/${req.user._id}`);
+        }
+    } catch {
         res.redirect(`/settings/${req.user._id}`);
-    } else {
-        req.user.save();
-        res.redirect(`/account/${req.user._id}`);
     }
 });
 
 app.post('/change-password', async (req,res) => {
-    const validPassword = await bcrypt.compare(req.body.password, req.user.password);
-    if (!validPassword || req.body.newPassword === req.body.password) {
-        console.log("Incorrect password or SAME password");
+    try {
+        const validPassword = await bcrypt.compare(req.body.password, req.user.password);
+        if (!validPassword || req.body.newPassword === req.body.password) {
+            console.log("Incorrect password or SAME password");
+            res.redirect(`/settings/${req.user._id}`);
+        } else {
+            const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+            req.user.password = hashedPassword;
+            req.user.save();
+            console.log("Password changed successfully!");
+            res.redirect(`/account/${req.user._id}`);
+        }
+    } catch {
         res.redirect(`/settings/${req.user._id}`);
-    } else {
-        const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
-        req.user.password = hashedPassword;
-        req.user.save();
-        console.log("Password changed successfully!");
-        res.redirect(`/account/${req.user._id}`);
     }
 });
 
 app.post('/change-email', async (req,res) => {
-    const validEmail = (req.body.email === req.user.email)
-    const existingEmail = await User.findOne({email: req.body.newEmail});
+    try {
+        const validEmail = (req.body.email === req.user.email)
+        const existingEmail = await User.findOne({email: req.body.newEmail});
 
-    if (!validEmail || req.body.newEmail === req.user.email || existingEmail) {
+        if (!validEmail || req.body.newEmail === req.user.email || existingEmail) {
+            res.redirect(`/settings/${req.user._id}`);
+        } else {
+            req.user.email = req.body.newEmail;
+            req.user.save();
+            res.redirect(`/account/${req.user._id}`);
+        }
+    } catch {
         res.redirect(`/settings/${req.user._id}`);
-    } else {
-        req.user.email = req.body.newEmail;
-        req.user.save();
-        res.redirect(`/account/${req.user._id}`);
     }
 });
 
 app.post('/delete-account', async (req,res) => {
-    const validPassword = await bcrypt.compare(req.body.password, req.user.password);
-    if (!validPassword) {
+    try {
+        const validPassword = await bcrypt.compare(req.body.password, req.user.password);
+        if (!validPassword) {
+            res.redirect(`/settings/${req.user._id}`);
+        } else {
+            await User.deleteOne({ _id: req.user._id });
+
+            await Post.deleteMany({ username: req.user.username });
+
+            req.logout(() => {
+                req.session.destroy();
+                res.clearCookie('sid')
+                res.redirect('/');
+            });
+        }
+    } catch {
         res.redirect(`/settings/${req.user._id}`);
-    } else {
-        await User.deleteOne({ _id: req.user._id });
-
-        await Post.deleteMany({ username: req.user.username });
-
-        req.logout(() => {
-            req.session.destroy();
-            res.clearCookie('sid')
-            res.redirect('/');
-        });
     }
 });
 
-//handing settings changes 
+//handing settings changes, updates the user's settings in the database
 function updateSetting(req, res, settingType, settingValue) {
     const update = { $set: {} };
     update.$set[`settings.${settingType}`] = settingValue;

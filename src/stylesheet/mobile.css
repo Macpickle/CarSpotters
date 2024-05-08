@@ -77,4 +77,27 @@
     .navbar ul, .navbar ul a, .navbar button {
         display: none;
     }
+
+    #post-container {
+        width: 100%;
+    }
+
+    .navbar{
+        height: 3em;
+    }
+
+    .navbar .web-logo {
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        justify-self: center;
+    }
+
+    .navbar .web-logo img {
+        width: 50%;
+        height: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }

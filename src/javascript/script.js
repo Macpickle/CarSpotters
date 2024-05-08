@@ -12,6 +12,7 @@ let currentPage = 1;
 cardTotalElem.innerHTML = cardLimit;
 
 var throttleTimer;
+//throttle function, enforces a minimum time interval between function calls (aka cant spam server to continue scrolling)
 const throttle = (callback, time) => {
   if (throttleTimer) return;
 
@@ -23,8 +24,7 @@ const throttle = (callback, time) => {
   }, time);
 };
 
-console.log();
-
+//creates an element with the post data
 const createCard = (index) => {
   fetch('/data', {
     method: 'POST',
@@ -35,47 +35,65 @@ const createCard = (index) => {
   })
   .then(response => response.json())
   .then(data => {
+    //get a random post in the data base (possible algorithm later on)
     const randomNumber = Math.floor(Math.random() * data.length);
     const randomData = data[randomNumber];
     const post = document.createElement("div");
-    post.className = "post";
     post.innerHTML = `
-    <form action="/viewPost/${randomData._id}" method="GET">
+    <form action = "/viewPost/${randomData._id}" method = "GET">
       <button>
+        <div class = "post">
+        <div class = "view-post">
         <div class = "post-header">
-            <div class = "post-content">
-                <div class = "post-header-upper">
-                    <div class="profile-picture">
-                        <i class="fa-solid fa-circle-user"></i>
-                    </div>
-                    <h3>${randomData.username}</h3>
-                    <p class = "carInformation">${randomData.carModel}, ${randomData.carTitle}</p>
-                </div>
-                <div class = "post-header-lower">
-                    <p>${randomData.description}</p>
-                </div>
-            </div>
-            <div class = "post-date">
-                <p>${randomData.date}</p>
-            </div>
+          <div class = "profile-picture">
+              <img src="assets/tyler.jpg" alt="">
+          </div>
+          <div class = "post-header-content">
+              <div class = "stack">
+                  <div class = "profile-name">
+                      <h5>${randomData.username}</h5>
+                  </div>
+                  <div class = "post-information">
+                      <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
+                  </div>
+              </div>
+              <div class = "stack">
+                  <div class = "description">
+                      <p>${randomData.description}</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class = "post-date">
+            <p>${randomData.date}</p>
+          </div>
         </div>
-        <div class = "post-image">
-            <img src = "${randomData.photo}" alt = "Pagani Zonda F">
+          <div class = "image-container">
+            <img src="${randomData.photo}" alt="">
+          </div>
         </div>
-      </div>
-      </button>
+          <div class = "extras-content">
+            <div class = "item">
+              <i class="fas fa-heart"></i>
+              <p>${randomData.likes}</p>
+            </div>
+            <div class = "item">
+              <i class="fas fa-star"></i>
+              <p>3</p>
+            </div>
+          </div>
+        </div>
+        </button>
     </form>
-
     `;
-    console.log("created card");
-
+    //append the post to the container
     cardContainer.appendChild(post);
   })
   .catch(error => {
     console.error('Error:', error);
   });
 };
-
+// responsible for checking if the user has reached the end of the page, then creating a post 
 const addCards = (pageIndex) => {
   currentPage = pageIndex;
 
@@ -90,6 +108,7 @@ const addCards = (pageIndex) => {
   }
 };
 
+//responsible for checking if the user has reached the end of the page
 const handleInfiniteScroll = () => {
   throttle(() => {
     const endOfPage =
@@ -115,5 +134,3 @@ window.onload = function () {
 };
 
 window.addEventListener("scroll", handleInfiniteScroll);
-
-
