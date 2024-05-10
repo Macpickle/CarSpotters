@@ -10,10 +10,11 @@ const Post = require('./models/post.js');
 const bcrypt = require('bcrypt');
 const flash = require('express-flash');
 const fileUpload = require('express-fileupload')
+const bodyParser = require('body-parser');
 
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
-const { ReturnDocument } = require('mongodb');
+
 
 const app = express();
 
@@ -34,6 +35,12 @@ const store = new MongoDBStore({
 app.use(express.static(path.join(__dirname, 'src')));
 app.use(flash());
 app.use(fileUpload())
+
+// Parse URL-encoded bodies
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// Parse JSON bodies
+app.use(bodyParser.json());
 
 // Catch errors
 store.on('error', function(error) {
@@ -95,11 +102,6 @@ app.get("/map", async (req,res) => {
     } catch {
         res.redirect('/');
     }
-});
-
-app.post('/getUserPhoto', async (req,res) => {
-    const user = await User.findOne({usernameID: req.body.user});
-    res.json(user.photo);
 });
 
 //sends all posts to request
@@ -210,6 +212,38 @@ app.post('/deletePost/:id', async (req,res) => {
         res.redirect('/');
     } catch {
         res.redirect('/');
+    }
+});
+
+app.post('/getUserPhoto', async (req,res) => {
+    const user = await User.findOne({username: req.body.username});
+    res.json(user.photo);
+});
+
+app.post('/changeProfilePicture', async (req,res) => {
+    try{
+        const user = await User.findOne({ _id: req.body.userID });
+        var photoData = req.files.photo.data.toString('base64');
+        const formData = new FormData();
+        formData.append('image', photoData);
+
+        fetch('https://api.imgur.com/3/image', {
+            method: 'POST',
+            headers: {
+                Authorization: "Client-ID " + process.env.IMGUR_CLIENT_ID,
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            user.photo = data.data.link;
+            user.save();
+            res.json({"ok":true});
+        }).catch(err => {
+            console.log(err);
+        });
+    } catch {
+        res.json({"ok":false});
     }
 });
 

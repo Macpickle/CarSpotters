@@ -60,15 +60,38 @@ html{
     top: 25%;
 }
 
-.navbar ul a, .navbar .icon {
+.navbar ul a {
     margin: 0 1em;
     font-size: 2.5em;
     color: var(--textColour);
 }
 
 .navbar .dropdown {
-    position: relative;
-    display: inline-block;  
+    position: static;
+    display: inline-block; 
+    margin-top:-0.5em;
+}
+
+.navbar .icon {
+    width: 3.5em;
+    height: 3.5em;
+}
+
+.navbar .icon img {
+    border-radius: 50%;
+    outline: 1px solid var(--outline);
+}
+
+.navbar .icon:hover {
+    transform: scale(1.1);
+    box-shadow: 1px 1px 5px 1px var(--loginHover);
+    border-radius: 50%;
+}
+
+.navbar .dropdown button {
+    border: none;
+    background-color: transparent;
+    margin-right:1em;
 }
 
 .navbar .dropdown-content {
@@ -79,9 +102,10 @@ html{
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-55%);
     top: 100%;
 }
+
 .navbar .dropdown-content a {
     color: var(--textColour);
     font-size: 1em;
@@ -99,11 +123,6 @@ html{
 
 .navbar .dropdown:hover .dropdown-content {
     display: block;
-}
-
-.navbar .dropdown button {
-    border: none;
-    background-color: transparent;
 }
 
 .tooltip {
@@ -461,13 +480,46 @@ html{
     width: 1.5em;
     height: 1.5em;
     margin-top: -0.5em;
+    position: relative;
 }
+
+.main-container .account-container .account-details .profile-picture-container .-label {
+    width:1.5em;
+    height:1.5em;
+    margin-top: -0.5em;
+    position: absolute;
+    z-index: 2;
+    border-radius: 50%;
+}
+
+.main-container .account-container .account-details .profile-picture-container .-label span {
+    font-size: 0.2em;
+    visibility: hidden;
+}
+
+.main-container .account-container .account-details .profile-picture-container .-label:hover {
+    background-color: rgba(0,0,0,.7);
+    transition: background-color .2s ease-in-out;
+    box-shadow: 0 0 15px 0 var(--loginHover);
+    outline: 1px solid var(--outline);
+    color: white;
+}
+
+.main-container .account-container .account-details .profile-picture-container .-label:hover span {
+    visibility: visible;
+}
+    
+.main-container .account-container .account-details .profile-picture-container input{
+    display: none;
+}
+
 
 .main-container .account-container .account-details .profile-picture-container .profile-picture img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     outline: 1px solid var(--outline);
+    object-fit: cover;
 }
 
 .main-container .account-stats-container{

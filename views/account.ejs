@@ -14,7 +14,6 @@
     <div class = "web-logo">
         <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
     </div>
-    <div class="search-container"></div>
 </div>
 
 <div class = "sidenav">
@@ -44,9 +43,13 @@
         <div class = "account-details">
             <div class="profile-picture-container">
                 <% if (JSON.stringify(user._id) == JSON.stringify(userID._id)) { %>
+                    <label class="-label" for = "file">
+                        <span>Change Picture</span>
+                    </label>
+                    <input id="file" type="file" onchange="loadFile(event);"/>
                 <% } %>
                 <div class = "profile-picture">
-                    <img src = "<%=user.photo%>" alt = "">
+                    <img src = "<%=user.photo%>" alt = "" id = "output">
                 </div>
             </div>
             <h3><%=user.username%></h3>
@@ -95,5 +98,6 @@
         </div>
     </div>
 </div>
+<script src = "/javascript/script.js"></script>
 
 </html>

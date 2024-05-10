@@ -1,3 +1,4 @@
+
 //infinite scroll posts
 const cardCountElem = 1;
 const cardTotalElem = 3;
@@ -52,7 +53,7 @@ const createCard = (index) => {
     .then(response => response.json())
     .then(data => {
       userPhoto = data;
-
+      
       const post = document.createElement("div");
       post.innerHTML = `
       <div class = "post">
@@ -157,3 +158,22 @@ window.onload = function () {
 };
 
 window.addEventListener("scroll", handleInfiniteScroll);
+
+var loadFile = function(event) {
+  var userID = event.target.baseURI.substring(30);
+  var data = new FormData()
+  data.append('photo', event.target.files[0])
+  data.append('userID', userID)
+
+  //send the image to the server
+
+  fetch('/changeProfilePicture', {
+    method: 'POST',
+    body: data
+  }).then(response => response.json()).then(data => {
+    if (data.ok){
+      window.location.reload();
+    }
+
+  })
+};
