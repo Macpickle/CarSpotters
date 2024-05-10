@@ -13,6 +13,7 @@ const fileUpload = require('express-fileupload')
 
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
+const { ReturnDocument } = require('mongodb');
 
 const app = express();
 
@@ -94,6 +95,11 @@ app.get("/map", async (req,res) => {
     } catch {
         res.redirect('/');
     }
+});
+
+app.post('/getUserPhoto', async (req,res) => {
+    const user = await User.findOne({usernameID: req.body.user});
+    res.json(user.photo);
 });
 
 //sends all posts to request
@@ -284,7 +290,7 @@ app.post('/register', async (req, res) => {
 
         // Save the user to the database
         newUser.save();
-        res.redirect('/login');
+        res.redirect(`/login?username=${req.body.username}`);
     } catch {
         // catches any unexpected errors
         res.render('register', {error: 'Error registering user' });

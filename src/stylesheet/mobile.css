@@ -100,4 +100,8 @@
         margin-left: auto;
         margin-right: auto;
     }
+
+    .main-container .account-container .preview-container {
+        height: 100%;
+    }
 }

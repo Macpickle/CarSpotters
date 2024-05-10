@@ -5,6 +5,7 @@
     transform: translate(-50%, -50%);
     padding: 1em;
     margin: 0 auto;
+    box-sizing: border-box;
     height: 40em;
     width: 30%;
     border-radius: 10px;
@@ -17,18 +18,6 @@
     margin: 0 auto;
     width: 50%;
 }
-
-p {
-    position: absolute;
-    color: var(--textColour);
-    animation: none;
-    top:37.5%;
-    font-size: 0.75em;
-    animation: smoothDrop 1.5s;
-    width: 100%;
-    text-align: center;
-}
-
 
 .login-wrapper input[type="username"]::placeholder,
 .login-wrapper input[type="email"]::placeholder,
@@ -78,6 +67,8 @@ p {
     display: inline-block;
     font-size: .75em;
     margin-left: 0.5em;
+    position: absolute;
+    animation: smoothDrop 1.5s;
 }
 
 .login-wrapper .forgot-password-link {
@@ -115,9 +106,20 @@ p {
     box-shadow: 0 5px 5px 0 var(--loginHover);
 }
 
-.login-wrapper p {
-    animation: smoothDrop 1.5s;
+.login-wrapper .login-error {
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-error .error {
+    width: fit-content;
+    height: fit-content;
     font-size: 0.75em;
+    color: var(--textColour);
+    animation: smoothDrop 1.5s;
 }
 
 @keyframes smoothDrop {
@@ -144,6 +146,14 @@ p {
             height: 40em;
             outline: none;
             background-color: transparent;
+        }
+
+        .login-wrapper .forgot-password-link {
+            font-size: 0.5em;
+        }
+
+        .login-wrapper a {
+            font-size: 0.5em;
         }
     }
 }

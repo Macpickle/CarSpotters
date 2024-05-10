@@ -24,6 +24,7 @@ const throttle = (callback, time) => {
   }, time);
 };
 
+
 //creates an element with the post data
 const createCard = (index) => {
   fetch('/data', {
@@ -38,56 +39,78 @@ const createCard = (index) => {
     //get a random post in the data base (possible algorithm later on)
     const randomNumber = Math.floor(Math.random() * data.length);
     const randomData = data[randomNumber];
-    const post = document.createElement("div");
-    post.innerHTML = `
-    <form action = "/viewPost/${randomData._id}" method = "GET">
-      <button>
-        <div class = "post">
-        <div class = "view-post">
-        <div class = "post-header">
-          <div class = "profile-picture">
-              <img src="assets/tyler.jpg" alt="">
-          </div>
-          <div class = "post-header-content">
-              <div class = "stack">
-                  <div class = "profile-name">
-                      <h5>${randomData.username}</h5>
-                  </div>
-                  <div class = "post-information">
-                      <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
-                  </div>
-              </div>
-              <div class = "stack">
-                  <div class = "description">
-                      <p>${randomData.description}</p>
-                  </div>
-              </div>
-          </div>
 
-          <div class = "post-date">
-            <p>${randomData.date}</p>
-          </div>
-        </div>
-          <div class = "image-container">
-            <img src="${randomData.photo}" alt="">
-          </div>
-        </div>
+    //get the post's user's photo
+    var userPhoto = "";
+    fetch('/getUserPhoto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username: randomData.username })
+    })
+    .then(response => response.json())
+    .then(data => {
+      userPhoto = data;
+
+      const post = document.createElement("div");
+      post.innerHTML = `
+      <div class = "post">
+        <form action = "/viewPost/${randomData._id}" method = "GET">
+          <button>
+            <div class = "view-post">
+              <div class = "post-header">
+                <div class = "profile-picture">
+                  <img src="${userPhoto}" alt="">
+                </div>
+
+                <div class = "post-header-content">
+                  <div class = "stack">
+                    <div class = "profile-name">
+                      <h5>${randomData.username}</h5>
+                    </div>
+                    <div class = "post-information">
+                      <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
+                    </div>
+                  </div>
+                  <div class = "stack">
+                      <div class = "description">
+                        <p>${randomData.description}</p>
+                      </div>
+                  </div>
+                </div>
+                <div class = "post-date">
+                  <p>${randomData.date}</p>
+                </div>
+              </div>
+                <div class = "image-container">
+                  <img src="${randomData.photo}" alt="">
+                </div>
+            </div>
+          </button>
+        </form>
           <div class = "extras-content">
-            <div class = "item">
-              <i class="fas fa-heart"></i>
-              <p>${randomData.likes}</p>
+            <div class = "item" id = "item">
+              <input class = "like-button" id = "like-button" type = "checkbox"></input>
+                <label for = "like-button">
+                  <i class="fas fa-heart"></i>
+                  <p>${randomData.likes}</p>
+                </label>
             </div>
-            <div class = "item">
-              <i class="fas fa-star"></i>
-              <p>3</p>
-            </div>
+            <div class = "item" id = "item">
+              <input class = "favourite-button" id = "favourite-button" type = "checkbox"></input>
+                <label for = "favourite-button">
+                  <i class="fas fa-star"></i>
+                  <p>3</p>
+                </label>
+              </div>
           </div>
-        </div>
-        </button>
-    </form>
-    `;
-    //append the post to the container
-    cardContainer.appendChild(post);
+      </div>
+      `;
+
+      //append the post to the container
+      cardContainer.appendChild(post);
+    });
   })
   .catch(error => {
     console.error('Error:', error);

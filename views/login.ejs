@@ -14,7 +14,13 @@
     <div class="login-wrapper">
         <img src="assets/CARSPOTTERIMG.png">
         <form action="/login" method="POST">
-            <h1 class="login-header">Login</h1>   
+            <h1 class="login-header">Login</h1>
+            <div class = "login-error">
+                <% if (error) {%>
+                    <p class="error"><%= error %></p>
+                <% } %>
+            </div>
+
             <div>
                 <input type="username" id="username" name="username" placeholder="Username..." required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
             </div>
@@ -27,10 +33,5 @@
         <a href="register">Don't have an account? Register here!</a>
         <a class= "forgot-password-link" href="forgotpassword">Forgot your password?</a>
     </div>
-    <% if (error) {%>
-        <p class="error"><%= error %></p>
-    <% } %>
-
-    <script src="script.js"></script>
 </body>
 </html>

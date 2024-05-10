@@ -42,19 +42,12 @@
             <div class = "settings-icon-container" style="height: 8.44%"></div> <!--very bad practice, fix later-->
         <% } %>
         <div class = "account-details">
-            <div class="profile-picture">
+            <div class="profile-picture-container">
                 <% if (JSON.stringify(user._id) == JSON.stringify(userID._id)) { %>
-                <a href = "/change-profile-picture" style="text-decoration: none;">
-                    <button for = "editProfilePicture">
-                        <div class = "gears">
-                            <i class="fa-solid fa-gear"></i>
-                            <i class="fa-solid fa-gear" id = "outline"></i>
-                        </div>
-                        <i class="fa-solid fa-circle" id = "inner"></i>
-                    </button>
-                </a>
                 <% } %>
-                <i class="fa-solid fa-circle-user"></i>
+                <div class = "profile-picture">
+                    <img src = "<%=user.photo%>" alt = "">
+                </div>
             </div>
             <h3><%=user.username%></h3>
             <p><%=user.bio%></p>
@@ -76,10 +69,6 @@
         <div class = "preview-container">
             <% if (user.postIDs.length > 0) { %>
             <button form="viewPosts">
-            <div class = "hover-container">
-                <h3>Click to View Posts</h3>
-                <div class = "arrow"></div>
-            </div>
             <% } %>
             <% if (user.postPhotos.length > 0) { %>
                 <div class = "post-preview">
@@ -94,6 +83,10 @@
                             </div>
                         <% } %>
                     <% } %>
+                    <div class = "hover-container">
+                        <h3>Click to View Posts</h3>
+                        <div class = "arrow"></div>
+                    </div>
                 </div>
             <% } else { %>
                 <h3 class = "no-post-preview">No posts yet!</h3>
