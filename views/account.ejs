@@ -27,7 +27,7 @@
 
 <div class = "main-container">
     <div class = "account-container">
-        <% if (JSON.stringify(user._id) == JSON.stringify(userID._id)) { %>
+        <% if (isAccountOwner) { %>
         <div class = "settings-icon-container">
             <form action = "/settings/<%=user._id%>" method = "GET">
                 <button>
@@ -42,7 +42,7 @@
         <% } %>
         <div class = "account-details">
             <div class="profile-picture-container">
-                <% if (JSON.stringify(user._id) == JSON.stringify(userID._id)) { %>
+                <% if (isAccountOwner) { %>
                     <label class="-label" for = "file">
                         <span>Change Picture</span>
                     </label>
@@ -57,7 +57,22 @@
         
             <div class = "account-stats-container">
                 <div class = "account-stats">
-                    <p>Followers<br><%=user.followersCount%></p>
+                    <p>Followers 
+                        <% if ((!isAccountOwner) && (userID._id != "0")){ %>  
+                        <button type="checkbox" id="follow">
+                            <label id = "followButton" for="follow">
+                                <% console.log(userID.username); %>
+                                <% if (user.followers.includes(userID.username)) { %>
+                                    <i class="fa-solid fa-check"></i>
+                                <% } else { %>
+                                    <i class="fa-solid fa-plus"></i>
+                                <% } %>
+                            </label>
+                        </button>
+                        <% } %>
+                        <br><div id = "followerCount"><%=user.followersCount%></div>
+                    </p>
+                    
                 </div>
                 <div class = "account-stats">
                     <p>Posts<br><%=user.postCount%></p>
@@ -67,8 +82,7 @@
                 </div>
             </div>
         </div>
-        <form action = "/viewAllPosts/<%=user.username%>" method = "GET" id = "viewPosts" >
-        </form>
+        <form action = "/viewAllPosts/<%=user.username%>" method = "GET" id = "viewPosts" ></form>
         <div class = "preview-container">
             <% if (user.postIDs.length > 0) { %>
             <button form="viewPosts">
@@ -99,5 +113,11 @@
     </div>
 </div>
 <script src = "/javascript/script.js"></script>
-
+<script>
+    document.getElementById("follow").addEventListener("click", function(){
+        if ("<%=userID._id%>" != 0){
+            followUser("<%=user._id%>", "<%=userID._id%>");
+        }
+    });
+</script>
 </html>

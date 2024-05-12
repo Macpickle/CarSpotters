@@ -14,6 +14,8 @@ const bodyParser = require('body-parser');
 
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
+const user = require('./models/user.js');
+const { isAsyncFunction } = require('util/types');
 
 
 const app = express();
@@ -115,11 +117,21 @@ app.post('/data', async (req,res) => {
     res.send(posts);
 });
 
-app.get('/account/:id', isLoggedIn, async (req,res) => {
+app.get('/account/:id', async (req,res) => {
     try {
         const user = await User.findOne({ _id: req.params.id });
-        const userID = req.user;
-        res.render('account', {user, userID});
+        var userID = req.user;
+        if (userID){
+            const isAccountOwner = (JSON.stringify(userID._id) == JSON.stringify(user._id));
+            res.render('account', {user, userID, isAccountOwner});
+            
+        } else {
+            userID = {
+                _id: "0",
+                username: "Guest",
+            }
+            res.render('account', {user, userID, isAccountOwner: false});
+        }
     } catch {
         res.redirect('/');
     }
@@ -145,12 +157,17 @@ app.get('/viewPost/:id', async (req,res) => {
         const post = await Post.findOne({ _id: req.params.id });
         if (userID) {
             const admin = userID.admin;
-            const postOwner = (userID._id == post.usernameID);
-            res.render('viewPost', {post, admin, postOwner});
+            const isOwner = (userID._id == post.usernameID);
+            const postOwner = await User.findOne({ _id: post.usernameID });
+            const postOwnerPhoto = postOwner.photo;
+            res.render('viewPost', {post, admin, isOwner, postOwnerPhoto});
         } else {
             const admin = false;
-            const postOwner = false;
-            res.render('viewPost', {post, admin, postOwner});
+            const isOwner = false;
+            const postOwner = await User.findOne({ _id: post.usernameID });
+            const postOwnerPhoto = postOwner.photo;
+
+            res.render('viewPost', {post, admin, isOwner, postOwnerPhoto});
         }
     } catch {
         res.redirect('/');
@@ -196,6 +213,35 @@ app.post('/logout', (req,res) => {
         res.clearCookie('sid'); // sid: name of cookie, change to secret later
         res.redirect('/');
     });
+});
+
+app.post('/followUser', async (req,res) => {
+    try {
+        const accountUser = await User.findOne({ _id: req.body.user });
+        const sessionUser = await User.findOne({ _id: req.body.userID });
+        if (accountUser.followers.includes(sessionUser.username)) {
+            const index = sessionUser.following.indexOf(accountUser.username);
+            sessionUser.following.splice(index, 1);
+            const index2 = accountUser.followers.indexOf(sessionUser.username);
+            accountUser.followers.splice(index2, 1);
+            accountUser.followersCount -= 1;
+            sessionUser.followingCount -= 1;
+            sessionUser.save();
+            accountUser.save();
+        } else {
+            sessionUser.following.push(accountUser.username);
+            accountUser.followers.push(sessionUser.username);
+            accountUser.followersCount += 1;
+            sessionUser.followingCount += 1;
+            sessionUser.save();
+            accountUser.save();
+        }
+        console.log("Request successful");
+        res.json({"followingCount": accountUser.followersCount, "isFollowing": accountUser.followers.includes(sessionUser.username)});
+    } catch {
+        console.log("Request failed");
+        res.json({"ok":false, "followingCount": 0});
+    }
 });
 
 app.post('/deletePost/:id', async (req,res) => {

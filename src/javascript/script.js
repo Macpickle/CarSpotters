@@ -61,6 +61,7 @@ const createCard = (index) => {
           <button>
             <div class = "view-post">
               <div class = "post-header">
+              
                 <div class = "profile-picture">
                   <img src="${userPhoto}" alt="">
                 </div>
@@ -177,3 +178,28 @@ var loadFile = function(event) {
 
   })
 };
+
+function followUser(user,userID) {
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/followUser", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify({ user, userID }));
+
+  xhr.onload = function() {
+    if (xhr.status == 200) {
+      followingCount = JSON.parse(xhr.responseText).followingCount;
+      isFollowing = JSON.parse(xhr.responseText).isFollowing;
+
+      document.getElementById("followerCount").innerHTML = followingCount;
+
+      if(isFollowing){
+        document.getElementById("followButton").innerHTML = "<i class='fa-solid fa-check'></i>"
+      } else {
+        document.getElementById("followButton").innerHTML = "<i class='fa-solid fa-plus'></i>"
+      }
+
+    } else {
+      console.log("Error: " + xhr.status);
+    }
+  }
+}

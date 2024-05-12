@@ -531,6 +531,16 @@ html{
     margin-top:0.25em;
     margin-left: 0;
 }
+
+.main-container .account-stats-container .account-stats button{
+    border:none;
+    background-color: transparent;
+}
+
+.main-container .account-stats-container .account-stats label {
+    cursor: pointer;
+}
+
 .main-container .account-container .settings-icon-container {
     width:100%;
 }
@@ -633,6 +643,10 @@ html{
     transform: scale(1.01);
     border-radius: 1em;
 }
+
+.main-container #post-container .post .post-header button:hover {
+    transform: scale(1.1);
+} 
 
 .main-container .preview-container .no-post-preview  {
     display: flex;

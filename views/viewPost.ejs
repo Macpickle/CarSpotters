@@ -19,66 +19,66 @@
     </div>
 </div>
 
-<form action = "/account/<%=post.usernameID%>" method = "GET" id = "viewAccount" name = "viewAccount">
-<div class = "main-container">
-    <div id = "post-container" style="width: 90%; min-height: 100vh;">
-        <div class = "post">
-            <div class = "post-header">
-                <% if (admin == true || postOwner == true) { %>
-                    <div class = "adminOptions">
-                        <form action = "/deletePost/<%=post._id%>" method = "POST">
-                            <button class = "deletePost">
-                                <div class = "tooltip">
-                                    <i class="fa-solid fa-trash"></i>
-                                    <span class = "tooltiptext">Delete Post</span>
-                                </div>
-                            </button>
-                        </form>     
-                    </div>
-                <% } %>
-                <button for = "viewAccount">
-                    <div class = "profile-picture">
-                        <img src="" alt="">
-                    </div>
-                </button>
-              <div class = "post-header-content">
-                  <div class = "stack">
-                    <button for = "viewAccount">
-                        <div class = "profile-name">
-                            <h5><%=post.username%></h5>
-                        </div>
-                    </button>
-                      <div class = "post-information">
-                          <p>- <%=post.carModel%>, <%=post.carTitle%></p>
-                      </div>
-                  </div>
-                  <div class = "stack">
-                      <div class = "description">
-                          <p><%=post.description%></p>
-                      </div>
-                  </div>
-              </div>
-              <div class = "post-date">
-                <p><%=post.date%></p>
-              </div>
-            </div>
-            <div class = "image-container" style="min-height: 80vh;">
-                <img src="<%=post.photo%>" alt="">
-            </div>
 
-                <div class = "extras-content">
-                  <div class = "item">
-                    <i class="fas fa-heart"></i>
-                    <p><%=post.likes%></p>
+<div class = "main-container">
+    <div id = "post-container" style="height: 100vh; width: 75%; border-left: none; border-right: none;">
+        <form id = "viewAccount" action = "/account/<%=post.usernameID%>" method = "GET">
+            <div class = "post" style="border-bottom: none;">
+                    <div class = "view-post">
+                      <div class = "post-header">
+                        <button style="width: fit-content;" for = "viewAccount">
+                            <div class = "tooltip">
+                                <div class = "profile-picture">
+                                  <img src="<%=postOwnerPhoto%>" alt="">
+                                </div>
+                                <span class = "tooltiptext">View Account</span>
+                            </div>
+                        </button>
+                    
+                        <div class = "post-header-content">
+                          <div class = "stack">
+                            <div class = "profile-name">
+                              <h5><%=post.username%></h5>
+                            </div>
+
+                            <div class = "post-information">
+                              <p>- <%=post.carModel%>, <%=post.carTitle%></p>
+                            </div>
+                          </div>
+                          <div class = "stack">
+                              <div class = "description">
+                                <p><%post.description%></p>
+                              </div>
+                          </div>
+                        </div>
+                        <div class = "post-date">
+                          <p><%=post.date%></p>
+                        </div>
+                      </div>
+                        <div class = "image-container">
+                          <img src="<%=post.photo%>" alt="">
+                        </div>
+                    </div>
+                  <div class = "extras-content">
+                    <div class = "item" id = "item">
+                      <input class = "like-button" id = "like-button" type = "checkbox"></input>
+                        <label for = "like-button">
+                          <i class="fas fa-heart"></i>
+                          <p><%=post.likes%></p>
+                        </label>
+                    </div>
+                    <div class = "item" id = "item">
+                      <input class = "favourite-button" id = "favourite-button" type = "checkbox"></input>
+                        <label for = "favourite-button">
+                          <i class="fas fa-star"></i>
+                          <p>3</p>
+                        </label>
+                      </div>
                   </div>
-                  <div class = "item">
-                    <i class="fas fa-star"></i>
-                    <p>3</p>
-                  </div>
-                </div>
-        </div>
-    </div>  
+            </div>
+        </form>
+    </div>
 </div>
-</form>
+
 </body>
 </html>
