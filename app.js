@@ -124,7 +124,7 @@ app.get('/account/:id', async (req,res) => {
         if (userID){
             const isAccountOwner = (JSON.stringify(userID._id) == JSON.stringify(user._id));
             res.render('account', {user, userID, isAccountOwner});
-            
+
         } else {
             userID = {
                 _id: "0",
@@ -215,6 +215,32 @@ app.post('/logout', (req,res) => {
     });
 });
 
+app.post('/likePost', async (req,res) => {
+    try {
+        const post = await Post.findOne({_id: req.body.postID});
+        const sessionUser = await User.findOne({ _id: req.body.user });
+
+        if (post.username == sessionUser.username) {
+            res.json({"ok":false, "isLiked": false, "likes": post.likes});
+        } else {
+
+            if (post.likeArray.includes(sessionUser.username)) {
+                const index = post.likeArray.indexOf(sessionUser.username);
+                post.likeArray.splice(index, 1);
+                post.likes -= 1;
+            } else {
+                post.likeArray.push(sessionUser.username);
+                post.likes += 1;
+            } 
+            post.save();
+            res.json({"ok":true, "likes": post.likes, "isLiked": post.likeArray.includes(sessionUser.username)});
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({"ok":false});
+    }
+});
+
 app.post('/followUser', async (req,res) => {
     try {
         const accountUser = await User.findOne({ _id: req.body.user });
@@ -236,10 +262,8 @@ app.post('/followUser', async (req,res) => {
             sessionUser.save();
             accountUser.save();
         }
-        console.log("Request successful");
         res.json({"followingCount": accountUser.followersCount, "isFollowing": accountUser.followers.includes(sessionUser.username)});
     } catch {
-        console.log("Request failed");
         res.json({"ok":false, "followingCount": 0});
     }
 });

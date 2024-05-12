@@ -318,8 +318,7 @@ html{
     height: 2em;
 }
 
-.main-container #post-container .post .extras-content input {
-    display: none;
+.main-container #post-container .post .extras-content button {
     width: 2em;
 }
 

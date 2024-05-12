@@ -88,7 +88,10 @@
         </ul> 
     </div>
 
-    <script src = "/javascript/script.js"></script>
+    <script src="/javascript/script.js"></script>
+    <script>
+        var userID = '<%- JSON.stringify(userID) %>';
+    </script>
     <script>
         var screenWidth = window.innerWidth;
         if (screenWidth < 768) {

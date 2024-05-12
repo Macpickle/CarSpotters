@@ -53,6 +53,7 @@ const createCard = (index) => {
     .then(response => response.json())
     .then(data => {
       userPhoto = data;
+      isLiked = randomData.likeArray.includes(JSON.parse(userID).username);
       
       const post = document.createElement("div");
       post.innerHTML = `
@@ -86,32 +87,43 @@ const createCard = (index) => {
                 </div>
               </div>
                 <div class = "image-container">
-                  <img src="${randomData.photo}" alt="">
+                  <img src="${randomData.photo}" alt="" id = "photo">
                 </div>
             </div>
           </button>
         </form>
           <div class = "extras-content">
-            <div class = "item" id = "item">
-              <input class = "like-button" id = "like-button" type = "checkbox"></input>
+            <div class = "item">
+              <button class = "like-button">
                 <label for = "like-button">
-                  <i class="fas fa-heart"></i>
-                  <p>${randomData.likes}</p>
+                  <i class="fas fa-heart" id = "likeIcon"></i>
+                  <p class = "likeCount">${randomData.likes}</p>
                 </label>
+              </button>
             </div>
-            <div class = "item" id = "item">
-              <input class = "favourite-button" id = "favourite-button" type = "checkbox"></input>
+            <div class = "item">
+              <button class = "favourite-button">
                 <label for = "favourite-button">
                   <i class="fas fa-star"></i>
                   <p>3</p>
                 </label>
+              </button>
               </div>
           </div>
       </div>
-      `;
+      `;      
 
       //append the post to the container
       cardContainer.appendChild(post);
+      if(isLiked){
+        document.getElementsByClassName("like-button")[index-1].children[0].children[0].style.color = "red";
+      } 
+      // add event listener to the like button
+      const likeButton = post.querySelector(".like-button");
+        likeButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          likePost(randomData._id, userID, randomData);
+      });
     });
   })
   .catch(error => {
@@ -129,7 +141,7 @@ const addCards = (pageIndex) => {
   cardCountElem.innerHTML = endRange;
 
   for (let i = startRange + 1; i <= endRange; i++) {
-    createCard(i);
+      createCard(i);
   }
 };
 
@@ -155,7 +167,7 @@ const removeInfiniteScroll = () => {
 };
 
 window.onload = function () {
-  addCards(currentPage);
+    addCards(currentPage);
 };
 
 window.addEventListener("scroll", handleInfiniteScroll);
@@ -175,7 +187,6 @@ var loadFile = function(event) {
     if (data.ok){
       window.location.reload();
     }
-
   })
 };
 
@@ -200,6 +211,44 @@ function followUser(user,userID) {
 
     } else {
       console.log("Error: " + xhr.status);
+    }
+  }
+}
+
+function likePost(postID, userID, post) {
+  if (!userID) {
+    window.location.href = "/login";
+    return;
+  }
+  user = JSON.parse(userID)._id;
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/likePost", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify({ postID, user }));
+
+  xhr.onload = function() {
+    if (xhr.status == 200) {
+      console.log(xhr.responseText);
+      likes = JSON.parse(xhr.responseText).likes;
+      postLikeId = JSON.parse(xhr.responseText).postLikeId;
+      if (JSON.parse(xhr.responseText).isLiked) {
+          updateLikes("red", post);
+      } else {
+          updateLikes("black", post);
+      }
+    } else {
+      console.log("Error: " + xhr.status);
+    }
+  }
+}
+
+function updateLikes(colour, post){
+  for (let i = 0; i < document.getElementsByClassName("like-button").length; i++) {
+    var imageSRC = document.getElementsByClassName("image-container")[i].children[0].getAttribute("src");
+
+    if (post.photo == imageSRC) {
+      document.getElementsByClassName("like-button")[i].style.color = colour;
+      document.getElementsByClassName("likeCount")[i].innerHTML = likes;
     }
   }
 }

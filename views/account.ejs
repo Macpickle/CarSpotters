@@ -61,7 +61,6 @@
                         <% if ((!isAccountOwner) && (userID._id != "0")){ %>  
                         <button type="checkbox" id="follow">
                             <label id = "followButton" for="follow">
-                                <% console.log(userID.username); %>
                                 <% if (user.followers.includes(userID.username)) { %>
                                     <i class="fa-solid fa-check"></i>
                                 <% } else { %>

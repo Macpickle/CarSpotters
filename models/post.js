@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    likeArray: {
+        type: Array,
+        required: false,
+    },
     comments: {
         type: Array,
         required: false
