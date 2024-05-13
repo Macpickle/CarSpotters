@@ -33,6 +33,15 @@ const userSchema = new mongoose.Schema({
         type: Array,
         required: false,
     },
+    favourites: {
+        type: Number,
+        required: true
+    },
+    favouriteArray: {
+        type: Array,
+        required: false
+    },
+
     comments: {
         type: Array,
         required: false

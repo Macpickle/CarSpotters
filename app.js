@@ -14,9 +14,6 @@ const bodyParser = require('body-parser');
 
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
-const user = require('./models/user.js');
-const { isAsyncFunction } = require('util/types');
-
 
 const app = express();
 
@@ -215,6 +212,32 @@ app.post('/logout', (req,res) => {
     });
 });
 
+app.post('/favouritePost', async (req,res) => {
+    try {
+        const post = await Post.findOne({_id: req.body.postID});
+        const sessionUser = await User.findOne({ _id: req.body.user });
+
+        if (post.username == sessionUser.username) {
+            res.json({"ok":false, "isFavourited": false, "favourites": post.favourites});
+        } else {
+            if (post.favouriteArray.includes(sessionUser.username)) {
+                const index = post.favouriteArray.indexOf(sessionUser.username);
+                post.favouriteArray.splice(index, 1);
+                post.favourites -= 1;
+            } else {
+                post.favouriteArray.push(sessionUser.username);
+                post.favourites += 1;
+            }
+                
+            post.save();
+            res.json({"ok":true, "isFavourited": post.favouriteArray.includes(sessionUser.username), "favourites": post.favourites});
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({"ok":false});
+    }
+});
+
 app.post('/likePost', async (req,res) => {
     try {
         const post = await Post.findOne({_id: req.body.postID});
@@ -223,7 +246,6 @@ app.post('/likePost', async (req,res) => {
         if (post.username == sessionUser.username) {
             res.json({"ok":false, "isLiked": false, "likes": post.likes});
         } else {
-
             if (post.likeArray.includes(sessionUser.username)) {
                 const index = post.likeArray.indexOf(sessionUser.username);
                 post.likeArray.splice(index, 1);
@@ -232,6 +254,7 @@ app.post('/likePost', async (req,res) => {
                 post.likeArray.push(sessionUser.username);
                 post.likes += 1;
             } 
+
             post.save();
             res.json({"ok":true, "likes": post.likes, "isLiked": post.likeArray.includes(sessionUser.username)});
         }
@@ -526,6 +549,11 @@ app.post('/change-account-privacy', async (req,res) => {
 
 app.listen((process.env.PORT) , () => {
     console.log(`Server is running on port ${process.env.PORT}`);
+});
+
+//handle if user tries to access a page that doesnt exist
+app.get('*', (req,res) => {
+    res.render('404');
 });
 
 module.exports = app;

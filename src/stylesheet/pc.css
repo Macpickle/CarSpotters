@@ -708,6 +708,40 @@ html{
     animation: arrow-left 2.5s infinite;
 }
 
+.main-container .page-not-found {
+    margin-top: -4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    color: var(--textColour);
+}
+
+.main-container .page-not-found .error {
+    font-size: 500%;
+    color: black;
+}
+
+.main-container .page-not-found .description {
+    font-size: 200%;
+    margin-bottom: 20%;
+    color: black;
+}
+
+.main-container .page-not-found .back-home {
+    margin-top: 1em;
+    border-radius: 1em;
+    padding: 1em;
+    border: 1px solid var(--outline);
+    color: var(--textColour);
+}
+
+.main-container .page-not-found .back-home:hover {
+    box-shadow: 0 0 10px 0 var(--loginHover);
+    transform: scale(1.1);
+}
+
 @media screen and (min-width: 786px) {
     .navbar {
         display: flex;

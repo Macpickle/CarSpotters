@@ -53,8 +53,14 @@ const createCard = (index) => {
     .then(response => response.json())
     .then(data => {
       userPhoto = data;
-      isLiked = randomData.likeArray.includes(JSON.parse(userID).username);
-      
+      if (userID){
+        isLiked = randomData.likeArray.includes(JSON.parse(userID).username);
+        isFavourited = randomData.favouriteArray.includes(JSON.parse(userID).username);
+      } else {
+        isLiked = false;
+        isFavourited = false;
+      }
+
       const post = document.createElement("div");
       post.innerHTML = `
       <div class = "post">
@@ -105,7 +111,7 @@ const createCard = (index) => {
               <button class = "favourite-button">
                 <label for = "favourite-button">
                   <i class="fas fa-star"></i>
-                  <p>3</p>
+                  <p class = "favouriteCount">${randomData.favourites}</p>
                 </label>
               </button>
               </div>
@@ -115,16 +121,31 @@ const createCard = (index) => {
 
       //append the post to the container
       cardContainer.appendChild(post);
-      if(isLiked){
-        document.getElementsByClassName("like-button")[index-1].children[0].children[0].style.color = "red";
-      } 
-      // add event listener to the like button
-      const likeButton = post.querySelector(".like-button");
-        likeButton.addEventListener("click", (event) => {
+
+        if(isLiked){
+          document.getElementsByClassName("like-button")[index-1].children[0].children[0].style.color = "red";
+        } 
+
+        if(isFavourited){
+          document.getElementsByClassName("favourite-button")[index-1].children[0].children[0].style.color = "blue";
+        }
+
+        // add event listener to the like button
+        const likeButton = post.querySelector(".like-button");
+          likeButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            likePost(randomData._id, userID, randomData);
+        });
+
+        // add event listener to follow button
+        const favouriteButton = post.querySelector(".favourite-button");
+        favouriteButton.addEventListener("click", (event) => {
           event.preventDefault();
-          likePost(randomData._id, userID, randomData);
-      });
+          favouritePost(randomData._id, userID, randomData);
+        });
+
     });
+    
   })
   .catch(error => {
     console.error('Error:', error);
@@ -216,7 +237,7 @@ function followUser(user,userID) {
 }
 
 function likePost(postID, userID, post) {
-  if (!userID) {
+  if (!userID || userID == "Guest") {
     window.location.href = "/login";
     return;
   }
@@ -249,6 +270,43 @@ function updateLikes(colour, post){
     if (post.photo == imageSRC) {
       document.getElementsByClassName("like-button")[i].style.color = colour;
       document.getElementsByClassName("likeCount")[i].innerHTML = likes;
+    }
+  }
+}
+
+function favouritePost(postID, userID, post) {
+  if (!userID || userID == "Guest") {
+    window.location.href = "/login";
+  }
+  user = JSON.parse(userID)._id;
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/favouritePost", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify({ postID, user }));
+
+  xhr.onload = function() {
+    if (xhr.status == 200) {
+      favourites = JSON.parse(xhr.responseText).favourites;
+      postFavouriteId = JSON.parse(xhr.responseText).postFavouriteId;
+      if (JSON.parse(xhr.responseText).isFavourited) {
+          updateFavourites("blue", post);
+      } else {
+          updateFavourites("black", post);
+      }
+      
+    } else {
+      console.log("Error: " + xhr.status);
+    }
+  }
+}
+
+function updateFavourites(colour, post){
+  for (let i = 0; i < document.getElementsByClassName("favourite-button").length; i++) {
+    var imageSRC = document.getElementsByClassName("image-container")[i].children[0].getAttribute("src");
+
+    if (post.photo == imageSRC) {
+      document.getElementsByClassName("favourite-button")[i].style.color = colour;
+      document.getElementsByClassName("favouriteCount")[i].innerHTML = favourites;
     }
   }
 }
