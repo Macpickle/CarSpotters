@@ -10,6 +10,7 @@
     <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
 </head>
 
+<body style="overflow-y: hidden;">
 <div class = "navbar">
     <div class = "web-logo">
         <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
@@ -24,12 +25,20 @@
                 <span class = "tooltiptext">Login</span>
             </div>
         <% } else { %>
-            <div class = "tooltip">
-                <a href = "/account/<%=userID._id%>" id="account"><i class="fa-solid fa-circle-user"></i></a>
-                <span class = "tooltiptext">Account</span>
+            <div class = "dropdown">
+                <button class = "dropbtn">
+                    <div class = "icon">
+                        <img src = "<%=userID.photo%>" alt = "">
+                    </div>
+                </button>
+                <div class = "dropdown-content">
+                    <a href = "/account/<%=userID._id%>" method="GET" id="account">Account</a>
+                    <a href = "/settings/<%=userID._id%>" method="GET" id="settings">Settings</a>
+                    <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+                    
+                    <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+                </div>
             </div>
-            <form id = "logout" method="post" action="/logout">
-                <button type="submit">LOGOUT</button>
         <% } %>
         </form>
     </ul>
@@ -81,5 +90,5 @@
         };
     </script>
 </div>
-
+</body>
 </html>

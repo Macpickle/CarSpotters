@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    ownerPhoto: {
+        type: String,
+        required: true,
+        default: "https://i.imgur.com/jNNT4LE.png"
+    },
     allowComments: {
         type: Boolean,
         required: true
@@ -35,7 +40,8 @@ const userSchema = new mongoose.Schema({
     },
     favourites: {
         type: Number,
-        required: true
+        required: false,
+        default: 0
     },
     favouriteArray: {
         type: Array,

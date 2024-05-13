@@ -11,68 +11,110 @@
 </head>
 
 <body>
-<div class = "navbar">
-    <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
-    <div class="search-container">
+  <div class = "navbar" id="navbar">
+    <div class = "web-logo">
+        <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
     </div>
+    <ul>
+      <div class = "dropdown">
+        <button class = "dropbtn">
+            <div class = "icon">
+                <img src = "<%=userID.photo%>" alt = "">
+            </div>
+        </button>
+        <div class = "dropdown-content">
+            <a href = "/account/<%=userID._id%>" method="GET" id="account">Account</a>
+            <a href = "/settings/<%=userID._id%>" method="GET" id="settings">Settings</a>
+            <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+            
+            <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+        </div>
+    </div>
+    </ul>
+  </div>
+
+  <div class = "sidenav">
+    <a href = "/" class = "selected"><i class="fa-solid fa-home"></i>Home</a>
+    <a href = "/map" ><i class="fa-solid fa-map"></i>Explore</a>
+    <a href = "/notify"><i class ="fa-solid fa-bell"></i>Notifications</a>
+    <a href = "/messages"><i class="fa-solid fa-envelope"></i>Messages</a>
+    <a href = "/favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+    <a href="/create"><i class="fa-solid fa-plus"></i>Create</a>
 </div>
 
 <div class = "main-container">
-    <div class = "post-container">
+    <div id = "post-container">
         <% posts.forEach(function(post){ %>
-            <div class = "post">
-                <form>
-                    <button>
-                    <div class = "view-post">
-                      <div class = "post-header">
-                        <div class = "profile-picture">
-                          <img src="<%=post.photo%>" alt="">
+          <div class = "post">
+            <form action = "/viewPost/${randomData._id}" method = "GET">
+              <button>
+                <div class = "view-post">
+                  <div class = "post-header">
+                  
+                    <div class = "profile-picture">
+                      <img src="<%=post.ownerPhoto%>" alt="">
+                    </div>
+    
+                    <div class = "post-header-content">
+                      <div class = "stack">
+                        <div class = "profile-name">
+                          <h5><%=post.username%></h5>
                         </div>
-        
-                        <div class = "post-header-content">
-                          <div class = "stack">
-                            <div class = "profile-name">
-                              <h5><%=post.username%></h5>
-                            </div>
-                            <div class = "post-information">
-                              <p>- <%=post.carModel%>, <%=post.carTitle%></p>
-                            </div>
-                          </div>
-                          <div class = "stack">
-                              <div class = "description">
-                                <p><%=post.description%></p>
-                              </div>
-                          </div>
-                        </div>
-                        <div class = "post-date">
-                          <p><%=post.date%></p>
+                        <div class = "post-information">
+                          <p>- <%=post.carModel%>, <%=post.carTitle%></p>
                         </div>
                       </div>
-                        <div class = "image-container">
-                          <img src="<%=post.photo%>" alt="">
-                        </div>
-                    </div>
-                    </button>
-                    </form>
-                  <div class = "extras-content">
-                    <div class = "item" id = "item">
-                      <input class = "like-button" id = "like-button" type = "checkbox"></input>
-                        <label for = "like-button">
-                          <i class="fas fa-heart"></i>
-                          <p><%=post.likes%></p>
-                        </label>
-                    </div>
-                    <div class = "item" id = "item">
-                      <input class = "favourite-button" id = "favourite-button" type = "checkbox"></input>
-                        <label for = "favourite-button">
-                          <i class="fas fa-star"></i>
-                          <p>3</p>
-                        </label>
+                      <div class = "stack">
+                          <div class = "description">
+                            <p><%=post.description%></p>
+                          </div>
                       </div>
+                    </div>
+                    <div class = "post-date">
+                      <p><%=post.date%></p>
+                    </div>
+                  </div>
+                    <div class = "image-container">
+                      <img src="<%=post.photo%>" alt="" id = "photo">
+                    </div>
+                </div>
+              </button>
+            </form>
+              <div class = "extras-content">
+                <div class = "item">
+                  <button class = "like-button">
+                    <label for = "like-button">
+                      <i class="fas fa-heart" id = "likeIcon"></i>
+                      <p class = "likeCount"><%=post.likes%></p>
+                    </label>
+                  </button>
+                </div>
+                <div class = "item">
+                  <button class = "favourite-button">
+                    <label for = "favourite-button">
+                      <i class="fas fa-star"></i>
+                      <p class = "favouriteCount"><%=post.favourites%></p>
+                    </label>
+                  </button>
                   </div>
               </div>
+          </div>
         <% }) %>
+        <% if (posts.length > 0) {%>
+          <div class = "back">
+              <div class = "return">
+                <button onclick="window.location.href='/'">Go To Home</button>
+              </div>
+          </div>
+        <% } %>
+        </div>
     </div>
+    <% if (posts.length == 0) {%>
+      <div class = "no-posts">
+        <h1>No Posts Found!</h1>
+        <h3>To favourite posts, click the star icon on a post.</h3>
+      </div>
+    <% } %>
 </div>
 </body>
 </html>

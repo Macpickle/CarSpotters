@@ -80,6 +80,7 @@
 
     #post-container {
         width: 100%;
+        margin-top: -1em;
     }
 
     .navbar{
@@ -99,6 +100,10 @@
         height: 100%;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    html {
+        width: 110%;
     }
 
     .main-container .account-container .preview-container {

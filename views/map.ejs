@@ -11,10 +11,34 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
 </head>
 
-<div class = "navbar">
-    <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
-    <div class="search-container">
+<div class = "navbar" id="navbar">
+    <div class = "web-logo">
+        <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
     </div>
+
+    <ul>
+        <% if (!userID) { %>
+            <div class = "tooltip">
+                <a href = "login" id="login"><i class="fa-solid fa-circle-user"></i></a>
+                <span class = "tooltiptext">Login</span>
+            </div>
+        <% } else { %>
+                <div class = "dropdown">
+                    <button class = "dropbtn">
+                        <div class = "icon">
+                            <img src = "<%=userID.photo%>" alt = "">
+                        </div>
+                    </button>
+                    <div class = "dropdown-content">
+                        <a href = "/account/<%=userID._id%>" method="GET" id="account">Account</a>
+                        <a href = "/settings/<%=userID._id%>" method="GET" id="settings">Settings</a>
+                        <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+                        
+                        <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+                    </div>
+                </div>
+        <% } %>
+    </ul>
 </div>
 <div class = "sidenav">
     <a href = "/"><i class="fa-solid fa-home"></i>Home</a>

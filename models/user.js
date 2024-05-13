@@ -71,7 +71,11 @@ const userSchema = new mongoose.Schema({
         followingPrivacy: "everyone", 
         accountPrivacy: "everyone"
         }
-    }
+    },
+    favouritePosts: {
+        type: Array,
+        required: false
+    },
     
 });
 

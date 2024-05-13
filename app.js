@@ -171,6 +171,16 @@ app.get('/viewPost/:id', async (req,res) => {
     }
 });
 
+app.get('/favourites', isLoggedIn, async (req,res) => {
+    try {
+        const userID = req.user;
+        const posts = await Post.find({_id: userID.favouritePosts});
+        res.render('viewAllPosts', {posts, userID});
+    } catch {
+        res.redirect('/');
+    }
+});
+
 app.get('/viewAllPosts/:id', async (req,res) => {
     try{
         const userID = req.user;
@@ -222,13 +232,16 @@ app.post('/favouritePost', async (req,res) => {
         } else {
             if (post.favouriteArray.includes(sessionUser.username)) {
                 const index = post.favouriteArray.indexOf(sessionUser.username);
+                sessionUser.favouritePosts.splice(index, 1);
                 post.favouriteArray.splice(index, 1);
                 post.favourites -= 1;
             } else {
                 post.favouriteArray.push(sessionUser.username);
+                sessionUser.favouritePosts.push(post._id);
                 post.favourites += 1;
             }
                 
+            sessionUser.save();
             post.save();
             res.json({"ok":true, "isFavourited": post.favouriteArray.includes(sessionUser.username), "favourites": post.favourites});
         }
@@ -308,10 +321,14 @@ app.post('/deletePost/:id', async (req,res) => {
     }
 });
 
-app.post('/getUserPhoto', async (req,res) => {
-    const user = await User.findOne({username: req.body.username});
-    res.json(user.photo);
-});
+//updates the post's owner profile picture if the user changes their profile picture
+const updatePhoto = async (user, res) => {
+    const posts = await Post.find({ usernameID: user._id });
+    posts.forEach(async (post) => {
+        post.ownerPhoto = user.photo;
+        await post.save();
+    });
+};
 
 app.post('/changeProfilePicture', async (req,res) => {
     try{
@@ -330,6 +347,7 @@ app.post('/changeProfilePicture', async (req,res) => {
         .then(response => response.json())
         .then(data => {
             user.photo = data.data.link;
+            updatePhoto(user, res);
             user.save();
             res.json({"ok":true});
         }).catch(err => {
@@ -547,13 +565,12 @@ app.post('/change-account-privacy', async (req,res) => {
     updateSetting(req, res, 'accountPrivacy', postPrivacy);
 });
 
-app.listen((process.env.PORT) , () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
-});
-
 //handle if user tries to access a page that doesnt exist
 app.get('*', (req,res) => {
     res.render('404');
 });
 
+app.listen((process.env.PORT) , () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+});
 module.exports = app;

@@ -14,7 +14,6 @@
 body {
     background-color: var(--backgroundColour);
     height: 100%;
-
 }
 
 * {
@@ -26,6 +25,8 @@ body {
 html{
     scroll-behavior:smooth;
     font-family: Helvetica;
+    width: 100%;
+
 }
 
 .navbar {
@@ -64,6 +65,15 @@ html{
     margin: 0 1em;
     font-size: 2.5em;
     color: var(--textColour);
+}
+
+.navbar .default-icon {
+    width: 3.5em;
+    height: 3.5em;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top:-0.75em;
 }
 
 .navbar .dropdown {
@@ -221,7 +231,6 @@ html{
 }
 
 .main-container #post-container .post {
-    width: flex-end;
     max-height: 32.5em;
     width: 100%;
     border-bottom: 2px solid var(--outline);
@@ -729,7 +738,7 @@ html{
     color: black;
 }
 
-.main-container .page-not-found .back-home {
+.main-container .back-home {
     margin-top: 1em;
     border-radius: 1em;
     padding: 1em;
@@ -737,9 +746,45 @@ html{
     color: var(--textColour);
 }
 
-.main-container .page-not-found .back-home:hover {
+.main-container .back-home:hover {
     box-shadow: 0 0 10px 0 var(--loginHover);
     transform: scale(1.1);
+}
+.main-container .back {
+    border:none;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width:110%;
+    transform: translateX(-5%);
+    background-color: var(--backgroundColour);
+}
+
+.main-container .back .return {
+    margin-top: 1em;
+    border-radius: 1em;
+    padding: 1em;
+    border: 1px solid var(--outline);
+    color: var(--textColour);
+    width: 25%;
+}
+
+.main-container .back .return:hover {
+    box-shadow: 0 0 10px 0 var(--loginHover);
+    transform: scale(1.1);
+}
+
+.no-posts {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    color: var(--textColour);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
 }
 
 @media screen and (min-width: 786px) {

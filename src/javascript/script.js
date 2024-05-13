@@ -42,110 +42,91 @@ const createCard = (index) => {
     const randomData = data[randomNumber];
 
     //get the post's user's photo
-    var userPhoto = "";
-    fetch('/getUserPhoto', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ username: randomData.username })
-    })
-    .then(response => response.json())
-    .then(data => {
-      userPhoto = data;
-      if (userID){
-        isLiked = randomData.likeArray.includes(JSON.parse(userID).username);
-        isFavourited = randomData.favouriteArray.includes(JSON.parse(userID).username);
-      } else {
-        isLiked = false;
-        isFavourited = false;
-      }
-
-      const post = document.createElement("div");
-      post.innerHTML = `
-      <div class = "post">
-        <form action = "/viewPost/${randomData._id}" method = "GET">
-          <button>
-            <div class = "view-post">
-              <div class = "post-header">
-              
-                <div class = "profile-picture">
-                  <img src="${userPhoto}" alt="">
-                </div>
-
-                <div class = "post-header-content">
-                  <div class = "stack">
-                    <div class = "profile-name">
-                      <h5>${randomData.username}</h5>
-                    </div>
-                    <div class = "post-information">
-                      <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
-                    </div>
+    userPhoto = randomData.ownerPhoto;
+    if (userID){
+      isLiked = randomData.likeArray.includes(JSON.parse(userID).username);
+      isFavourited = randomData.favouriteArray.includes(JSON.parse(userID).username);
+    } else {
+      isLiked = false;
+      isFavourited = false;
+    }
+    const post = document.createElement("div");
+    post.innerHTML = `
+    <div class = "post">
+      <form action = "/viewPost/${randomData._id}" method = "GET">
+        <button>
+          <div class = "view-post">
+            <div class = "post-header">
+            
+              <div class = "profile-picture">
+                <img src="${userPhoto}" alt="">
+              </div>
+              <div class = "post-header-content">
+                <div class = "stack">
+                  <div class = "profile-name">
+                    <h5>${randomData.username}</h5>
                   </div>
-                  <div class = "stack">
-                      <div class = "description">
-                        <p>${randomData.description}</p>
-                      </div>
+                  <div class = "post-information">
+                    <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
                   </div>
                 </div>
-                <div class = "post-date">
-                  <p>${randomData.date}</p>
+                <div class = "stack">
+                    <div class = "description">
+                      <p>${randomData.description}</p>
+                    </div>
                 </div>
               </div>
-                <div class = "image-container">
-                  <img src="${randomData.photo}" alt="" id = "photo">
-                </div>
+              <div class = "post-date">
+                <p>${randomData.date}</p>
+              </div>
             </div>
-          </button>
-        </form>
-          <div class = "extras-content">
-            <div class = "item">
-              <button class = "like-button">
-                <label for = "like-button">
-                  <i class="fas fa-heart" id = "likeIcon"></i>
-                  <p class = "likeCount">${randomData.likes}</p>
-                </label>
-              </button>
-            </div>
-            <div class = "item">
-              <button class = "favourite-button">
-                <label for = "favourite-button">
-                  <i class="fas fa-star"></i>
-                  <p class = "favouriteCount">${randomData.favourites}</p>
-                </label>
-              </button>
+              <div class = "image-container">
+                <img src="${randomData.photo}" alt="" id = "photo">
               </div>
           </div>
-      </div>
-      `;      
-
-      //append the post to the container
-      cardContainer.appendChild(post);
-
-        if(isLiked){
-          document.getElementsByClassName("like-button")[index-1].children[0].children[0].style.color = "red";
-        } 
-
-        if(isFavourited){
-          document.getElementsByClassName("favourite-button")[index-1].children[0].children[0].style.color = "blue";
-        }
-
-        // add event listener to the like button
-        const likeButton = post.querySelector(".like-button");
-          likeButton.addEventListener("click", (event) => {
-            event.preventDefault();
-            likePost(randomData._id, userID, randomData);
-        });
-
-        // add event listener to follow button
-        const favouriteButton = post.querySelector(".favourite-button");
-        favouriteButton.addEventListener("click", (event) => {
+        </button>
+      </form>
+        <div class = "extras-content">
+          <div class = "item">
+            <button class = "like-button">
+              <label for = "like-button">
+                <i class="fas fa-heart" id = "likeIcon"></i>
+                <p class = "likeCount">${randomData.likes}</p>
+              </label>
+            </button>
+          </div>
+          <div class = "item">
+            <button class = "favourite-button">
+              <label for = "favourite-button">
+                <i class="fas fa-star"></i>
+                <p class = "favouriteCount">${randomData.favourites}</p>
+              </label>
+            </button>
+            </div>
+        </div>
+    </div>
+    `;      
+    //append the post to the container
+    cardContainer.appendChild(post);
+      if(isLiked){
+        document.getElementsByClassName("like-button")[index-1].children[0].children[0].style.color = "red";
+      } 
+      if(isFavourited){
+        document.getElementsByClassName("favourite-button")[index-1].children[0].children[0].style.color = "blue";
+      }
+      // add event listener to the like button
+      const likeButton = post.querySelector(".like-button");
+        likeButton.addEventListener("click", (event) => {
           event.preventDefault();
-          favouritePost(randomData._id, userID, randomData);
-        });
+          likePost(randomData._id, userID, randomData);
+      });
+      // add event listener to follow button
+      const favouriteButton = post.querySelector(".favourite-button");
+      favouriteButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        favouritePost(randomData._id, userID, randomData);
+      });
 
-    });
-    
   })
   .catch(error => {
     console.error('Error:', error);
@@ -249,7 +230,6 @@ function likePost(postID, userID, post) {
 
   xhr.onload = function() {
     if (xhr.status == 200) {
-      console.log(xhr.responseText);
       likes = JSON.parse(xhr.responseText).likes;
       postLikeId = JSON.parse(xhr.responseText).postLikeId;
       if (JSON.parse(xhr.responseText).isLiked) {
