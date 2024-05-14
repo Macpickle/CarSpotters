@@ -31,6 +31,7 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "postman": "^0.2.0",
+    "pug": "^3.0.2",
     "socket.io": "^4.7.5",
     "socketio": "^1.0.0"
   },

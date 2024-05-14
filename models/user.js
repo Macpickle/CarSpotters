@@ -33,20 +33,9 @@ const userSchema = new mongoose.Schema({
         type: Array,
         required: false
     },
-    followersCount: {
-        type: Number,
-        required: false,
-        default: 0
-    },
-    followingCount: {
-        type: Number,
-        required: false,
-        default: 0
-    },
-    postCount: {
-        type: Number,
-        required: false,
-        default: 0
+    favouritePosts: {
+        type: Array,
+        required: false
     },
     postIDs: {
         type: Array,
@@ -71,12 +60,7 @@ const userSchema = new mongoose.Schema({
         followingPrivacy: "everyone", 
         accountPrivacy: "everyone"
         }
-    },
-    favouritePosts: {
-        type: Array,
-        required: false
-    },
-    
+    }, 
 });
 
 module.exports = mongoose.model('User', userSchema);

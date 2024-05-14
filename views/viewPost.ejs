@@ -17,66 +17,169 @@
     </div>  
     <div class="search-container">
     </div>
+
+    <ul>
+      <% if (!userID) { %>
+          <div class = "default-icon">
+              <div class = "tooltip">
+                      <a href = "login" id="login"><i class="fa-solid fa-circle-user"></i></a>
+                  <span class = "tooltiptext">Login</span>
+              </div>
+          </div>
+      <% } else { %>
+              <div class = "dropdown">
+                  <button class = "dropbtn">
+                      <div class = "icon">
+                          <img src = "<%=userID.photo%>" alt = "">
+                      </div>
+                  </button>
+                  <div class = "dropdown-content">
+                      <a href = "/account/<%=userID._id%>" method="GET" id="account">Account</a>
+                      <a href = "/settings/<%=userID._id%>" method="GET" id="settings">Settings</a>
+                      <a href = "/" method="GET" id="home">Home</a>
+                      <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+                      
+                      <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+                  </div>
+              </div>
+      <% } %>
+  </ul>
 </div>
 
 
 <div class = "main-container">
-    <div id = "post-container" style="height: 100vh; width: 75%; border-left: none; border-right: none;">
-        <form id = "viewAccount" action = "/account/<%=post.usernameID%>" method = "GET">
+    <div id = "post-container" style="height: 88vh; width: 75%; border: none;">
             <div class = "post" style="border-bottom: none;">
-                    <div class = "view-post">
-                      <div class = "post-header">
-                        <button style="width: fit-content;" for = "viewAccount">
-                            <div class = "tooltip">
-                                <div class = "profile-picture">
-                                  <img src="<%=postOwnerPhoto%>" alt="">
-                                </div>
-                                <span class = "tooltiptext">View Account</span>
-                            </div>
-                        </button>
-                    
-                        <div class = "post-header-content">
-                          <div class = "stack">
-                            <div class = "profile-name">
-                              <h5><%=post.username%></h5>
-                            </div>
-
-                            <div class = "post-information">
-                              <p>- <%=post.carModel%>, <%=post.carTitle%></p>
-                            </div>
+              <div class = "view-post">
+                <div class = "post-header">
+                  <form id = "viewAccount" action = "/account/<%=post.usernameID%>" method = "GET">
+                  <button style="width: fit-content;" for = "viewAccount">
+                      <div class = "tooltip">
+                          <div class = "profile-picture">
+                            <img src="<%=post.owner.photo%>" alt="">
                           </div>
-                          <div class = "stack">
-                              <div class = "description">
-                                <p><%post.description%></p>
-                              </div>
-                          </div>
-                        </div>
-                        <div class = "post-date">
-                          <p><%=post.date%></p>
-                        </div>
+                          <span class = "tooltiptext">View Account</span>
                       </div>
-                        <div class = "image-container" style="max-height:75vh">
-                          <img src="<%=post.photo%>" alt="">
+                  </button>
+                </form>
+              
+                  <div class = "post-header-content">
+                    <div class = "stack">
+                      <div class = "profile-name">
+                        <h5><%=post.username%></h5>
+                      </div>
+                      <div class = "post-information">
+                        <p>- <%=post.carModel%>, <%=post.carTitle%></p>
+                      </div>
+                    </div>
+                    <div class = "stack">
+                        <div class = "description">
+                          <p><%post.description%></p>
                         </div>
                     </div>
-                  <div class = "extras-content">
-                    <div class = "item" id = "item">
-                      <input class = "like-button" id = "like-button" type = "checkbox"></input>
-                        <label for = "like-button">
-                          <i class="fas fa-heart"></i>
-                          <p><%=post.likes%></p>
-                        </label>
-                    </div>
-                    <div class = "item" id = "item">
-                      <input class = "favourite-button" id = "favourite-button" type = "checkbox"></input>
-                        <label for = "favourite-button">
-                          <i class="fas fa-star"></i>
-                          <p>3</p>
-                        </label>
-                      </div>
                   </div>
+                  <div class = "post-date">
+                    <p><%=post.date%></p>
+                  </div>
+                </div>
+                  <div class = "image-container" style="max-height:75vh">
+                    <img src="<%=post.photo%>" alt="">
+                  </div>
+              </div>
+            <div class = "extras-content">
+              <div class = "item">
+                <button class = "like-button">
+                  <label for = "like-button">
+                    <i class="fas fa-heart" id = "likeIcon"></i>
+                    <p class = "likeCount"><%=post.likes.length%></p>
+                  </label>
+                </button>
+              </div>
+              <div class = "item">
+                <button class = "favourite-button">
+                  <label for = "favourite-button">
+                    <i class="fas fa-star"></i>
+                    <p class = "favouriteCount"><%=post.favourites.length%></p>
+                  </label>
+                </button>
+              </div>
+              <div class = "item">
+                <button class = "comment-button">
+                  <label for = "comment-button">
+                    <i class="fas fa-comment"></i>
+                    <p class = "commentCount"><%=post.comments.length%></p>
+                  </label>
+                </button>
+              </div>
             </div>
-        </form>
+          </div>
+    </div>
+
+    <div class = "comment-container">
+      <% if (!isOwner) { %>
+      <div class = "new-comment">
+        <div class = "comment-title">
+          <h3>Create New Comment</h3>
+        </div>
+        <form id = "newComment" action = "/commentPost" method = "POST">
+          <div class = "comment-input">
+            <textarea name = "comment" placeholder = "Enter your comment here"  rows="3" cols="3" wrap="hard" minlength="1" maxlength="150" style="resize: none;"></textarea>
+            <button type = "submit">Comment</button>
+          </div>
+          <input type = "hidden" name = "postID" value = "<%=post._id%>">
+      </div>
+      <% } %>
+
+      <div class = "comments">
+          <% post.comments.forEach(function(comment) { %>
+            <div class = "comment-list">
+            <div class = "comment">
+              <div class = "comment-header">
+                <form id = "viewAccount" action = "/account/<%=comment.usernameID%>" method = "GET">
+                  <button style="width: fit-content;" for = "viewAccount">
+                    <div class = "profile-picture">
+                      <img src="<%=comment.ownerPhoto%>" alt="">
+                    </div>
+                  </button>
+                </form>
+                <div class = "comment-username">
+                  <h5><%=comment.username%></h5>
+                </div>
+                <div class = "comment-date">
+                  <p><%=comment.date%></p>
+                </div>
+              </div>
+              <div class = "comment-content">
+                <p><%=comment.comment%></p>
+              </div>
+
+              <div class = "comment-extras">
+                <div class = "item">
+                  <button class = "like-button">
+                    <label for = "like-button">
+                      <i class="fas fa-heart" id = "likeIcon"></i>
+                      <p class = "likeCount"><%=comment.likes%></p>
+                    </label>
+                  </button>
+                </div>
+                <% if (isOwner) { %>
+                  <form action = "/deleteComment/<%=comment.commentID%>" method = "POST">
+                    <div class = "item">
+                      <button class = "delete-button">
+                        <label for = "delete-button">
+                          <i class="fas fa-trash" style="margin-top: 0.25em"></i>
+                        </label>
+                      </button>
+                    </div>
+                    <input type = "hidden" name = "postID" value = "<%=post._id%>">
+                    
+                  </div>
+                <% } %>
+            </div>
+          </div>
+
+          <% }) %>
+
     </div>
 </div>
 

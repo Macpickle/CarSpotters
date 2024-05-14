@@ -44,13 +44,14 @@ const createCard = (index) => {
     //get the post's user's photo
     userPhoto = randomData.ownerPhoto;
     if (userID){
-      isLiked = randomData.likeArray.includes(JSON.parse(userID).username);
-      isFavourited = randomData.favouriteArray.includes(JSON.parse(userID).username);
+      isLiked = randomData.likes.includes(JSON.parse(userID).username);
+      isFavourited = randomData.favourites.includes(JSON.parse(userID).username);
     } else {
       isLiked = false;
       isFavourited = false;
     }
     const post = document.createElement("div");
+
     post.innerHTML = `
     <div class = "post">
       <form action = "/viewPost/${randomData._id}" method = "GET">
@@ -59,12 +60,12 @@ const createCard = (index) => {
             <div class = "post-header">
             
               <div class = "profile-picture">
-                <img src="${userPhoto}" alt="">
+                <img src="${randomData.owner.photo}" alt="">
               </div>
               <div class = "post-header-content">
                 <div class = "stack">
                   <div class = "profile-name">
-                    <h5>${randomData.username}</h5>
+                    <h5>${randomData.owner.username}</h5>
                   </div>
                   <div class = "post-information">
                     <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
@@ -87,21 +88,31 @@ const createCard = (index) => {
         </button>
       </form>
         <div class = "extras-content">
-          <div class = "item">
-            <button class = "like-button">
-              <label for = "like-button">
-                <i class="fas fa-heart" id = "likeIcon"></i>
-                <p class = "likeCount">${randomData.likes}</p>
-              </label>
-            </button>
-          </div>
-          <div class = "item">
-            <button class = "favourite-button">
-              <label for = "favourite-button">
-                <i class="fas fa-star"></i>
-                <p class = "favouriteCount">${randomData.favourites}</p>
-              </label>
-            </button>
+            <div class = "item">
+              <button class = "like-button">
+                <label for = "like-button">
+                  <i class="fas fa-heart" id = "likeIcon"></i>
+                  <p class = "likeCount">${randomData.likes.length}</p>
+                </label>
+              </button>
+            </div>
+            <div class = "item">
+              <button class = "favourite-button">
+                <label for = "favourite-button">
+                  <i class="fas fa-star"></i>
+                  <p class = "favouriteCount">${randomData.favourites.length}</p>
+                </label>
+              </button>
+            </div>
+            <div class = "item">
+              <form action = "/viewPost/${randomData._id}" method = "GET">
+                <button class = "comment-button"'>
+                  <label for = "comment-button">
+                    <i class="fas fa-comment"></i>
+                    <p class = "commentCount">${randomData.comments.length}</p>
+                  </label>
+                </button>
+              </form>
             </div>
         </div>
     </div>

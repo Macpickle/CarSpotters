@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const postSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true
     },
-    usernameID: {
-        type: String,
+    owner: {
+        type: Object,
         required: true
     },
     location: {
@@ -21,33 +21,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    ownerPhoto: {
-        type: String,
-        required: true,
-        default: "https://i.imgur.com/jNNT4LE.png"
-    },
     allowComments: {
         type: Boolean,
         required: true
     },
     likes: {
-        type: Number,
+        type: Array,
         required: true
     },
-    likeArray: {
-        type: Array,
-        required: false,
-    },
     favourites: {
-        type: Number,
-        required: false,
-        default: 0
-    },
-    favouriteArray: {
         type: Array,
-        required: false
+        required: false,
     },
-
     comments: {
         type: Array,
         required: false
@@ -66,4 +51,4 @@ const userSchema = new mongoose.Schema({
     }
 }); 
 
-module.exports = mongoose.model('Post', userSchema);
+module.exports = mongoose.model('Post', postSchema);

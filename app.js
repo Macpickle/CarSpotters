@@ -154,17 +154,14 @@ app.get('/viewPost/:id', async (req,res) => {
         const post = await Post.findOne({ _id: req.params.id });
         if (userID) {
             const admin = userID.admin;
-            const isOwner = (userID._id == post.usernameID);
-            const postOwner = await User.findOne({ _id: post.usernameID });
-            const postOwnerPhoto = postOwner.photo;
-            res.render('viewPost', {post, admin, isOwner, postOwnerPhoto});
+            const isOwner = (JSON.stringify(userID._id) == JSON.stringify(post.owner._id));
+
+            res.render('viewPost', {post, admin, isOwner, userID});
         } else {
             const admin = false;
             const isOwner = false;
-            const postOwner = await User.findOne({ _id: post.usernameID });
-            const postOwnerPhoto = postOwner.photo;
 
-            res.render('viewPost', {post, admin, isOwner, postOwnerPhoto});
+            res.render('viewPost', {post, admin, isOwner, userID});
         }
     } catch {
         res.redirect('/');
@@ -222,28 +219,74 @@ app.post('/logout', (req,res) => {
     });
 });
 
+app.post('/commentPost', async (req,res) => {
+    try {
+        const post = await Post.findOne({_id: req.body.postID});
+
+        if (!req.body.comment) {
+            res.redirect(`/viewPost/${post._id}`);
+        } else {
+
+        const sessionUser = req.user;
+        const newComment = {
+            username: sessionUser.username,
+            ownerPhoto: sessionUser.photo,
+            comment: req.body.comment,
+            postID: post._id,
+            likes: 0,
+            date: (new Date()).toDateString().substring(0,10),
+            commentID: new mongoose.Types.ObjectId()
+        };
+        
+        post.comments.push(newComment);
+        post.save();
+        res.redirect(`/viewPost/${post._id}`);
+        }
+    } catch {
+        res.redirect('/');
+    }
+});
+
+app.post('/deleteComment/:id', async (req,res) => {
+    try {
+        const post = await Post.findOne({ _id: req.body.postID });
+        for (let i = 0; i < post.comments.length; i++) {
+            if (post.comments[i].commentID == req.params.id) {
+                post.comments.splice(i, 1);
+                break;
+            }
+        }
+        post.save();
+        res.redirect(`/viewPost/${post._id}`);
+
+    } catch (err) {
+        console.log(err);
+        res.redirect('/');
+    }
+
+});
+
 app.post('/favouritePost', async (req,res) => {
     try {
         const post = await Post.findOne({_id: req.body.postID});
         const sessionUser = await User.findOne({ _id: req.body.user });
 
         if (post.username == sessionUser.username) {
-            res.json({"ok":false, "isFavourited": false, "favourites": post.favourites});
+            res.json({"ok":false, "isFavourited": false, "favourites": post.favourites.length});
         } else {
-            if (post.favouriteArray.includes(sessionUser.username)) {
-                const index = post.favouriteArray.indexOf(sessionUser.username);
+            if (post.favourites.includes(sessionUser.username)) {
+                const index = post.favourites.indexOf(sessionUser.username);
                 sessionUser.favouritePosts.splice(index, 1);
-                post.favouriteArray.splice(index, 1);
-                post.favourites -= 1;
+                post.favourites.splice(index, 1);
+
             } else {
-                post.favouriteArray.push(sessionUser.username);
+                post.favourites.push(sessionUser.username);
                 sessionUser.favouritePosts.push(post._id);
-                post.favourites += 1;
             }
                 
             sessionUser.save();
             post.save();
-            res.json({"ok":true, "isFavourited": post.favouriteArray.includes(sessionUser.username), "favourites": post.favourites});
+            res.json({"ok":true, "isFavourited": post.favourites.includes(sessionUser.username), "favourites": post.favourites.length});
         }
     } catch (error) {
         console.log(error);
@@ -257,19 +300,17 @@ app.post('/likePost', async (req,res) => {
         const sessionUser = await User.findOne({ _id: req.body.user });
 
         if (post.username == sessionUser.username) {
-            res.json({"ok":false, "isLiked": false, "likes": post.likes});
+            res.json({"ok":false, "isLiked": false, "likes": post.likes.length});
         } else {
-            if (post.likeArray.includes(sessionUser.username)) {
-                const index = post.likeArray.indexOf(sessionUser.username);
-                post.likeArray.splice(index, 1);
-                post.likes -= 1;
+            if (post.likes.includes(sessionUser.username)) {
+                const index = post.likes.indexOf(sessionUser.username);
+                post.likes.splice(index, 1);
             } else {
-                post.likeArray.push(sessionUser.username);
-                post.likes += 1;
+                post.likes.push(sessionUser.username);
             } 
 
             post.save();
-            res.json({"ok":true, "likes": post.likes, "isLiked": post.likeArray.includes(sessionUser.username)});
+            res.json({"ok":true, "likes": post.likes.length, "isLiked": post.likes.includes(sessionUser.username)});
         }
     } catch (error) {
         console.log(error);
@@ -321,18 +362,10 @@ app.post('/deletePost/:id', async (req,res) => {
     }
 });
 
-//updates the post's owner profile picture if the user changes their profile picture
-const updatePhoto = async (user, res) => {
-    const posts = await Post.find({ usernameID: user._id });
-    posts.forEach(async (post) => {
-        post.ownerPhoto = user.photo;
-        await post.save();
-    });
-};
-
 app.post('/changeProfilePicture', async (req,res) => {
     try{
         const user = await User.findOne({ _id: req.body.userID });
+        const posts = await Post.find({ username: user.username });
         var photoData = req.files.photo.data.toString('base64');
         const formData = new FormData();
         formData.append('image', photoData);
@@ -347,8 +380,17 @@ app.post('/changeProfilePicture', async (req,res) => {
         .then(response => response.json())
         .then(data => {
             user.photo = data.data.link;
-            updatePhoto(user, res);
             user.save();
+            
+            posts.forEach(post => {
+                post.owner = {
+                    _id: user._id,
+                    username: user.username,
+                    photo: user.photo,
+                };
+                post.save();
+            });
+            
             res.json({"ok":true});
         }).catch(err => {
             console.log(err);
@@ -377,24 +419,31 @@ app.post('/create', async (req,res) => {
             //gets image link returned by JSON of imgur API
             const imageLink = data.data.link;
 
+            //create owner information, only useful for the post schema
+            const ownerInformation = {
+                _id: req.user._id,
+                username: req.user.username,
+                photo: req.user.photo,
+            }
+
             //create post via Schema
             const newPost = new Post({
                 username: req.user.username,
-                usernameID: req.user._id,
-                location:  req.body.location,
+                owner: ownerInformation,
+                location: req.body.location,
                 description: req.body.description,
-                photo: imageLink, 
+                photo: imageLink,
                 allowComments: true,
-                likes: 0,
+                likes: [],
+                favourites: [],
                 comments: [],
                 date: (new Date()).toDateString().substring(0,10),
                 carModel: req.body.carModel,
                 carTitle: req.body.carName,
-                _id: new mongoose.Types.ObjectId().value
             });
 
             //update user's post cound, postIDs, and postPhotos, then saves into database.
-            req.user.postPhotos.push(newPost.photo); 
+            req.user.postPhotos.push(imageLink);
             req.user.postIDs.push(newPost._id);
             req.user.postCount += 1;
             req.user.save();

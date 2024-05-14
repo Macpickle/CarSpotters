@@ -213,13 +213,14 @@ html{
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .main-container #post-container {
     height: 100%;
     border-right: 2px solid var(--outline);
     border-left: 2px solid var(--outline);
-    align-self: flex-start;
+    align-self: center;
 }
 
 .main-container #post-container button {
@@ -353,6 +354,169 @@ html{
     color: grey;
     font-size: 0.7em;
 }
+
+.main-container .comment-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    border-top: 2px solid var(--outline);
+    flex-direction: column;
+    padding-top:1em;
+}
+
+.main-container .comment-container .new-comment {
+    display: flex;
+    width: 75%;
+    height: 7.5em;
+    border: 2px solid var(--outline);
+    background-color: var(--postBackground);
+    border-radius: 1em;
+    margin: 1em;
+    color: var(--textColour);
+    flex-direction: column;
+    padding: 0.5em;
+}
+
+.main-container .comment-container .new-comment .comment-title {
+    display: flex;
+    height:fit-content;
+    font-size: 0.9em;
+}
+
+.main-container .comment-container .new-comment .comment-input {
+    width:75%;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.main-container .comment-container .new-comment .comment-input textarea {
+    width: 100%;
+    height: 100%;
+    border-radius: 1em;
+    border: 1px solid var(--outline);
+    padding: 1em 1em;
+    margin-top:0.5em;
+    resize: none;
+    max-height: 130px;
+    max-width: 100%;
+}
+
+.main-container .comment-container .new-comment .comment-input button {
+    margin-left: 1em;
+    border:none;
+    padding:0.5em;
+    height:fit-content;
+    border-radius: 50em;
+    background-color: var(--sidenavSelected);
+    outline: 1px solid var(--outline);
+}
+
+.main-container .comment-container .comments {
+    display:flex;
+    flex-direction: column;
+    width:75%;
+}
+
+.main-container .comment-container .comments .comment {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    border: 2px solid var(--outline);
+    background-color: var(--postBackground);
+    border-radius: 1em;
+    margin-bottom: 0.5em;
+    color: var(--textColour);
+    flex-direction: column;
+    padding: 0.5em;
+}
+
+.main-container .comment-container .comments .comment .comment-header {
+    display: flex;
+    height: fit-content;
+    flex-direction: row;
+}
+
+.main-container .comment-container .comments .comment .comment-header .comment-username {
+    font-size: 1em;
+    display:flex;
+    align-items: center;
+    margin-left: 0.5em;
+}
+
+.main-container .comment-container .comments .comment .comment-header .comment-date {
+    margin-left: auto;
+    font-size: 0.7em;
+    margin-right: 0.5em;
+}
+
+.main-container .comment-container .comments .comment button {
+    border: none;
+    background-color: transparent;
+}
+
+.main-container .comment-container .comments .comment .profile-picture {
+    font-size: 1.5em;
+    height: 100%;
+    color: var(--textColour);
+    display: flex;
+    align-items: center;
+    margin-left: 2%;
+}
+
+.main-container .comment-container .comments .comment .profile-picture img {
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+}
+
+.main-container .comment-container .comments .comment .comment-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 0.5em;
+    font-size: 0.85em;
+}
+
+.main-container .comment-container .comments .comment .comment-extras {
+    margin-top: 0.5em;
+    border-top: 1px solid var(--outline);
+    display: flex;
+    flex-direction: row;
+    margin-right: 0.5em;
+}
+
+.main-container .comment-container .comments .comment .comment-extras .item {
+    margin-top: 0.5em;
+    display: flex;
+    align-items: center;
+}
+
+.main-container .comment-container .comments .comment .comment-extras button {
+    border: none;
+    background-color: transparent;
+    margin-right: 0.5em;
+}
+
+.main-container .comment-container .comments .comment .comment-extras label {
+    width: 2em;
+    height:100%;
+    display: flex;
+    align-items: center;
+}
+
+.main-container .comment-container .comments .comment .comment-extras label:hover {
+    transform: scale(1.1);
+}
+
+.main-container .comment-container .comments .comment .comment-extras .likeCount {
+    margin-right: 0.5em;
+    margin-top:0.5em;
+}
+
+
 
 .main-container .file-form{
     width: 50%;
