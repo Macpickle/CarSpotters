@@ -1,4 +1,3 @@
-
 //infinite scroll posts
 const cardCountElem = 1;
 const cardTotalElem = 3;
@@ -120,22 +119,24 @@ const createCard = (index) => {
     //append the post to the container
     cardContainer.appendChild(post);
       if(isLiked){
-        document.getElementsByClassName("like-button")[index-1].children[0].children[0].style.color = "red";
+        updateLikes("red", randomData, randomData.likes.length)
       } 
+      
       if(isFavourited){
-        document.getElementsByClassName("favourite-button")[index-1].children[0].children[0].style.color = "blue";
+        updateFavourites("blue", randomData, randomData.favourites.length)
       }
+
       // add event listener to the like button
       const likeButton = post.querySelector(".like-button");
         likeButton.addEventListener("click", (event) => {
           event.preventDefault();
-          likePost(randomData._id, userID, randomData);
+          updatePost(userID, randomData, "likePost");
       });
       // add event listener to follow button
       const favouriteButton = post.querySelector(".favourite-button");
-      favouriteButton.addEventListener("click", (event) => {
-        event.preventDefault();
-        favouritePost(randomData._id, userID, randomData);
+        favouriteButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          updatePost(userID, randomData, "favouritePost");
       });
 
   })
@@ -192,7 +193,6 @@ var loadFile = function(event) {
   data.append('userID', userID)
 
   //send the image to the server
-
   fetch('/changeProfilePicture', {
     method: 'POST',
     body: data
@@ -203,101 +203,129 @@ var loadFile = function(event) {
   })
 };
 
-function followUser(user,userID) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/followUser", true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(JSON.stringify({ user, userID }));
-
-  xhr.onload = function() {
-    if (xhr.status == 200) {
-      followingCount = JSON.parse(xhr.responseText).followingCount;
-      isFollowing = JSON.parse(xhr.responseText).isFollowing;
-
-      document.getElementById("followerCount").innerHTML = followingCount;
-
-      if(isFollowing){
-        document.getElementById("followButton").innerHTML = "<i class='fa-solid fa-check'></i>"
-      } else {
-        document.getElementById("followButton").innerHTML = "<i class='fa-solid fa-plus'></i>"
-      }
-
-    } else {
-      console.log("Error: " + xhr.status);
-    }
-  }
-}
-
-function likePost(postID, userID, post) {
-  if (!userID || userID == "Guest") {
-    window.location.href = "/login";
-    return;
-  }
-  user = JSON.parse(userID)._id;
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/likePost", true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(JSON.stringify({ postID, user }));
-
-  xhr.onload = function() {
-    if (xhr.status == 200) {
-      likes = JSON.parse(xhr.responseText).likes;
-      postLikeId = JSON.parse(xhr.responseText).postLikeId;
-      if (JSON.parse(xhr.responseText).isLiked) {
-          updateLikes("red", post);
-      } else {
-          updateLikes("black", post);
-      }
-    } else {
-      console.log("Error: " + xhr.status);
-    }
-  }
-}
-
-function updateLikes(colour, post){
+function updateLikes(colour, post, currentValue){
   for (let i = 0; i < document.getElementsByClassName("like-button").length; i++) {
     var imageSRC = document.getElementsByClassName("image-container")[i].children[0].getAttribute("src");
 
     if (post.photo == imageSRC) {
       document.getElementsByClassName("like-button")[i].style.color = colour;
-      document.getElementsByClassName("likeCount")[i].innerHTML = likes;
+      document.getElementsByClassName("likeCount")[i].innerHTML = currentValue;
     }
   }
 }
 
-function favouritePost(postID, userID, post) {
-  if (!userID || userID == "Guest") {
-    window.location.href = "/login";
-  }
-  user = JSON.parse(userID)._id;
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/favouritePost", true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(JSON.stringify({ postID, user }));
-
-  xhr.onload = function() {
-    if (xhr.status == 200) {
-      favourites = JSON.parse(xhr.responseText).favourites;
-      postFavouriteId = JSON.parse(xhr.responseText).postFavouriteId;
-      if (JSON.parse(xhr.responseText).isFavourited) {
-          updateFavourites("blue", post);
-      } else {
-          updateFavourites("black", post);
-      }
-      
-    } else {
-      console.log("Error: " + xhr.status);
-    }
-  }
-}
-
-function updateFavourites(colour, post){
+function updateFavourites(colour, post, currentValue){
   for (let i = 0; i < document.getElementsByClassName("favourite-button").length; i++) {
     var imageSRC = document.getElementsByClassName("image-container")[i].children[0].getAttribute("src");
 
     if (post.photo == imageSRC) {
       document.getElementsByClassName("favourite-button")[i].style.color = colour;
-      document.getElementsByClassName("favouriteCount")[i].innerHTML = favourites;
+      document.getElementsByClassName("favouriteCount")[i].innerHTML = currentValue;
     }
   }
+}
+
+//creates a new post request to URL using XHR
+function newPostRequest(data, postURL, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", postURL, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify(data));
+
+  xhr.onload = function() {
+    if (xhr.status == 200) {
+      response = JSON.parse(xhr.responseText);
+      callback(null, response)
+    } else {
+      callback(xhr.status, null)
+    }
+  }
+} 
+
+//checks if user is logged in
+function validUser(user) {
+  if (!user || user == "Guest") {
+    window.location.href = "/login";
+  }
+}
+
+//follow user 
+function followUser(sessionUser,accountUser) {
+  //determines if user is logged in
+  validUser(sessionUser);
+
+  //full URL for post request
+  const postRequestURL = "/followUser";
+
+  //body for XHR request
+  const body = {
+    sessionUser: sessionUser,
+    accountUser: accountUser
+  }
+
+  //create new post request
+  newPostRequest(body, postRequestURL, function(error, response) {
+    if (error) {
+      console.log("Error: " + error);
+      window.location.href = "/";
+    }
+
+    const followingCount = response.followingCount;
+    const isFollowing = response.isFollowing;
+
+    document.getElementById("followerCount").innerHTML = followingCount;
+
+    if(isFollowing){
+      document.getElementById("followButton").innerHTML = "<i class='fa-solid fa-check'></i>"
+    } else {
+      document.getElementById("followButton").innerHTML = "<i class='fa-solid fa-plus'></i>"
+    }
+
+  });
+}
+
+//updates likes and favourites of a post
+function updatePost(user,post,POSTurl) {
+  //determines if user is logged in
+  validUser(user);
+
+  //used on the request to find the user and post
+  const parsedUser = JSON.parse(user);
+  const postID = post._id;
+  const userID = parsedUser._id;
+
+  //full URL for post request
+  const postRequestURL = "/" + POSTurl;
+
+  //body for XHR request
+  const body = {
+    postID: postID,
+    userID: userID
+  }
+  
+  //create new post request
+  newPostRequest(body, postRequestURL, function(error, response) {
+    if (error) {
+      console.log("Error: " + error);
+      window.location.href = "/";
+    }
+
+    const isClicked = response.isClicked;
+    const value = response.value
+
+    if (POSTurl == "likePost") {
+      if (isClicked) {
+        updateLikes("red", post, value);
+      } else {
+        updateLikes("black", post, value);
+      }
+    } else if (POSTurl == "favouritePost") {
+      if (isClicked) {
+        updateFavourites("blue", post, value);
+      } else {
+        updateFavourites("black", post, value);
+      }
+    }
+  });
+
 }

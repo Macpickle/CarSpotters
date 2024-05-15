@@ -172,7 +172,8 @@ app.get('/favourites', isLoggedIn, async (req,res) => {
     try {
         const userID = req.user;
         const posts = await Post.find({_id: userID.favouritePosts});
-        res.render('viewAllPosts', {posts, userID});
+        const isFavouritePage = true;
+        res.render('viewAllPosts', {posts, userID, isFavouritePage});
     } catch {
         res.redirect('/');
     }
@@ -182,7 +183,8 @@ app.get('/viewAllPosts/:id', async (req,res) => {
     try{
         const userID = req.user;
         const posts = await Post.find({username: req.params.id});
-        res.render('viewAllPosts', {posts, userID});
+        const isFavouritePage = false;
+        res.render('viewAllPosts', {posts, userID,isFavouritePage});
     } catch {
         res.redirect('/');
     }
@@ -269,10 +271,11 @@ app.post('/deleteComment/:id', async (req,res) => {
 app.post('/favouritePost', async (req,res) => {
     try {
         const post = await Post.findOne({_id: req.body.postID});
-        const sessionUser = await User.findOne({ _id: req.body.user });
+        const sessionUser = await User.findOne({ _id: req.body.userID });
 
         if (post.username == sessionUser.username) {
-            res.json({"ok":false, "isFavourited": false, "favourites": post.favourites.length});
+            res.json({"ok":false, "isClicked": false, "value": post.favourites.length});
+            
         } else {
             if (post.favourites.includes(sessionUser.username)) {
                 const index = post.favourites.indexOf(sessionUser.username);
@@ -286,10 +289,10 @@ app.post('/favouritePost', async (req,res) => {
                 
             sessionUser.save();
             post.save();
-            res.json({"ok":true, "isFavourited": post.favourites.includes(sessionUser.username), "favourites": post.favourites.length});
+            res.json({"ok":true, "isClicked": post.favourites.includes(sessionUser.username), "value": post.favourites.length});
         }
+
     } catch (error) {
-        console.log(error);
         res.json({"ok":false});
     }
 });
@@ -297,10 +300,10 @@ app.post('/favouritePost', async (req,res) => {
 app.post('/likePost', async (req,res) => {
     try {
         const post = await Post.findOne({_id: req.body.postID});
-        const sessionUser = await User.findOne({ _id: req.body.user });
+        const sessionUser = await User.findOne({ _id: req.body.userID });
 
         if (post.username == sessionUser.username) {
-            res.json({"ok":false, "isLiked": false, "likes": post.likes.length});
+            res.json({"ok":false, "isClicked": false, "value": post.likes.length});
         } else {
             if (post.likes.includes(sessionUser.username)) {
                 const index = post.likes.indexOf(sessionUser.username);
@@ -310,18 +313,17 @@ app.post('/likePost', async (req,res) => {
             } 
 
             post.save();
-            res.json({"ok":true, "likes": post.likes.length, "isLiked": post.likes.includes(sessionUser.username)});
+            res.json({"ok":true, "isClicked": post.likes.includes(sessionUser.username), "value": post.likes.length});
         }
     } catch (error) {
-        console.log(error);
         res.json({"ok":false});
     }
 });
 
 app.post('/followUser', async (req,res) => {
     try {
-        const accountUser = await User.findOne({ _id: req.body.user });
-        const sessionUser = await User.findOne({ _id: req.body.userID });
+        const accountUser = await User.findOne({ _id: req.body.sessionUser });
+        const sessionUser = await User.findOne({ _id: req.body.accountUser });
         if (accountUser.followers.includes(sessionUser.username)) {
             const index = sessionUser.following.indexOf(accountUser.username);
             sessionUser.following.splice(index, 1);
@@ -339,7 +341,7 @@ app.post('/followUser', async (req,res) => {
             sessionUser.save();
             accountUser.save();
         }
-        res.json({"followingCount": accountUser.followersCount, "isFollowing": accountUser.followers.includes(sessionUser.username)});
+        res.json({"followingCount": accountUser.followers.length, "isFollowing": accountUser.followers.includes(sessionUser.username)});
     } catch {
         res.json({"ok":false, "followingCount": 0});
     }

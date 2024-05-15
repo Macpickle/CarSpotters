@@ -35,11 +35,15 @@
   </div>
 
   <div class = "sidenav">
-    <a href = "/" class = "selected"><i class="fa-solid fa-home"></i>Home</a>
+    <a href = "/"><i class="fa-solid fa-home"></i>Home</a>
     <a href = "/map" ><i class="fa-solid fa-map"></i>Explore</a>
     <a href = "/notify"><i class ="fa-solid fa-bell"></i>Notifications</a>
     <a href = "/messages"><i class="fa-solid fa-envelope"></i>Messages</a>
-    <a href = "/favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+    <% if (isFavouritePage) {%>
+      <a href = "/favourites" class = "selected"><i class="fa-solid fa-star"></i>Favourites</a>
+    <% } else {%>
+      <a href = "/favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+    <% } %>
     <a href="/create"><i class="fa-solid fa-plus"></i>Create</a>
 </div>
 
@@ -47,15 +51,13 @@
     <div id = "post-container">
         <% posts.forEach(function(post){ %>
           <div class = "post">
-            <form action = "/viewPost/${randomData._id}" method = "GET">
+            <form action = "/viewPost/<%=post._id%>" method = "GET">
               <button>
                 <div class = "view-post">
-                  <div class = "post-header">
-                  
+                  <div class = "post-header">    
                     <div class = "profile-picture">
-                      <img src="<%=post.ownerPhoto%>" alt="">
+                      <img src="<%=post.owner.photo%>" alt="">
                     </div>
-    
                     <div class = "post-header-content">
                       <div class = "stack">
                         <div class = "profile-name">
@@ -86,7 +88,7 @@
                   <button class = "like-button">
                     <label for = "like-button">
                       <i class="fas fa-heart" id = "likeIcon"></i>
-                      <p class = "likeCount"><%=post.likes%></p>
+                      <p class = "likeCount"><%=post.likes.length%></p>
                     </label>
                   </button>
                 </div>
@@ -94,7 +96,7 @@
                   <button class = "favourite-button">
                     <label for = "favourite-button">
                       <i class="fas fa-star"></i>
-                      <p class = "favouriteCount"><%=post.favourites%></p>
+                      <p class = "favouriteCount"><%=post.favourites.length%></p>
                     </label>
                   </button>
                   </div>

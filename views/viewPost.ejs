@@ -52,16 +52,16 @@
             <div class = "post" style="border-bottom: none;">
               <div class = "view-post">
                 <div class = "post-header">
-                  <form id = "viewAccount" action = "/account/<%=post.usernameID%>" method = "GET">
-                  <button style="width: fit-content;" for = "viewAccount">
+                  <form id = "viewAccount" action = "/account/<%=post.owner._id%>" method = "GET">
+                    <button style="width: fit-content;" for = "viewAccount">
                       <div class = "tooltip">
                           <div class = "profile-picture">
                             <img src="<%=post.owner.photo%>" alt="">
                           </div>
                           <span class = "tooltiptext">View Account</span>
                       </div>
-                  </button>
-                </form>
+                    </button>
+                  </form>
               
                   <div class = "post-header-content">
                     <div class = "stack">
@@ -116,7 +116,7 @@
     </div>
 
     <div class = "comment-container">
-      <% if (!isOwner) { %>
+      <% if (!isOwner && userID) { %>
       <div class = "new-comment">
         <div class = "comment-title">
           <h3>Create New Comment</h3>
@@ -128,6 +128,13 @@
           </div>
           <input type = "hidden" name = "postID" value = "<%=post._id%>">
       </div>
+      <% } %>
+      <% if (!userID) { %>
+        <div class = "new-comment" style="align-items: center;">
+          <h3>Sign in to Comment!</h3>
+          <button class = "login-button">
+            <a href = "/login">Login</a>
+        </div>
       <% } %>
 
       <div class = "comments">
@@ -182,6 +189,16 @@
 
     </div>
 </div>
+
+<script src="/javascript/script.js"></script>
+<script>
+  if (userID){
+    document.querySelector('.like-button').addEventListener('click', () => {
+      likePost('<%=post._id%>', userID, '<%post%>');
+    });
+  }
+
+</script>
 
 </body>
 </html>

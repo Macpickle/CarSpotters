@@ -69,15 +69,15 @@
                             </label>
                         </button>
                         <% } %>
-                        <br><div id = "followerCount"><%=user.followersCount%></div>
+                        <br><div id = "followerCount"><%=user.followers.length%></div>
                     </p>
                     
                 </div>
                 <div class = "account-stats">
-                    <p>Posts<br><%=user.postCount%></p>
+                    <p>Posts<br><%=user.postIDs.length%></p>
                 </div>
                 <div class = "account-stats">
-                    <p>Following<br><%=user.followingCount%></p>
+                    <p>Following<br><%=user.following.length%></p>
                 </div>
             </div>
         </div>
