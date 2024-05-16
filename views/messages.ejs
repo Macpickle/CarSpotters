@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <title>CarSpotters</title>
+    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+</head>
+
+<body>
+    <div class = "navbar" id="navbar">
+        <div class = "web-logo">
+            <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+        </div>
+    
+        <ul>
+            <div class = "dropdown">
+                <button class = "dropbtn">
+                    <div class = "icon">
+                        <img src = "<%=user.photo%>" alt = "">
+                    </div>
+                </button>
+                <div class = "dropdown-content">
+                    <a href = "/account/<%=user._id%>" method="GET" id="account">Account</a>
+                    <a href = "/settings/<%=user._id%>" method="GET" id="settings">Settings</a>
+                    <a href = "/" method="GET" id="home">Home</a>
+                    <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+                    
+                    <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+                </div>
+            </div>
+        </ul>
+    </div>
+
+    <div class = "sidenav">
+        <a href = "/"><i class="fa-solid fa-home"></i>Home</a>
+        <a href = "map"><i class="fa-solid fa-map"></i>Explore</a>
+        <a href = "notify"><i class ="fa-solid fa-bell"></i>Notifications</a>
+        <a href = "messages" class = "selected"><i class="fa-solid fa-envelope"></i>Messages</a>
+        <a href = "favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+        <a href="create"><i class="fa-solid fa-plus"></i>Create</a>    
+    </div>
+
+    <div class = "main-container">
+        <div class = "create-message-container" style="display: none;">
+            <div class = "create-message">
+                <form action="/sendMessage" method="POST" id="submitForm">
+                    <div class="user-search">
+                        <input type="text" placeholder="Search for user" maxlength="40" id="searchUser" onfocus="showSelectMenu()">
+                        <div name="user" id="user" class = "user-dropdown" style="display: none;">
+                            <% for (let i = 0; i < usernames.length; i++) { %>
+                                <% if (usernames[i].username != user.username) {%>
+                                <input type="hidden" name="receiver" value="<%= usernames[i].username %>">
+                                <div class = "user">
+                                    <button type="button" onclick="selectUser('<%=usernames[i].username%>')">
+                                        <div class = "image-container">
+                                            <img src="<%=usernames[i].photo%>" alt="">
+                                        </div>
+                                        <p><%=usernames[i].username%></p>
+                                    </button>
+                                </div>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                    <textarea name="message" placeholder="Type your message here" maxlength="250" ></textarea>
+                    <div class="create-message-buttons">
+                        <button id="cancelMessage" type="button" onclick="closeCreation()">Back</button>
+                        <button id="sendMessage" type="submit">Send</button>
+                    </div>
+                    <input type="hidden" name="sender" value="<%= user.username %>">
+                </form>
+            </div>
+        </div>
+
+        <div class = "message-container">
+            <div class = "message-header">
+                <div class = "message-title">
+                    <h1>Messages</h1>
+                </div>
+
+                <div class = "create-new">
+                    <button id = "newMessage">
+                        <i class="fa-solid fa-plus"></i>
+                        <p>Start new Message!</p> 
+                    </button>  
+                </div>
+            </div>
+
+            <div class = "message-dropdown-container">
+                <div class = "message-dropdown">
+                    <form action = "/viewMessage/1" method = "POST">
+                        <button>
+                            <div class = "dropdown-content">
+                                <div class = "message-user">
+                                    <div class = "image-container">
+                                        <img src = "" alt="">
+                                    </div>
+                                    <p>qwe</p>
+                                    <div class = "message-date">
+                                        <p>12:00</p>
+                                    </div>
+                                </div>
+                                <div class = "recent-message">
+                                    <p>Hello man. Hows it going?</p>
+                                </div>
+                            </div>      
+                        </button>
+                    </form>    
+                </div>
+            </div>      
+        </div>
+    </div>
+</body>
+
+<script>
+    document.getElementById("newMessage").addEventListener("click", function(){
+        document.querySelector(".create-message-container").style.display = "block";
+    });
+
+    function closeCreation(){
+        document.querySelector(".create-message-container").style.display = "none";
+    }
+
+    function showSelectMenu(){
+        document.getElementById("user").style.display = "block";
+    }
+
+    function selectUser(username){
+        document.getElementById("searchUser").value = username;
+        console.log(username);
+        document.getElementById("user").style.display = "none";
+    }
+</script>
+</html>

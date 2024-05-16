@@ -109,4 +109,8 @@
     .main-container .account-container .preview-container {
         height: 100%;
     }
+
+    .main-container .create-message-container .create-message {
+        width: 95%;
+    }
 }

@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
     <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
     <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
-    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>]
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
 </head>
 
@@ -53,8 +53,14 @@
 
 </div>
 <div class = "main-container">
-    <div class = "map">
-        <div id="map"></div>
+    <div class = "map-container">
+        <div class = "search-container">
+            <input type="text" id="search" placeholder="Search for a location">
+            <button id="search-button"><i class="fa-solid fa-search"></i></button>
+        </div>
+        <div class = "map">
+            <div id="map"></div>
+        </div>
     </div>
 </div>
 

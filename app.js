@@ -7,6 +7,8 @@ const passport = require('passport');
 const initpassport = require('./passport-config.js');
 const User = require('./models/user.js');
 const Post = require('./models/post.js');
+const Message = require('./models/message.js');
+const Comment = require('./models/comment.js');
 const bcrypt = require('bcrypt');
 const flash = require('express-flash');
 const fileUpload = require('express-fileupload')
@@ -55,7 +57,7 @@ const IN_PRODUCTION = process.env.NODE_ENV === 'production';
 // stores session data
 app.use(session({
     name: 'sid',
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     secret: process.env.SECRET_KEY,
     store: store,
@@ -88,6 +90,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({extended: false}));
 
+//get current user and colour scheme
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    if (req.user) {
+        res.locals.colourScheme = req.user.settings.appearence;
+    }
+    next();
+});
+
 //routes
 app.get('/', async (req,res) => {
     const userID = req.user;
@@ -98,6 +109,18 @@ app.get("/map", async (req,res) => {
     try{
         const userID = req.user;
         res.render('map', { userID });
+    } catch {
+        res.redirect('/');
+    }
+});
+
+app.get('/messages', isLoggedIn, async (req,res) => {
+    try {
+        const user = req.user;
+        const allUsers = await User.find({});
+        const usernames = allUsers.map(user => ({ username: user.username, photo: user.photo }));
+        const messages = await Message.find({ members: { $in: [user.username] } });
+        res.render('messages', { user, usernames });
     } catch {
         res.redirect('/');
     }
@@ -230,7 +253,7 @@ app.post('/commentPost', async (req,res) => {
         } else {
 
         const sessionUser = req.user;
-        const newComment = {
+        const newComment = new Comment({
             username: sessionUser.username,
             ownerPhoto: sessionUser.photo,
             comment: req.body.comment,
@@ -238,11 +261,46 @@ app.post('/commentPost', async (req,res) => {
             likes: 0,
             date: (new Date()).toDateString().substring(0,10),
             commentID: new mongoose.Types.ObjectId()
-        };
+        });
         
         post.comments.push(newComment);
         post.save();
         res.redirect(`/viewPost/${post._id}`);
+        }
+    } catch {
+        res.redirect('/');
+    }
+});
+
+app.post('/sendMessage', async (req,res) => {
+    try {
+        const sender =  await User.findOne({ username: req.body.sender });
+        const receiver = await User.findOne({ username: req.body.receiver });
+        const message = req.body.message;
+
+        if (sender.username == receiver.username) {
+            res.redirect('/messages');
+        }
+
+        const existingMessage = await Message.findOne({ members: { $all: [sender.username, receiver.username] } });
+
+        if (existingMessage) {
+            res.redirect('/messages');
+        } else {
+
+            const newMessage = new Message({
+                members: [sender.username, receiver.username],
+                messages: [
+                    {
+                        sender: sender.username,
+                        message: message,
+                        date: (new Date()).toDateString().substring(0,10),
+                    }
+                ]
+            });
+        
+            newMessage.save();
+            res.redirect('/messages');
         }
     } catch {
         res.redirect('/');
