@@ -28,7 +28,7 @@
                     <a href = "/account/<%=user._id%>" method="GET" id="account">Account</a>
                     <a href = "/settings/<%=user._id%>" method="GET" id="settings">Settings</a>
                     <a href = "/" method="GET" id="home">Home</a>
-                    <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log out</a>
+                    <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                     
                     <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
                 </div>
@@ -93,24 +93,26 @@
 
             <div class = "message-dropdown-container">
                 <div class = "message-dropdown">
-                    <form action = "/viewMessage/1" method = "POST">
-                        <button>
-                            <div class = "dropdown-content">
-                                <div class = "message-user">
-                                    <div class = "image-container">
-                                        <img src = "" alt="">
+                    <% for (let i = 0; i < messageList.length; i++) { %>
+                        <form action = "/viewMessage/<%=messageList[i]._id%>" method = "GET">
+                            <button>
+                                <div class = "dropdown-content">
+                                    <div class = "message-user">
+                                        <div class = "image-container">
+                                            <img src = "<%=otherUsers[i].photo%>" alt="">
+                                        </div>
+                                        <p><%=otherUsers[i].username%></p>
+                                        <div class = "message-date">
+                                            <p><%=messageList[i].messages[messageList[i].messages.length - 1].date%></p>
+                                        </div>
                                     </div>
-                                    <p>qwe</p>
-                                    <div class = "message-date">
-                                        <p>12:00</p>
+                                    <div class = "recent-message">
+                                        <p><%=messageList[i].messages[messageList[i].messages.length - 1].message%></p>
                                     </div>
-                                </div>
-                                <div class = "recent-message">
-                                    <p>Hello man. Hows it going?</p>
-                                </div>
-                            </div>      
-                        </button>
-                    </form>    
+                                </div>      
+                            </button>
+                        </form>    
+                    <% } %>
                 </div>
             </div>      
         </div>

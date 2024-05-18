@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="eng">  
+<head>
+    <title>CarSpotters</title>
+    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+</head>
+
+<body>
+    <div class = "navbar" id="navbar">
+        <div class = "web-logo">
+            <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+        </div>
+    
+        <ul>
+            <div class = "dropdown">
+                <button class = "dropbtn">
+                    <div class = "icon">
+                        <img src = "<%=user.photo%>" alt = "">
+                    </div>
+                </button>
+                <div class = "dropdown-content">
+                    <a href = "/account/<%=user._id%>" method="GET" id="account">Account</a>
+                    <a href = "/settings/<%=user._id%>" method="GET" id="settings">Settings</a>
+                    <a href = "/" method="GET" id="home">Home</a>
+                    <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                    
+                    <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+                </div>
+            </div>
+        </ul>
+    </div>
+
+    <div class = "sidenav">
+        <a href = "/"><i class="fa-solid fa-home"></i>Home</a>
+        <a href = "map"><i class="fa-solid fa-map"></i>Explore</a>
+        <a href = "notify"><i class ="fa-solid fa-bell"></i>Notifications</a>
+        <a href = "messages" class = "selected"><i class="fa-solid fa-envelope"></i>Messages</a>
+        <a href = "favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+        <a href="create"><i class="fa-solid fa-plus"></i>Create</a>    
+    </div>
+
+
+    <div class = "main-container">
+        <div class = "message-container">
+            <div class = "message-content-container">
+                <% for (let i = 0; i < messageList.length; i++) { %>
+                    <% if (messageList[i].sender == user._id) { %>
+                        <div class = "message-content">
+                            <img class = "message-profile" src = "<%=user.photo%>" alt = "">
+                            <div class = "stack">
+                                <div class = "message-username">
+                                    <p><%=user.username%></p>
+                                </div>
+                                <p class = "message-text"><%=messageList[i].message%></p>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <div class = "message-content-otherUser">
+                            <div class = "stack">
+                                <div class = "message-username">
+                                    <p><%=otherUserInformation.username%></p>
+                                </div>
+                                <p class = "message-text"><%=messageList[i].message%></p>
+                            </div>
+                            <img class = "message-profile" src = "<%=otherUserInformation.photo%>" alt = "">
+                        </div>
+                    <% } %>
+                    
+                <% } %>
+            </div>
+            <div class = "message-seperator-container">
+                <textarea class = "message-text" id="message" placeholder="Type your message here..." cols="2" maxlength="146"></textarea>
+                <button class = "send-button" id="send">Send</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+        document.getElementById('message').addEventListener('input', function() {
+            var lines = this.value.split('\n');
+            if (lines.length > 2) {
+                this.value = lines.slice(0, 2).join('\n');
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var messageContainer = document.querySelector(".message-content-container");
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        });
+
+</script>
+</html>

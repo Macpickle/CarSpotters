@@ -49,47 +49,23 @@ html{
     align-items: center;
 }
 
-
 .navbar ul {
+    display: flex;
     list-style-type: none;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-right: 1em;
-    right: 0;
+    height:100%;
     position: absolute;
-    top: 25%;
-}
-
-.navbar ul a {
-    margin: 0 1em;
-    font-size: 2.5em;
-    color: var(--textColour);
-}
-
-.navbar .default-icon {
-    width: 3.5em;
-    height: 3.5em;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-top:-0.75em;
-}
-
-.navbar .dropdown {
-    position: static;
-    display: inline-block; 
-    margin-top:-0.5em;
+    right: 1em;
 }
 
 .navbar .icon {
-    width: 3.5em;
-    height: 3.5em;
+    height: 4em;
+    width: 4em;
 }
 
 .navbar .icon img {
     border-radius: 50%;
     outline: 1px solid var(--outline);
+    object-fit: cover;
 }
 
 .navbar .icon:hover {
@@ -98,10 +74,25 @@ html{
     border-radius: 50%;
 }
 
+.navbar .dropdown {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar .dropdown .dropbtn {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .navbar .dropdown button {
     border: none;
     background-color: transparent;
-    margin-right:1em;
 }
 
 .navbar .dropdown-content {
@@ -112,7 +103,7 @@ html{
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
     left: 50%;
-    transform: translateX(-60%);
+    transform: translateX(-50%);
     top: 100%;
 }
 
@@ -1276,6 +1267,162 @@ html{
     color: var(--textColour);
     font-size: 0.8em;
     text-align: left;
+}
+
+.main-container .message-container .message-seperator-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10%;
+    border-top: 1px solid var(--outline);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.main-container .message-container .message-seperator-container .message-text {
+    min-width: 75%;
+    height: 75%;
+    margin-left: 1em;
+}
+
+.main-container .message-container .message-seperator-container textarea {
+    width: 100%;
+    height: 100%;
+    border-radius: 1em;
+    border: 1px solid var(--outline);
+    padding: 0.5em;
+    resize: none;
+    columns: 2;
+}
+
+.main-container .message-container .message-seperator-container textarea:focus {
+    border: 1px solid var(--loginHover);
+    outline: none;
+}
+
+.main-container .message-container .message-seperator-container .send-button {
+    width:100%;
+    margin: 1em;
+}
+
+.main-container .message-container .message-seperator-container button {
+    border:none;
+    padding: 1em 2em;
+    border-radius: 1em;
+    background-color: var(--sidenavSelected);
+    outline: 1px solid var(--outline);
+}
+
+.main-container .message-container .message-seperator-container button:hover {
+    box-shadow: 0 5px 5px 0 var(--loginHover);
+    transform: scale(1.05);
+}
+
+.main-container .message-container .message-content-container {
+    display:flex;
+    justify-self: center;
+    align-self: center;
+    width: 95%;
+    height: 90%;
+    overflow-y: scroll;
+    flex-direction: column;
+}
+
+.main-container .message-container .message-content-container::-webkit-scrollbar {
+    display:none;
+}
+
+.main-container .message-container .message-content-container .message-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 2.5em;
+}
+
+.main-container .message-container .message-content-container .message-content .message-profile {
+    display: flex;
+    height: 2.5em;
+    width: 2.5em;
+}
+
+.main-container .message-container .message-content-container .message-content  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    padding: 0.25em;
+    object-fit: cover;
+}
+
+.main-container .message-container .message-content-container .message-content .stack {
+    display:flex;
+    flex-direction: column;
+    margin: 0.25em;
+}
+
+.main-container .message-container .message-content-container .message-content .message-username {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    height: 1.25em;
+    padding-bottom: 0.5em;
+}
+
+.main-container .message-container .message-content-container .message-content .message-username p {
+    font-size: 0.9em;
+}
+
+.main-container .message-container .message-content-container .message-content .message-text {
+    height:1em;
+    color: var(--textColour);
+    font-size: 0.85em;
+}
+
+.main-container .message-container .message-content-container .message-content-otherUser {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 2.5em;
+    justify-content: flex-end;
+}
+
+.main-container .message-container .message-content-container .message-content-otherUser .message-profile {
+    display: flex;
+    height: 2.5em;
+    width: 2.5em;
+}
+
+.main-container .message-container .message-content-container .message-content-otherUser img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    padding: 0.25em;
+    object-fit: cover;
+}
+
+.main-container .message-container .message-content-container .message-content-otherUser .stack {
+    display:flex;
+    flex-direction: column;
+    margin: 0.25em;
+}
+
+.main-container .message-container .message-content-container .message-content-otherUser .message-username {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    height: 1.25em;
+    padding-bottom: 0.5em;
+    align-self: flex-end;
+}
+
+.main-container .message-container .message-content-container .message-content-otherUser .message-username p {
+    font-size: 0.9em;
+}
+
+.main-container .message-container .message-content-container .message-content-otherUser .message-text {
+    height:1em;
+    color: var(--textColour);
+    font-size: 0.85em;
 }
 
 .loader,

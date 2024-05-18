@@ -119,10 +119,25 @@ app.get('/messages', isLoggedIn, async (req,res) => {
         const user = req.user;
         const allUsers = await User.find({});
         const usernames = allUsers.map(user => ({ username: user.username, photo: user.photo }));
-        const messages = await Message.find({ members: { $in: [user.username] } });
-        res.render('messages', { user, usernames });
+        const otherUsers = usernames.filter(username => username.username !== user.username);
+        const messageList = await Message.find({ members: { $in: [user.username] } });
+
+        res.render('messages', {user , usernames, otherUsers, messageList});
     } catch {
         res.redirect('/');
+    }
+});
+
+app.get('/viewMessage/:id', async (req,res) => {
+    try {
+        const user = req.user;
+        const message = await Message.findOne({ _id: req.params.id });
+        const messageList = message.messages;
+        const otherUser = await User.findOne({username: message.members.filter(member => member !== user.username)[0]});
+        const otherUserInformation = { username: otherUser.username, photo: otherUser.photo };
+        res.render('viewMessage', {user, message, messageList, otherUserInformation});
+    } catch {
+        res.redirect('/messages');
     }
 });
 
