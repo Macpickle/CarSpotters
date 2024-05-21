@@ -45,17 +45,16 @@
         <a href="create"><i class="fa-solid fa-plus"></i>Create</a>    
     </div>
 
-
     <div class = "main-container">
         <div class = "message-container">
             <div class = "message-content-container">
                 <% for (let i = 0; i < messageList.length; i++) { %>
-                    <% if (messageList[i].sender == user._id) { %>
+                    <% if (messageList[i].sender != user.username) { %>
                         <div class = "message-content">
-                            <img class = "message-profile" src = "<%=user.photo%>" alt = "">
+                            <img class = "message-profile" src = "<%=otherUserInformation.photo%>" alt = "">
                             <div class = "stack">
                                 <div class = "message-username">
-                                    <p><%=user.username%></p>
+                                    <p><%=otherUserInformation.username%></p>
                                 </div>
                                 <p class = "message-text"><%=messageList[i].message%></p>
                             </div>
@@ -64,19 +63,21 @@
                         <div class = "message-content-otherUser">
                             <div class = "stack">
                                 <div class = "message-username">
-                                    <p><%=otherUserInformation.username%></p>
+                                    <p><%=user.username%></p>
                                 </div>
                                 <p class = "message-text"><%=messageList[i].message%></p>
                             </div>
-                            <img class = "message-profile" src = "<%=otherUserInformation.photo%>" alt = "">
+                            <img class = "message-profile" src = "<%=user.photo%>" alt = "">
                         </div>
                     <% } %>
                     
                 <% } %>
             </div>
             <div class = "message-seperator-container">
-                <textarea class = "message-text" id="message" placeholder="Type your message here..." cols="2" maxlength="146"></textarea>
-                <button class = "send-button" id="send">Send</button>
+                <form action="/appendMessage/<%=message._id%>" method="POST" id="sendMessage">
+                    <textarea class="message-text" id="message" name="message" placeholder="Type your message here..." cols="2" maxlength="146"></textarea>
+                    <button class="send-button" id="send">Send</button>
+                </form>
             </div>
         </div>
     </div>

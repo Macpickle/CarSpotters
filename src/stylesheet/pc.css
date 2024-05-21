@@ -126,6 +126,57 @@ html{
     display: block;
 }
 
+.navbar .error-container {
+    display:flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    z-index: 12;
+    position: absolute;
+    top: 0;
+}
+
+
+.navbar .error-alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid var(--outline);
+    width: 25%;
+    height: 5em;
+    animation: fadeDownIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeDownIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes fadeBack {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+}
+
 .tooltip {
     position: relative;
     display: inline-block;
@@ -1074,20 +1125,13 @@ html{
     background-color: var(--postBackground);
     border: 1px solid var(--outline);
     position: relative;
-}
-
-.main-container .create-message-container .create-message .user-dropdown .user button {
-    border: none;
-    background-color: transparent;
-    width: 100%;
-    height: 100%;
-    display: flex;
+    display:flex;
     flex-direction: row;
     align-items: center;
 }
 
-.main-container .create-message-container .create-message .user-dropdown .user button:hover {
-    background-color: var(--sidenavSelected);
+.main-container .create-message-container .create-message .user-dropdown .user:hover {
+    background-color: var(--sidenavHover);
 }
 
 .main-container .create-message-container .create-message .user-dropdown p {
@@ -1327,6 +1371,12 @@ html{
     height: 90%;
     overflow-y: scroll;
     flex-direction: column;
+}
+
+.main-container .message-container form {
+    width:100%; 
+    display:flex; 
+    align-items: center;
 }
 
 .main-container .message-container .message-content-container::-webkit-scrollbar {

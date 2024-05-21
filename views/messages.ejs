@@ -34,6 +34,14 @@
                 </div>
             </div>
         </ul>
+
+        <!--
+        <div class = "error-container">
+                <div class = "error-alert">
+                    <p>test</p>
+                </div>
+        </div>
+        -->
     </div>
 
     <div class = "sidenav">
@@ -50,24 +58,13 @@
             <div class = "create-message">
                 <form action="/sendMessage" method="POST" id="submitForm">
                     <div class="user-search">
-                        <input type="text" placeholder="Search for user" maxlength="40" id="searchUser" onfocus="showSelectMenu()">
-                        <div name="user" id="user" class = "user-dropdown" style="display: none;">
-                            <% for (let i = 0; i < usernames.length; i++) { %>
-                                <% if (usernames[i].username != user.username) {%>
-                                <input type="hidden" name="receiver" value="<%= usernames[i].username %>">
-                                <div class = "user">
-                                    <button type="button" onclick="selectUser('<%=usernames[i].username%>')">
-                                        <div class = "image-container">
-                                            <img src="<%=usernames[i].photo%>" alt="">
-                                        </div>
-                                        <p><%=usernames[i].username%></p>
-                                    </button>
-                                </div>
-                                <% } %>
-                            <% } %>
+                        <input id = "input" type="text" placeholder="Search for user" maxlength="40" id="searchUser">
+                        <input type="hidden" name="receiver" id="receiver" value = >
+                        <div name="user" id="user" class = "user-dropdown" style="display:none">
+                           <!--new created here-->
                         </div>
                     </div>
-                    <textarea name="message" placeholder="Type your message here" maxlength="250" ></textarea>
+                    <textarea id = "message" name="message" placeholder="Type your message here" maxlength="250" ></textarea>
                     <div class="create-message-buttons">
                         <button id="cancelMessage" type="button" onclick="closeCreation()">Back</button>
                         <button id="sendMessage" type="submit">Send</button>
@@ -119,7 +116,12 @@
     </div>
 </body>
 
+<script src="/javascript/autocomplete.js"></script>
 <script>
+    var userInput = document.getElementById("input");
+    var currentUsername = "<%= user.username %>";
+    autocomplete(userInput, JSON.parse('<%- JSON.stringify(usernames) %>'), currentUsername);
+
     document.getElementById("newMessage").addEventListener("click", function(){
         document.querySelector(".create-message-container").style.display = "block";
     });
@@ -128,14 +130,25 @@
         document.querySelector(".create-message-container").style.display = "none";
     }
 
-    function showSelectMenu(){
-        document.getElementById("user").style.display = "block";
-    }
+    document.getElementById("input").addEventListener("input", function(){
+        if (document.getElementById("input").value == ""){
+            document.getElementById("user").style.display = "none";
+        } else {
+            document.getElementById("user").style.display = "flex";
+        }
+    });
 
-    function selectUser(username){
-        document.getElementById("searchUser").value = username;
-        console.log(username);
-        document.getElementById("user").style.display = "none";
-    }
+    document.getElementById("message").addEventListener("input", function(){
+        if (document.getElementById("message").value != ""){
+            document.getElementById("user").style.display = "none";
+        } else {
+            document.getElementById("user").style.display = "flex";
+        }
+    });
+
+    setTimeout(() => {
+        document.querySelector('.navbar .error-alert').style.animation = 'fadeBack 1s ease-in-out forwards';
+    }, 2500);
+
 </script>
 </html>
