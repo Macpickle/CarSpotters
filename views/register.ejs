@@ -15,20 +15,34 @@
         <form action="/register" method="POST">
             <h1 class = "login-header">Welcome!</h1>
             <div class = "login-error">
+                <% console.log(error); %>   
                 <% if (error) {%>
                     <p class="error"><%= error %></p>
                 <% } %>
             </div>
 
-            <input id = "username" name = "username" type = "username" placeholder = "Username" required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
-            <input id = "email" name = "email" type = "email" placeholder = "Email" required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
-            <input id = "password" name = "password" type = "password" placeholder = "Password" required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
+            <input id = "username" name = "username" type = "username" placeholder = "Username" required>
+            <input id = "email" name = "email" type = "email" placeholder = "Email" required >
+            <input id = "password" name = "password" type = "password" placeholder = "Password">
             <div>
                 <button type="submit" value="register">Register</button>
             </div>
         </form>
 </div>
-
     <script src="/src/javascript/script.js"></script>
+    <script>
+        console.log("<%= error %>");
+        if ("<%= error %>" != "") {
+            document.getElementById("username").style.border = "1px solid red";
+            document.getElementById("email").style.border = "1px solid red";
+            document.getElementById("password").style.border = "1px solid red";
+        }
+        
+        document.querySelectorAll("input").forEach(function(input) {
+            input.addEventListener("input", function() {
+            input.style.border = "";
+            });
+        });
+    </script>
 </body>
 </html>

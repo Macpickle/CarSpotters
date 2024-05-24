@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.8",
+    "bad-words": "^3.0.4",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
     "connect-mongodb-session": "^2.2.0",

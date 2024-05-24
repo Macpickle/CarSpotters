@@ -123,7 +123,7 @@
         </div>
         <form id = "newComment" action = "/commentPost" method = "POST">
           <div class = "comment-input">
-            <textarea name = "comment" placeholder = "Enter your comment here"  rows="3" cols="3" wrap="hard" minlength="1" maxlength="150" style="resize: none;"></textarea>
+            <textarea id = "comment" name = "comment" placeholder = "Enter your comment here"  rows="3" cols="3" wrap="hard" minlength="1" maxlength="150" style="resize: none;"></textarea>
             <button type = "submit">Comment</button>
           </div>
           <input type = "hidden" name = "postID" value = "<%=post._id%>">
@@ -192,12 +192,26 @@
 
 <script src="/javascript/script.js"></script>
 <script>
+  document.getElementById('comment').addEventListener('input', function() {
+      var lines = this.value.split('\n');
+      if (lines.length > 3) {
+          this.value = lines.slice(0, 3).join('\n');
+      }
+  });
+
+  if ("<%=error%>" != "") {
+    document.getElementById('comment').style.border = "1px solid red";
+  }
+
+  document.getElementById('comment').addEventListener('input', function() {
+    document.getElementById('comment').style.border = "";
+  });
+
   if (userID){
     document.querySelector('.like-button').addEventListener('click', () => {
       likePost('<%=post._id%>', userID, '<%post%>');
     });
   }
-
 </script>
 
 </body>

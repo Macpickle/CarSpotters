@@ -56,12 +56,12 @@
     </div>
 
     <div class = "main-container">
-        <form class = "file-form" action="/create" method="POST" enctype="multipart/form-data" onsubmit="submit.disabled = true">
+        <form class = "file-form" action="/createNewPost" method="POST" enctype="multipart/form-data" onsubmit="submit.disabled = true">
             <div class = "file-container">
             <div class = "image-container">
                 <input type="file" id="img" name="img" accept="image/png, image/jpg" style="display:none;" onchange="loadFile(event)" required>
                 <img id="output" name="output" style="display:none">
-                <button type="button"><label for="img" id = "button-img">Select an Image</label></button>
+                <button type="button" class = "button-img"><label for="img" id = "button-img">Select an Image</label></button>
             </div>
             <div class = "text-input-container">
                 <div class = "information-container">

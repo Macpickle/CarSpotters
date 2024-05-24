@@ -600,6 +600,9 @@ html{
     outline: 1px solid var(--outline);
     overflow: hidden;
     background-color: var(--postBackground);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .main-container .file-container .image-container img{
@@ -617,8 +620,13 @@ html{
     height: 100%;
     width: 100%;
 }
+.main-container .file-container .button-img {
+    position: absolute;
+}
+
 .main-container .file-container button{
-    border:none;
+    border: 1px solid var(--outline);
+    background-color: var(--sidenavBackground);
     padding:1em;
     border-radius: 50em;
 }
@@ -632,6 +640,16 @@ html{
 
 .main-container .file-container button:hover{
     box-shadow: 0 5px 5px 0 var(--loginHover);
+}
+
+.main-container .file-container input[type="text"]:focus {
+    border: none;
+    outline: 1px solid var(--loginHover);
+}
+
+.main-container .file-container textarea:focus {
+    border: none;
+    outline: 1px solid var(--loginHover);
 }
 
 .main-container .text-input-container{

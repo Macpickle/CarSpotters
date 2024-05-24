@@ -33,5 +33,29 @@
         <a href="register">Don't have an account? Register here!</a>
         <a class= "forgot-password-link" href="forgotpassword">Forgot your password?</a>
     </div>
+
+    <script>
+        //auto fill if user was just registered
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        const username = urlParams.get('username');
+
+        if (username) {
+            document.getElementById('username').value = username;
+        }
+
+        document.getElementById('username').addEventListener('input', function() {
+            this.style.outline = 'none';
+            document.getElementById('password').style.outline = 'none';
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            this.style.outline = 'none';
+            document.getElementById('username').style.outline = 'none';
+        });
+
+
+    </script>
 </body>
 </html>

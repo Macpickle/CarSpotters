@@ -34,14 +34,13 @@
                 </div>
             </div>
         </ul>
-
-        <!--
+        <% if (error.length > 0) { %>
         <div class = "error-container">
-                <div class = "error-alert">
-                    <p>test</p>
-                </div>
+            <div class = "error-alert">
+                <p><%=error%></p>
+            </div>
         </div>
-        -->
+        <% } %>
     </div>
 
     <div class = "sidenav">
@@ -64,7 +63,7 @@
                            <!--new created here-->
                         </div>
                     </div>
-                    <textarea id = "message" name="message" placeholder="Type your message here" maxlength="250" ></textarea>
+                    <textarea id = "message" name="message" placeholder="Type your message here" maxlength="250" minlength="1" ></textarea>
                     <div class="create-message-buttons">
                         <button id="cancelMessage" type="button" onclick="closeCreation()">Back</button>
                         <button id="sendMessage" type="submit">Send</button>
@@ -104,7 +103,7 @@
                                         </div>
                                     </div>
                                     <div class = "recent-message">
-                                        <p><%=messageList[i].messages[messageList[i].messages.length - 1].message%></p>
+                                        <p class = "message-text-content"><%=messageList[i].messages[messageList[i].messages.length - 1].message%></p>
                                     </div>
                                 </div>      
                             </button>
@@ -145,6 +144,14 @@
             document.getElementById("user").style.display = "flex";
         }
     });
+
+    var messageTextElements = document.getElementsByClassName("message-text-content");
+    for (var i = 0; i < messageTextElements.length; i++) {
+        var messageText = messageTextElements[i].innerText;
+        if (messageText.length > 50) {
+            messageTextElements[i].innerText = messageText.substring(0, 50) + "...";
+        }
+    }
 
     setTimeout(() => {
         document.querySelector('.navbar .error-alert').style.animation = 'fadeBack 1s ease-in-out forwards';

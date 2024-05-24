@@ -2,6 +2,8 @@ require('dotenv').config(); // for environment variables
 
 const getRoutes = require('./routes/getRoutes.js');
 const postRoutes = require('./routes/postRoutes.js');
+const adminRoutes = require('./routes/adminRoutes.js');
+
 const express = require('express');
 const session = require('express-session'); 
 const path = require('path');
@@ -11,13 +13,13 @@ const User = require('./models/user.js');
 const Post = require('./models/post.js');
 const Message = require('./models/message.js');
 const Comment = require('./models/comment.js');
-const bcrypt = require('bcrypt');
 const flash = require('express-flash');
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser');
 
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
+const errorHandler = require('./middleware/errorHandler.js');
 
 const app = express();
 
@@ -38,6 +40,8 @@ const store = new MongoDBStore({
 app.use(express.static(path.join(__dirname, 'src')));
 app.use(flash());
 app.use(fileUpload())
+
+app.use(flash());
 
 // Parse URL-encoded bodies
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -71,15 +75,6 @@ app.use(session({
     }
 ));
 
-//function to determine if the session has a logged in account
-const isLoggedIn = (req, res, next) => {
-    const userID = req.user;
-    if (userID) {
-        return next();
-    }
-    res.redirect('/login');
-}
-
 // passport middleware, used to authenticate users
 initpassport(
     passport,
@@ -92,18 +87,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({extended: false}));
 
-//get current user and colour scheme
+//get current date formatted as dd mm time
 app.use((req, res, next) => {
-    res.locals.user = req.user;
-    if (req.user) {
-        res.locals.colourScheme = req.user.settings.appearence;
-    }
+    const day = (new Date().getDate() + "/" + new Date().getMonth());
+    const time = new Date().toLocaleTimeString();
+
+    res.locals.formattedDate = day + " " + time;
+
     next();
 });
 
 //routes
+app.use(adminRoutes);
 app.use(getRoutes);
 app.use(postRoutes);
+
+//error handling
+app.use(errorHandler);
 
 //sends all posts to request
 app.post('/data', async (req,res) => {

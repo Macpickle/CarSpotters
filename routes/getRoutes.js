@@ -27,7 +27,8 @@ router.get('/login', (req,res) => {
 });
 
 router.get('/register', (req,res) => {
-    res.render('register', {"error":false});
+    const error = req.query.error || "";
+    res.render('register', {error:error});
 });
 
 router.get('/create', isLoggedIn, (req,res) => {
@@ -42,9 +43,10 @@ router.get('/failureLogin', (req,res) => {
 router.get('/settings/:id', isLoggedIn, async (req,res) => {
     const userID = req.user;
     const id = req.params.id;
+    const sucess = req.query.success || false;
 
     if (id == userID._id) {
-        res.render('settings', {userID});
+        res.render('settings', {userID, sucess});
     } else {
         res.redirect('/');
     }
@@ -57,8 +59,9 @@ router.get('/messages', isLoggedIn, async (req,res) => {
         const usernames = allUsers.map(user => ({ username: user.username, photo: user.photo }));
         const otherUsers = usernames.filter(username => username.username !== user.username);
         const messageList = await Message.find({ members: { $in: [user.username] } });
-        
-        res.render('messages', {user , usernames, otherUsers, messageList});
+        const error = req.query.error || false;
+
+        res.render('messages', {user , usernames, otherUsers, messageList, error: error});
     } catch {
         res.redirect('/');
     }
@@ -71,7 +74,8 @@ router.get('/viewMessage/:id', async (req,res) => {
         const messageList = message.messages;
         const otherUser = await User.findOne({username: message.members.filter(member => member !== user.username)[0]});
         const otherUserInformation = { username: otherUser.username, photo: otherUser.photo };
-        res.render('viewMessage', {user, message, messageList, otherUserInformation});
+        const error = req.query.error || "";
+        res.render('viewMessage', {user, message, messageList, otherUserInformation, error: error});
     } catch {
         res.redirect('/messages');
     }
@@ -102,18 +106,19 @@ router.get('/viewPost/:id', async (req,res) => {
     try {
         const userID = req.user;
         const post = await Post.findOne({ _id: req.params.id });
+        const error = req.query.error || "";
 
         if (userID) {
             //determines authentication of user, if post owner or server admin
             const admin = userID.admin;
             const isOwner = (JSON.stringify(userID._id) == JSON.stringify(post.owner._id));
 
-            res.render('viewPost', {post, admin, isOwner, userID});
+            res.render('viewPost', {post, admin, isOwner, userID, error: error});
         } else {
             const admin = false;
             const isOwner = false;
 
-            res.render('viewPost', {post, admin, isOwner, userID});
+            res.render('viewPost', {post, admin, isOwner, userID, error: error});
         }
     } catch {
         res.redirect('/');

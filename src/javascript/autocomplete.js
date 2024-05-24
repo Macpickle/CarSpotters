@@ -2,8 +2,10 @@ function autocomplete(input, objectOfUsers, user) {
     var usernamesList = [];
     var users = objectOfUsers;
 
+    //gets all usernames from the object
     for (let i = 0; i < users.length; i++) {
-        if (users[i].username != user && !usernamesList.includes(users[i].username)) {
+        //if the username is not already in the list of usernames
+        if (!usernamesList.includes(users[i].username)) {
             usernamesList.push(users[i].username);
         }
     }
@@ -12,6 +14,7 @@ function autocomplete(input, objectOfUsers, user) {
         var inputText = input.value;
         var suggestions = [];
         if (inputText) {
+            // filter usernames if the userinput is starts with the username
             suggestions = usernamesList.filter(function(username) {
                 return username.toLowerCase().startsWith(inputText.toLowerCase());
             });
@@ -20,6 +23,7 @@ function autocomplete(input, objectOfUsers, user) {
         var parent = document.getElementById('user');
         parent.innerHTML = '';
 
+        // for each suggestion, create a div element and append it to the parent div to show to user
         for (let i = 0; i < suggestions.length; i++) {
             var suggestion = suggestions[i];
             var user = users.find(function(user) {

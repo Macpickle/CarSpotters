@@ -25,10 +25,6 @@ const commentSchema = new mongoose.Schema({
         type: String,
         timestamps: true
     },
-    commentID: {
-        type: String,
-        required: true
-    }
 });
 
 module.exports = mongoose.model('Comment', commentSchema);

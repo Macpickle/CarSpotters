@@ -1,6 +1,23 @@
 const router = require('express').Router();
 const passport = require('passport');
+const User = require('../models/user');
+const Post = require('../models/post');
+const Comment = require('../models/comment');
+const Message = require('../models/message');
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 
+const appError = require('../appError');
+const autoModerate = require('../automoderation');
+const { tryCatch } = require('../utils/tryCatch');
+const { SAME_USER } = require('../constants/errorCodes');
+const { EXISTING_MESSAGE } = require('../constants/errorCodes');
+const { MESSAGE_NOT_FOUND } = require('../constants/errorCodes');
+const { EXISTING_USER } = require('../constants/errorCodes');
+const { INAPPROPRIATE_MESSAGE } = require('../constants/errorCodes');
+const { IMAGE_UPLOAD_FAILED } = require('../constants/errorCodes');
+const { INVALID_PASSWORD } = require('../constants/errorCodes');
+const { INVALID_EMAIL } = require('../constants/errorCodes');
 
 router.post('/login', passport.authenticate('local', {
     failureRedirect:  '/failureLogin',
@@ -19,114 +36,87 @@ router.post('/logout', (req,res) => {
     });
 });
 
-router.post('/commentPost', async (req,res) => {
-    try {
-        const post = await Post.findOne({_id: req.body.postID});
-
-        if (!req.body.comment) {
-            res.redirect(`/viewPost/${post._id}`);
-        } else {
-
-        const sessionUser = req.user;
-        const newComment = new Comment({
-            username: sessionUser.username,
-            ownerPhoto: sessionUser.photo,
-            comment: req.body.comment,
-            postID: post._id,
-            likes: 0,
-            date: (new Date()).toDateString().substring(0,10),
-            commentID: new mongoose.Types.ObjectId()
-        });
-        
-        post.comments.push(newComment);
-        post.save();
-        res.redirect(`/viewPost/${post._id}`);
-        }
-    } catch {
-        res.redirect('/');
+router.post('/commentPost', tryCatch(async (req,res) => {
+    const post = await Post.findOne({ _id: req.body.postID });
+    const sessionUser = req.user;
+    if (!req.body.comment) {
+        throw new appError("Comment cannot be empty!", 404, MESSAGE_NOT_FOUND, `/viewPost/${post._id}`);
     }
-});
 
-router.post("/routerendMessage/:id", async (req,res) => {
-    try {
-        if (!req.body.message) {
-            res.redirect(`/viewMessage/${message._id}`);
-        }
+    //replaces swear words with asterisks
+    const cleanedText = autoModerate(req.body.comment, true);
 
-        const message = await Message.findOne({ _id: req.params.id });
-        const sender = req.user;
-        const date = (new Date()).toDateString().substring(0,10);
+    const newComment = new Comment({
+        username: sessionUser.username,
+        ownerPhoto: sessionUser.photo,
+        comment: cleanedText,
+        postID: post._id,
+        likes: 0,
+        date: res.locals.formattedDate,
+    });
 
-        const newMessage = {
-            sender: sender.username,
-            message: req.body.message,
-            date: date,
-        };
+    post.comments.push(newComment);
+    post.save();
+    return res.status(200).redirect(`/viewPost/${post._id}`);
+}));
 
-        message.messages.push(newMessage);
-        message.save();
+router.post("/appendMessage/:id", tryCatch(async (req,res) => {
+    const currentChat = await Message.findOne({ _id: req.params.id });
+    const sender = req.user;
 
-        res.redirect(`/viewMessage/${message._id}`);
-    } catch {
-        res.redirect('/messages');
+    if (!req.body.message) {
+        throw new appError("Message cannot be empty!", 404, MESSAGE_NOT_FOUND, `/viewMessage/${currentChat._id}`);
     }
-});
-
-router.post('/sendMessage', async (req,res) => {
-    try {
-        const sender =  await User.findOne({ username: req.body.sender });
-        const receiver = await User.findOne({ username: req.body.receiver });
-        const message = req.body.message;
-        const existingMessage = await Message.findOne({ members: { $all: [sender.username, receiver.username] } });
-
-        if (existingMessage) {
-            res.redirect('/messages');
-        }
-        else if (sender.username == receiver.username) {
-            res.redirect('/messages');
-        } else {
-            const newMessage = new Message({
-                members: [sender.username, receiver.username],
-                messages: [
-                    {
-                        sender: sender.username,
-                        message: message,
-                        date: (new Date()).toDateString().substring(0,10),
-                    }
-                ]
-            });
-        
-            newMessage.save();
-            res.redirect('/messages');
-        }
-    } catch {
-        res.redirect('/');
+    if (!currentChat) {
+        throw new appError("Message not found!", 404, MESSAGE_NOT_FOUND, `/viewMessage/${currentChat._id}`);
     }
-});
 
-router.post('/deleteComment/:id', async (req,res) => {
-    try {
-        const post = await Post.findOne({ _id: req.body.postID });
-        for (let i = 0; i < post.comments.length; i++) {
-            if (post.comments[i].commentID == req.params.id) {
-                post.comments.splice(i, 1);
-                break;
+    const newMessage = {
+        sender: sender.username,
+        message: req.body.message,
+        date: res.locals.formattedDate,
+    };
+
+    currentChat.messages.push(newMessage);
+    currentChat.save();
+    return res.status(200).redirect('/viewMessage/' + currentChat._id);
+}));
+
+router.post('/sendMessage', tryCatch(async (req,res) => {
+    const sender =  await User.findOne({ username: req.body.sender });
+    const receiver = await User.findOne({ username: req.body.receiver });
+    const isExistingMessage = await Message.findOne({ members: { $all: [sender.username, receiver.username] } });
+    const message = req.body.message;
+
+    if (sender.username == receiver.username) {
+        throw new appError("Cannot message yourself!", 400, SAME_USER, "/messages");
+    } 
+    if (isExistingMessage) {
+        throw new appError("Message already exists!", 400, EXISTING_MESSAGE, "/messages");
+    }
+    if (message.length <= 0 || message == null) {
+        throw new appError("Message cannot be empty!", 404, MESSAGE_NOT_FOUND, "/messages");
+    }
+    
+    const newMessage = new Message({
+        members: [sender.username, receiver.username],
+        messages: [
+            {
+                sender: sender.username,
+                message: message,
+                date: res.locals.formattedDate,
             }
-        }
-        post.save();
-        res.redirect(`/viewPost/${post._id}`);
+        ]
+    });
 
-    } catch (err) {
-        console.log(err);
-        res.redirect('/');
-    }
-
-});
+    newMessage.save();
+    return res.status(200).redirect('/messages');
+}));
 
 router.post('/favouritePost', async (req,res) => {
     try {
         const post = await Post.findOne({_id: req.body.postID});
-        const sessionUser = await User.findOne({ _id: req.body.userID });
+        const sessionUser = req.user;
 
         if (post.username == sessionUser.username) {
             res.json({"ok":false, "isClicked": false, "value": post.favourites.length});
@@ -175,32 +165,29 @@ router.post('/likePost', async (req,res) => {
     }
 });
 
-router.post('/followUser', async (req,res) => {
-    try {
-        const accountUser = await User.findOne({ _id: req.body.sessionUser });
-        const sessionUser = await User.findOne({ _id: req.body.accountUser });
-        if (accountUser.followers.includes(sessionUser.username)) {
-            const index = sessionUser.following.indexOf(accountUser.username);
-            sessionUser.following.splice(index, 1);
-            const index2 = accountUser.followers.indexOf(sessionUser.username);
-            accountUser.followers.splice(index2, 1);
-            accountUser.followersCount -= 1;
-            sessionUser.followingCount -= 1;
-            sessionUser.save();
-            accountUser.save();
-        } else {
-            sessionUser.following.push(accountUser.username);
-            accountUser.followers.push(sessionUser.username);
-            accountUser.followersCount += 1;
-            sessionUser.followingCount += 1;
-            sessionUser.save();
-            accountUser.save();
-        }
-        res.json({"followingCount": accountUser.followers.length, "isFollowing": accountUser.followers.includes(sessionUser.username)});
-    } catch {
-        res.json({"ok":false, "followingCount": 0});
+router.post('/followUser', tryCatch(async (req,res) => {
+    const accountUser = await User.findOne({ _id: req.body.accountUser });
+    const sessionUser = await User.findOne({ _id: req.body.sessionUser });
+
+    var isFollowing = sessionUser.following.includes(accountUser.username);
+
+    if (isFollowing) {
+        //remove following of session user
+        const index = sessionUser.following.indexOf(accountUser.username);
+        sessionUser.following.splice(index, 1);
+        //remove followers of account user
+        const index2 = accountUser.followers.indexOf(sessionUser.username);
+        accountUser.followers.splice(index2, 1);
+    } else {
+        //add following of session user
+        sessionUser.following.push(accountUser.username);
+        //add followers of account user
+        accountUser.followers.push(sessionUser.username);
     }
-});
+    sessionUser.save();
+    accountUser.save();
+    res.status(200).json({"followingCount": accountUser.followers.length, "isFollowing": !isFollowing});
+}));
 
 router.post('/deletePost/:id', async (req,res) => {
     try {
@@ -219,217 +206,223 @@ router.post('/deletePost/:id', async (req,res) => {
     }
 });
 
-router.post('/changeProfilePicture', async (req,res) => {
-    try{
-        const user = await User.findOne({ _id: req.body.userID });
-        const posts = await Post.find({ username: user.username });
-        var photoData = req.files.photo.data.toString('base64');
-        const formData = new FormData();
-        formData.routerend('image', photoData);
-
-        fetch('https://api.imgur.com/3/image', {
-            method: 'POST',
-            headers: {
-                Authorization: "Client-ID " + process.env.IMGUR_CLIENT_ID,
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            user.photo = data.data.link;
-            user.save();
-            
-            posts.forEach(post => {
-                post.owner = {
-                    _id: user._id,
-                    username: user.username,
-                    photo: user.photo,
-                };
-                post.save();
-            });
-            
-            res.json({"ok":true});
-        }).catch(err => {
-            console.log(err);
-        });
-    } catch {
-        res.json({"ok":false});
+//makes IMGUR post request, returns link to image
+function fetchImage(img, defaultURL) {
+    if (!img || img == null) {
+        return new appError("Image required!", 400, "IMAGE_REQUIRED", defaultURL);
     }
-});
 
-router.post('/create', async (req,res) => {
-    try {
-        //upload image to imgur
-        const img = req.files.img;
-        const formData = new FormData();
-        formData.append('image', img.data.toString('base64'));
+    const formData = new FormData();
+    formData.append('image', img.data.toString('base64'));
 
-        fetch('https://api.imgur.com/3/image', {
-            method: 'POST',
-            headers: {
-                Authorization: "Client-ID " + process.env.IMGUR_CLIENT_ID,
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            //gets image link returned by JSON of imgur API
-            const imageLink = data.data.link;
+    return fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+            Authorization: "Client-ID " + process.env.IMGUR_CLIENT_ID,
+        },
+        body: formData
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        return data.data.link;
+    })
+    .catch(err => {
+        return new appError("Image upload failed!", 400, IMAGE_UPLOAD_FAILED, defaultURL);
+    });
+}
 
-            //create owner information, only useful for the post schema
-            const ownerInformation = {
-                _id: req.user._id,
-                username: req.user.username,
-                photo: req.user.photo,
-            }
+router.post('/changeProfilePicture', tryCatch(async (req,res) => {
+    const user = await User.findOne({ _id: req.body.userID });
+    const posts = await Post.find({ username: user.username });
+    const img = req.files.photo;
+    const photoLink = await fetchImage(img, "/account/" + user._id);
 
-            //create post via Schema
-            const newPost = new Post({
-                username: req.user.username,
-                owner: ownerInformation,
-                location: req.body.location,
-                description: req.body.description,
-                photo: imageLink,
-                allowComments: true,
-                likes: [],
-                favourites: [],
-                comments: [],
-                date: (new Date()).toDateString().substring(0,10),
-                carModel: req.body.carModel,
-                carTitle: req.body.carName,
-            });
-
-            //update user's post cound, postIDs, and postPhotos, then saves into database.
-            req.user.postPhotos.push(imageLink);
-            req.user.postIDs.push(newPost._id);
-            req.user.postCount += 1;
-            req.user.save();
-            newPost.save();
-
-            res.redirect('/');
-        });
-    } catch {
-        const userID = req.user; 
-        res.render('create', {userID});
+    if (photoLink instanceof appError) {
+        throw photoLink;
     }
-});
 
-router.post('/register', async (req, res) => {
-    try {
-        // Check if user already exists by username or email
-        const existingUser = await User.findOne({ 
-            $or: [
-                { username: req.body.username },
-                { email: req.body.email }
-            ]
-        });
-        if (existingUser) {
-            // User already exists
-            res.render('register', { error: 'User already exists!' });
-            return;
-        }
-        // Hash the password (bcrypt)
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    user.photo = photoLink;
+    user.save();
+
+    posts.forEach(post => {
+        post.owner = {
+            _id: user._id,
+            username: user.username,
+            photo: user.photo,
+        };
+        post.save();
+    });
+    
+    res.status(200).json({"ok":true});
+}));
+
+router.post('/createNewPost', tryCatch(async (req,res) => {
+    const img = req.files.img;
+    //post image required, default URL to be redirected to if image upload fails
+    const imageLink = await fetchImage(img, "/create");
+    
+    if (imageLink instanceof appError) {
+        throw imageLink;
+    }
+
+    const postOwner = {
+        _id: req.user._id,
+        username: req.user.username,
+        photo: req.user.photo,
+    }
+
+    const newPost = new Post({
+        username: req.user.username,
+        owner: postOwner,
+        location: req.body.location,
+        description: req.body.description,
+        photo: imageLink,
+        allowComments: true,
+        likes: [],
+        favourites: [],
+        comments: [],
+        date: res.locals.formattedDate,
+        carModel: req.body.carModel,
+        carTitle: req.body.carName,
+    }); 
+
+    req.user.postPhotos.push(imageLink);
+    req.user.postIDs.push(newPost._id);
+    req.user.postCount += 1;
+    req.user.save();
+    newPost.save();
+    res.status(200).redirect('/');
+}));
+
+router.post("/register", tryCatch(async (req,res) => {
+    const existingUser = await User.findOne({ $or: [{ username: req.body.username }, { email: req.body.email }] });
+
+    if (existingUser) {
+        throw new appError("User already exists!", 400, EXISTING_USER, "/register");
+    }
+
+    const isCleanUsername = autoModerate(req.body.username, false);
+    if (!isCleanUsername) {
+        throw new appError("Username contains inappropriate language!", 400, INAPPROPRIATE_MESSAGE, "/register");
+    }
+
+    //hash the password
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
         
-        // Create a new user
-        const newUser = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPassword,
-            _id: new mongoose.Types.ObjectId()
-        });
+    // Create a new user
+    const newUser = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: hashedPassword,
+        _id: new mongoose.Types.ObjectId()
+    });
+    
+    // Save the user to the database
+    newUser.save();
+    res.status(200).redirect(`/login?username=${req.body.username}`);
 
-        // Save the user to the database
-        newUser.save();
-        res.redirect(`/login?username=${req.body.username}`);
-    } catch {
-        // catches any unexpected errors
-        res.render('register', {error: 'Error registering user' });
+}));
+
+// CHANGE ACCOUNT SETTINGS
+
+router.post("/change-bio", tryCatch(async (req,res) => {
+    if (!req.body.bio) {
+        throw new appError("Bio cannot be empty!", 404, MESSAGE_NOT_FOUND, `/settings/${req.user._id}`);
     }
-});
 
-router.post('/change-bio', async (req,res) => {
-    try {
-        req.user.bio = req.body.bio;
-        req.user.save();
-        res.redirect(`/account/${req.user._id}`);
-    } catch {
-        res.redirect(`/settings/${req.user._id}`);
+    //checks for profanity in bio
+    const isCleanBio = autoModerate(req.body.bio, true);
+    if (!isCleanBio) {
+        throw new appError("Bio contains inappropriate language!", 400, INAPPROPRIATE_MESSAGE, `/settings/${req.user._id}`);
     }
-});
 
-router.post('/change-username', async (req,res) => {
-    try {
-        req.user.username = req.body.username;
+    req.user.bio = req.body.bio;
+    req.user.save();
+    res.status(200).redirect(`/settings/${req.user._id}?success=true`);
+}));
 
-        const validUsername = await User.findOne({ username: req.body.username });
-
-        if (validUsername) {
-            res.redirect(`/settings/${req.user._id}`);
-        } else {
-            req.user.save();
-            res.redirect(`/account/${req.user._id}`);
-        }
-    } catch {
-        res.redirect(`/settings/${req.user._id}`);
+router.post("/change-username", tryCatch(async (req,res) => {
+    if (!req.body.username) {
+        throw new appError("Username cannot be empty!", 404, MESSAGE_NOT_FOUND, `/settings/${req.user._id}`);
     }
-});
 
-router.post('/change-password', async (req,res) => {
-    try {
-        const validPassword = await bcrypt.compare(req.body.password, req.user.password);
-        if (!validPassword || req.body.newPassword === req.body.password) {
-            console.log("Incorrect password or SAME password");
-            res.redirect(`/settings/${req.user._id}`);
-        } else {
-            const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
-            req.user.password = hashedPassword;
-            req.user.save();
-            console.log("Password changed successfully!");
-            res.redirect(`/account/${req.user._id}`);
-        }
-    } catch {
-        res.redirect(`/settings/${req.user._id}`);
+    //check if username is already taken
+    const usernameInUsage = await User.findOne({ username: req.body.username });
+    if (usernameInUsage) {
+        throw new appError("Username already in use!", 400, EXISTING_USER, `/settings/${req.user._id}`);
     }
-});
 
-router.post('/change-email', async (req,res) => {
-    try {
-        const validEmail = (req.body.email === req.user.email)
-        const existingEmail = await User.findOne({email: req.body.newEmail});
-
-        if (!validEmail || req.body.newEmail === req.user.email || existingEmail) {
-            res.redirect(`/settings/${req.user._id}`);
-        } else {
-            req.user.email = req.body.newEmail;
-            req.user.save();
-            res.redirect(`/account/${req.user._id}`);
-        }
-    } catch {
-        res.redirect(`/settings/${req.user._id}`);
+    //checks for profanity in username
+    const isCleanUsername = autoModerate(req.body.username, false);
+    if (!isCleanUsername) {
+        throw new appError("Username contains inappropriate language!", 400, INAPPROPRIATE_MESSAGE, `/settings/${req.user._id}`);
     }
-});
 
-router.post('/delete-account', async (req,res) => {
-    try {
-        const validPassword = await bcrypt.compare(req.body.password, req.user.password);
-        if (!validPassword) {
-            res.redirect(`/settings/${req.user._id}`);
-        } else {
-            await User.deleteOne({ _id: req.user._id });
+    req.user.username = req.body.username;
+    req.user.save();
+    res.status(200).redirect(`/settings/${req.user._id}?success=true`);
+}));
 
-            await Post.deleteMany({ username: req.user.username });
-
-            req.logout(() => {
-                req.session.destroy();
-                res.clearCookie('sid')
-                res.redirect('/');
-            });
-        }
-    } catch {
-        res.redirect(`/settings/${req.user._id}`);
+router.post("/change-password", tryCatch(async (req,res) => {
+    if (!req.body.password || !req.body.newPassword) {
+        throw new appError("Password cannot be empty!", 404, MESSAGE_NOT_FOUND, `/settings/${req.user._id}`);
     }
-});
+
+    //checks the input the user put in, compares the two passwords
+    const validPassword = await bcrypt.compare(req.body.password, req.user.password);
+
+    if (!validPassword || req.body.newPassword === req.body.password) {
+        throw new appError("Incorrect password or same password!", 400, INVALID_PASSWORD, `/settings/${req.user._id}`);
+    }
+
+    //hash the new password
+    const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+    req.user.password = hashedPassword;
+    req.user.save();
+    res.status(200).redirect(`/settings/${req.user._id}?success=true`);
+}));
+
+router.post("/change-email", tryCatch(async (req,res) => {
+    if (!req.body.email || !req.body.newEmail) {
+        throw new appError("Email cannot be empty!", 404, MESSAGE_NOT_FOUND, `/settings/${req.user._id}`);
+    }
+
+    //check if email is already taken
+    const emailInUsage = await User.findOne({ email: req.body.newEmail });
+    if (emailInUsage) {
+        throw new appError("Email already in use!", 400, EXISTING_USER, `/settings/${req.user._id}`);
+    }
+
+    //checks the input the user put in, compares the two emails
+    if (req.body.email !== req.user.email) {
+        throw new appError("Incorrect email!", 400, INVALID_EMAIL, `/settings/${req.user._id}`);
+    }
+
+    req.user.email = req.body.newEmail;
+    req.user.save();
+    res.status(200).redirect(`/settings/${req.user._id}?success=true`);
+}));
+
+//deletes the user's account, all posts and messages associated with the user
+router.post('/delete-account', tryCatch(async (req,res) => {
+    const validPassword = await bcrypt.compare(req.body.password, req.user.password);
+    if (!validPassword) {
+        throw new appError("Incorrect password!", 400, INVALID_PASSWORD, `/settings/${req.user._id}`);
+    }
+
+    await User.deleteOne({ _id: req.user._id });
+    await Post.deleteMany({ username: req.user.username });
+    await Message.deleteMany({ members: { $in: [req.user.username] } });
+
+    //log out the user using logout POST request above
+    req.logout(() => {
+        req.session.destroy();
+        res.clearCookie('sid'); // sid: name of cookie, change to secret later
+        res.redirect('/');
+    });
+}));
 
 //handing settings changes, updates the user's settings in the database
 function updateSetting(req, res, settingType, settingValue) {
@@ -475,5 +468,25 @@ router.post('/change-account-privacy', async (req,res) => {
 router.get('*', (req,res) => {
     res.render('404');
 });
+
+router.post('/deleteComment/:id', async (req,res) => {
+    try {
+        const post = await Post.findOne({ _id: req.body.postID });
+        for (let i = 0; i < post.comments.length; i++) {
+            if (post.comments[i].commentID == req.params.id) {
+                post.comments.splice(i, 1);
+                break;
+            }
+        }
+        post.save();
+        res.redirect(`/viewPost/${post._id}`);
+
+    } catch (err) {
+        console.log(err);
+        res.redirect('/');
+    }
+
+});
+
 
 module.exports = router;

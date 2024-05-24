@@ -84,6 +84,14 @@
 </body>
 
 <script>
+    if ("<%=error%>" != "") {
+        document.getElementById("message").style.border = "1px solid red";         
+    }
+
+    document.getElementById("message").addEventListener("input", function() {
+        document.getElementById("message").style.border = "";
+    });
+
         document.getElementById('message').addEventListener('input', function() {
             var lines = this.value.split('\n');
             if (lines.length > 2) {
