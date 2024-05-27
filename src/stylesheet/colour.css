@@ -1,0 +1,42 @@
+[data-theme = "light"] {
+    --backgroundColour: rgb(235, 235, 235);
+    --textColour: rgb(118, 118, 118);
+    --navbarColour: rgb(255, 255, 255);
+    --outline: rgb(203, 203, 203);
+    --sidenavBackground: rgb(255, 255, 255);
+    --sidenavHover: rgb(248, 240, 255);
+    --sidenavSelected: rgba(220, 220, 220, 0.381);
+    --textboxbackground: rgb(230, 230, 230);
+    --loginHover: rgb(234, 211, 255);
+    --postBackground: rgb(246, 246, 246);
+}
+
+[data-theme = "dark"] {
+    --backgroundColour: rgb(34, 34, 34);
+    --textColour: rgb(229, 229, 229);
+    --navbarColour: rgb(51, 51, 51);
+    --outline: rgb(51, 51, 51);
+    --sidenavBackground: rgb(51, 51, 51);
+    --sidenavHover: rgb(116, 112, 120);
+    --sidenavSelected: rgba(255, 255, 255, 0.381);
+    --textboxbackground: rgb(51, 51, 51);
+    --loginHover: rgb(234, 211, 255);
+    --postBackground: rgb(51, 51, 51);
+}
+
+/* new */
+[data-theme = "light"] {
+    --border-standard: rgb(203, 203, 203);
+    --text-title: rgb(54, 54, 54);
+    --text-subtitle: rgb(82, 82, 82);
+    --text-paragragh: rgb(118, 118, 118);
+    --text-body: rgb(54, 54, 54);
+    
+    /* backgrounds */
+    --standard-background: rgb(255, 255, 255);
+    --standard-secondary-background: rgb(235, 235, 235);
+    --standard-tertiary-background: rgb(221, 221, 221);
+    --standard-hover-background: rgb(248, 240, 255);
+    --standard-selected-background: rgba(220, 220, 220);
+    --highlighted-hover-background: rgb(234, 211, 255);
+}

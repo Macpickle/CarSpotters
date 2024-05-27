@@ -64,7 +64,7 @@ const createCard = (index) => {
               <div class = "post-header-content">
                 <div class = "stack">
                   <div class = "profile-name">
-                    <h5>${randomData.owner.username}</h5>
+                    <h2>${randomData.owner.username}</h2>
                   </div>
                   <div class = "post-information">
                     <p>- ${randomData.carModel}, ${randomData.carTitle}</p>

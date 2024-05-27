@@ -1,5 +1,5 @@
 {
-  "name": "express-session",
+  "name": "express-session-carspotters",
   "version": "1.0.0",
   "description": "A simple express app that uses express-session",
   "main": "index.js",
@@ -24,7 +24,7 @@
     "express-session": "^1.18.0",
     "filebuffer": "^1.0.5",
     "flash": "^1.1.0",
-    "imgur": "^2.4.2",
+    "imgur": "^1.0.2",
     "mongo": "^0.1.0",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.2",

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="eng">  
+<html lang="eng" data-theme = <%=theme%>>  
 <head>
     <title>CarSpotters</title>
     <meta name="theme-color" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
     <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
-    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/messages.css">
     <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
 </head>
@@ -51,30 +51,42 @@
                 <% for (let i = 0; i < messageList.length; i++) { %>
                     <% if (messageList[i].sender != user.username) { %>
                         <div class = "message-content">
-                            <img class = "message-profile" src = "<%=otherUserInformation.photo%>" alt = "">
-                            <div class = "stack">
-                                <div class = "message-username">
-                                    <p><%=otherUserInformation.username%></p>
+                            <form action = "/account/<%=otherUser._id%>" method="GET">
+                                <button>
+                                    <img class = "message-profile" src = "<%=otherUserInformation.photo%>" alt = "">
+                                </button>
+                                <div class = "stack">
+                                    <button id = "hover-underline">
+                                    <div class = "message-username">
+                                        <p><%=otherUserInformation.username%></p>
+                                    </div>
+                                    </button>
+                                    <p class = "message-text"><%=messageList[i].message%></p>
                                 </div>
-                                <p class = "message-text"><%=messageList[i].message%></p>
-                            </div>
+                            </form>
                         </div>
                     <% } else { %>
-                        <div class = "message-content-otherUser">
-                            <div class = "stack">
-                                <div class = "message-username">
-                                    <p><%=user.username%></p>
+                        <form action = "/account/<%=user._id%>" method="GET">
+                            <div class = "message-content-otherUser">
+                                <div class = "stack">
+                                    <button style="display: flex; justify-content: flex-end;" id = "hover-underline">
+                                        <div class = "message-username">
+                                            <p><%=user.username%></p>
+                                        </div>
+                                    </button>
+                                    <p class = "message-text"><%=messageList[i].message%></p>
                                 </div>
-                                <p class = "message-text"><%=messageList[i].message%></p>
+                                <button>
+                                    <img class = "message-profile" src = "<%=user.photo%>" alt = "">
+                                </button>
                             </div>
-                            <img class = "message-profile" src = "<%=user.photo%>" alt = "">
-                        </div>
+                        </form>
                     <% } %>
                     
                 <% } %>
             </div>
             <div class = "message-seperator-container">
-                <form action="/appendMessage/<%=message._id%>" method="POST" id="sendMessage">
+                <form id="sendMessage">
                     <textarea class="message-text" id="message" name="message" placeholder="Type your message here..." cols="2" maxlength="146"></textarea>
                     <button class="send-button" id="send">Send</button>
                 </form>
@@ -104,5 +116,54 @@
             messageContainer.scrollTop = messageContainer.scrollHeight;
         });
 
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    const form = document.getElementById("sendMessage");
+    const message = document.getElementById("message");
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (message.value.trim() === "") {
+            message.style.border = "1px solid red";
+        } else {
+            const data = {
+                message: message.value,
+                chatID: "<%=message._id%>",
+                sender: "<%=user.username%>",
+            };
+
+            socket.emit('chat message', data);
+            message.value = "";
+        }
+    });
+
+    socket.on('chat message', function(msg) {
+        const messageContainer = document.querySelector(".message-content-container");
+        const messageContent = document.createElement("div");
+        
+        messageContent.className = "message-content";
+        messageContent.innerHTML = `
+        <form action = "/account/<%=user._id%>" method="GET">
+            <div class = "message-content-otherUser" style="width:98%;">
+                <div class = "stack">
+                    <button id = "hover-underline">
+                        <div class = "message-username">
+                            <p><%=user.username%></p>
+                        </div>
+                    </button>
+                    <p class = "message-text">${msg}</p>
+                </div>
+                <button>
+                    <img class = "message-profile" src = "<%=user.photo%>" alt = "">
+                </button>
+            </div>
+        </form>
+        `;
+        messageContainer.appendChild(messageContent);
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    });
 </script>
 </html>

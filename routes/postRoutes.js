@@ -18,6 +18,8 @@ const { INAPPROPRIATE_MESSAGE } = require('../constants/errorCodes');
 const { IMAGE_UPLOAD_FAILED } = require('../constants/errorCodes');
 const { INVALID_PASSWORD } = require('../constants/errorCodes');
 const { INVALID_EMAIL } = require('../constants/errorCodes');
+const { UNEXPECTED_ERROR } = require('../constants/errorCodes');
+const { INVALID_INPUT } = require('../constants/errorCodes');
 
 router.post('/login', passport.authenticate('local', {
     failureRedirect:  '/failureLogin',
@@ -429,13 +431,17 @@ function updateSetting(req, res, settingType, settingValue) {
     const update = { $set: {} };
     update.$set[`settings.${settingType}`] = settingValue;
 
+    if (!settingValue || settingValue == null) {
+        throw new appError("Setting cannot be empty!", 400, INVALID_INPUT, `/settings/${req.user._id}`);
+    }   
+
     User.findOneAndUpdate({ _id: req.user._id }, update, { new: true })
         .then(doc => {
-            res.redirect(`/account/${req.user._id}`);
+            res.status(200).redirect(`/settings/${req.user._id}?success=true`);
         })
         .catch(err => {
             //unexpected error
-            res.redirect(`/settings/${req.user._id}`);
+            throw new appError("Error updating settings!", 500, UNEXPECTED_ERROR, `/settings/${req.user._id}`);
         });
 }
 
@@ -466,7 +472,8 @@ router.post('/change-account-privacy', async (req,res) => {
 
 //handle if user tries to access a page that doesnt exist
 router.get('*', (req,res) => {
-    res.render('404');
+    const theme = "light";
+    res.render('404', { theme: theme });
 });
 
 router.post('/deleteComment/:id', async (req,res) => {

@@ -1,0 +1,99 @@
+@import "colour.css";
+@import "default-text-sizing.css";
+
+.main-container .file-form{
+    width: 50%;
+}
+
+.main-container .file-container{
+    margin: 2.5em;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height:80vh;
+    background-color: var(--standard-background);
+    outline: 1px solid var(--border-standard);
+    border-radius: 1em;
+}
+
+.main-container .file-container .image-container{
+    width: 80%;
+    height: 55%;
+    border-radius: 0 0 1em 1em;
+    outline: 1px solid var(--border-standard);
+    overflow: hidden;
+    background-color: var(--standard-secondary-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.main-container .file-container .image-container img{
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+    border-radius: 0 0 1em 1em;
+    background-color: var(--standard-secondary-background);
+}
+
+.main-container .file-container .button-img {
+    position: absolute;
+}
+
+.main-container .file-container button{
+    border: 1px solid var(--border-standard);
+    background-color: var(--standard-background);
+    padding:1em;
+    border-radius: 50rem;
+}
+
+.main-container .file-container button[type="submit"]{
+    position: absolute;
+    top: 80%;
+}
+
+.main-container .file-container button:hover{
+    box-shadow: 0 5px 5px 0 var(--highlighted-hover-background);
+}
+
+.main-container .file-container input[type="text"]:focus,
+.main-container .file-container textarea:focus {
+    outline: 1px solid var(--highlighted-hover-background);
+}
+
+.main-container .text-input-container{
+    display:flex;
+    flex-direction: row;
+    width:80%;
+    height: fit-content;
+    gap: 1rem;
+}
+
+.main-container .text-input-container .information-container,
+.main-container .text-input-container .description-container {
+    width:100%;
+    height: 100%;
+}
+
+.main-container .text-input-container .information-container .stack {
+    height: fit-content;
+}
+
+.main-container .text-input-container .information-container input[type="text"]{
+    width: 100%;
+    border-radius: 1em;
+    border: 1px solid var(--outline);
+    padding: 1em 1em;
+    margin-bottom: 0.5em;
+}
+
+.main-container .text-input-container .description-container textarea{
+    width: 100%;
+    height: calc(100% - 0.5em);
+    border-radius: 1em;
+    border: 1px solid var(--outline);
+    padding: 1em 1em;
+}

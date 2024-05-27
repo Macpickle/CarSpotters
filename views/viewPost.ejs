@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="eng">  
+<html lang="eng" data-theme = <%=theme%>>  
 <head>
     <title>CarSpotters</title>
     <meta name="theme-color" content="">
@@ -20,35 +20,39 @@
 
     <ul>
       <% if (!userID) { %>
-          <div class = "default-icon">
-              <div class = "tooltip">
-                      <a href = "login" id="login"><i class="fa-solid fa-circle-user"></i></a>
-                  <span class = "tooltiptext">Login</span>
-              </div>
+          <div class = "dropdown">
+              <button>
+                  <div class = "tooltip">
+                      <div class = "icon">
+                          <a href = "login" id="login"><img src = "https://i.imgur.com/jNNT4LE.png" alt = ""></a>
+                      </div>
+                      <span class = "tooltiptext">Login</span>
+                  </div>
+              </button>
           </div>
       <% } else { %>
-              <div class = "dropdown">
-                  <button class = "dropbtn">
-                      <div class = "icon">
-                          <img src = "<%=userID.photo%>" alt = "">
-                      </div>
-                  </button>
-                  <div class = "dropdown-content">
-                      <a href = "/account/<%=userID._id%>" method="GET" id="account">Account</a>
-                      <a href = "/settings/<%=userID._id%>" method="GET" id="settings">Settings</a>
-                      <a href = "/" method="GET" id="home">Home</a>
-                      <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                      
-                      <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+          <div class = "dropdown">
+              <button class = "dropbtn">
+                  <div class = "icon">
+                      <img src = "<%=userID.photo%>" alt = "">
                   </div>
+              </button>
+              <div class = "dropdown-content">
+                  <a href = "/account/<%=userID._id%>" method="GET" id="account">Account</a>
+                  <a href = "/settings/<%=userID._id%>" method="GET" id="settings">Settings</a>
+                  <a href = "/" method="GET" id="home">Home</a>
+                  <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                  
+                  <form id="logout-form" action="/logout" method="POST"></form>
               </div>
+          </div>
       <% } %>
   </ul>
 </div>
 
 
 <div class = "main-container">
-    <div id = "post-container" style="height: 88vh; width: 75%; border: none;">
+    <div id = "post-container" style="height: 85vh; width: 75%; border: none; margin-bottom: auto;">
             <div class = "post" style="border-bottom: none;">
               <div class = "view-post">
                 <div class = "post-header">
@@ -132,8 +136,8 @@
       <% if (!userID) { %>
         <div class = "new-comment" style="align-items: center;">
           <h3>Sign in to Comment!</h3>
-          <button class = "login-button">
-            <a href = "/login">Login</a>
+            <button class="login-button" onclick="window.location.href='/login'">
+            <h3>Login</h3>
         </div>
       <% } %>
 
@@ -184,8 +188,12 @@
                 <% } %>
             </div>
           </div>
-
           <% }) %>
+          <% if (post.comments.length == 0) { %>
+            <div class = "comment-list">
+              <h3>No Comments Yet!</h3>
+            </div>
+          <% } %>
 
     </div>
 </div>

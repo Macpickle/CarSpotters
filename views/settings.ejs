@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="eng">  
+<html lang="eng" data-theme = <%=theme%>>  
 <head>
     <title>CarSpotters</title>
     <meta name="theme-color" content="">
@@ -17,6 +17,13 @@
     <div class="search-container">
     </div>
 
+    <% if (error.length > 0) { %>
+        <div class = "error-container">
+            <div class = "error-alert">
+                <p><%=error%></p>
+            </div>
+        </div>
+    <% } %>
 
     <ul>
         <% if (!userID) { %>
@@ -167,6 +174,11 @@
     </div>
 
     <script src="/src/javascript/script.js"></script>
+    <script>
+        setTimeout(() => {
+        document.querySelector('.navbar .error-alert').style.animation = 'fadeBack 1s ease-in-out forwards';
+    }, 2500);
+    </script>
 </div>
 </body>
 

@@ -12,16 +12,23 @@ const initpassport = require('./passport-config.js');
 const User = require('./models/user.js');
 const Post = require('./models/post.js');
 const Message = require('./models/message.js');
-const Comment = require('./models/comment.js');
 const flash = require('express-flash');
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser');
+const { Server } = require('socket.io');
+const { createServer } = require('node:http');
 
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
 const errorHandler = require('./middleware/errorHandler.js');
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server,
+    {
+        connectionStateRecovery: {}
+    }
+);
 
 //connects mongoose to the mongoDB database
 mongoose.connect(process.env.DATABASE_URL, {
@@ -111,7 +118,26 @@ app.post('/data', async (req,res) => {
     res.send(posts);
 });
 
-app.listen((process.env.PORT) , () => {
+//live server updates for messages
+io.on('connection', (socket) => {
+    socket.on('chat message', async(data) => {
+        //store message in database
+        const chatLog = await Message.findOne({_id: data.chatID});
+
+        const newMessage = ({
+            sender: data.sender,
+            message: data.message,
+            date: new Date()
+        });
+
+        chatLog.messages.push(newMessage);
+        chatLog.save();
+
+        io.emit('chat message', data.message);
+    });
+});
+
+server.listen((process.env.PORT) , () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });
 module.exports = app;

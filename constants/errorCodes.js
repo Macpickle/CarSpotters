@@ -8,3 +8,5 @@ exports.USER_NOT_FOUND = 404;
 exports.UNAUTHORIZED = 403;
 exports.INVALID_PASSWORD = 400;
 exports.INVALID_EMAIL = 400;
+exports.UNEXPECTED_ERROR = 500;
+exports.INVALID_INPUT = 400;

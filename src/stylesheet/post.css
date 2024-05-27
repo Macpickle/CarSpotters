@@ -1,0 +1,310 @@
+@import "colour.css";
+@import "default-text-sizing.css";
+
+.main-container #post-container {
+    display:flex;
+    align-self: center;
+    border-right: 2px solid var(--border-standard);
+    border-left: 2px solid var(--border-standard);
+    flex-direction: column;
+}
+
+.main-container #post-container button {
+    width: 100%;
+}
+
+.main-container #post-container .post {
+    max-height: 32.5em;
+    border-bottom: 2px solid var(--outline);
+}
+
+.main-container #post-container .post .post-header {
+    display: flex;
+    height: fit-content;
+    align-items: center;
+    height: 3rem;
+}
+
+.main-container #post-container .post .post-header .profile-picture {
+    min-width: 2.5rem;
+    max-width: 2.5rem;
+    height: 2.5rem;
+    margin-left: 2%;
+    display: flex;
+    align-items: center;
+}
+
+.main-container #post-container .post .post-header .post-header-content {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-container #post-container .post .post-header .post-header-content .stack {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 3%;
+    color: var(--text-subtitle);
+}
+
+.main-container #post-container .post .post-header .post-header-content .profile-name {
+    color: var(--text-title);
+}
+
+.main-container #post-container .post .post-header .post-header-content .stack .post-information {
+    margin-left: 2.5%;
+}
+
+.main-container #post-container .post .post-header .post-header-content .stack .description {
+    padding-top:0.25rem;
+    margin-left: 2.5%;
+    color: var(--text-paragragh);
+}
+
+.main-container #post-container .post .post-header .post-date {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    color: var(--text-subtitle);
+    margin-right: 2%;
+}
+
+.main-container #post-container .post .image-container {
+    margin: 0.5rem 0.5rem 0rem 0.5rem;
+    max-height: 25em;
+    border-radius: 1em;
+    border: 2px solid var(--border-standard);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.main-container #post-container .post .image-container img {
+    width: 100%;
+    height: 100%;
+}
+
+.main-container #post-container .post i {
+    color: var(--text-subtitle);
+}
+
+.main-container #post-container .post .extras-content {
+    margin-left: 1%;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 2em;
+}
+
+.main-container #post-container .post .extras-content label:first-child {
+    margin-left: 20%;
+}
+
+.main-container #post-container .post .extras-content label {
+    width: 2em;
+    height:100%;
+    display: flex;
+    align-items: center;
+}
+
+.main-container #post-container .post .extras-content label:hover {
+    transform: scale(1.1);
+}
+
+.main-container #post-container .post .extras-content .item {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5%;
+}
+
+.main-container #post-container .post .extras-content .item p {
+    margin-top: auto;
+    color: var(--text-paragragh);
+    font-size: 0.7em;
+}
+
+/*
+    COMMENT BOXES
+*/
+
+.main-container .comment-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    border-top: 2px solid var(--border-standard);
+    flex-direction: column;
+}
+
+.main-container .comment-container .new-comment {
+    display: flex;
+    width: 75%;
+    height: 7.5em;
+    border: 2px solid var(--border-standard);
+    background-color: var(--standard-secondary-background);
+    border-radius: 1em;
+    margin: 1em;
+    color: var(--textColour);
+    flex-direction: column;
+    padding: 0.5em;
+}
+
+.main-container .comment-container .new-comment .comment-title {
+    display: flex;
+    height:fit-content;
+}
+
+.main-container .comment-container .new-comment .comment-input {
+    width:75%;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.main-container .comment-container .new-comment .comment-input textarea {
+    width: 100%;
+    height: 100%;
+    border-radius: 1em;
+    border: 1px solid var(--border-standard);
+    background-color: var(--standard-tertiary-background);
+    padding: 1em 1em;
+    margin-top:0.5em;
+    resize: none;
+    max-height: 130px;
+    max-width: 100%;
+}
+
+.main-container .comment-container .new-comment .comment-input button {
+    margin-left: 1em;
+    border:none;
+    padding:0.5em;
+    height:fit-content;
+    border-radius: 50em;
+    background-color: var(--standard-background);
+    outline: 1px solid var(--outline);
+}
+
+.main-container .comment-container .new-comment .comment-input button:hover {
+    transform: scale(1.05);
+    box-shadow: 1px 1px 1px 1px var(--highlighted-hover-background); 
+}
+
+.main-container .comment-container .comments {
+    display:flex;
+    flex-direction: column;
+    width:75%;
+}
+
+.main-container .comment-container .comments .comment {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    border: 2px solid var(--border-standard);
+    background-color: var(--standard-secondary-background);
+    border-radius: 1em;
+    margin-bottom: 0.5em;
+    color: var(--textColour);
+    flex-direction: column;
+    padding: 0.5em;
+}
+
+.main-container .comment-container .comments .comment .comment-header {
+    display: flex;
+    height: fit-content;
+    flex-direction: row;
+}
+
+.main-container .comment-container .comments .comment .comment-header .comment-username {
+    font-size: 1em;
+    display:flex;
+    align-items: center;
+    margin-left: 0.5em;
+    color: var(--text-title);
+}
+
+.main-container .comment-container .comments .comment .comment-header .comment-date {
+    margin-left: auto;
+    font-size: 0.7em;
+    margin-right: 0.5em;
+}
+
+.main-container .comment-container .comments .comment .profile-picture {
+    font-size: 1.5em;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: 2%;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.main-container .comment-container .comments .comment .comment-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 0.5em;
+    font-size: 0.85em;
+}
+
+.main-container .comment-container .comments .comment .comment-extras {
+    margin-top: 0.5em;
+    border-top: 1px solid var(--outline);
+    display: flex;
+    flex-direction: row;
+    margin-right: 0.5em;
+}
+
+.main-container .comment-container .comments .comment .comment-extras .item {
+    margin-top: 0.5em;
+    display: flex;
+    align-items: center;
+}
+
+.main-container .comment-container .comments .comment .comment-extras button {
+    border: none;
+    background-color: transparent;
+    margin-right: 0.5em;
+}
+
+.main-container .comment-container .comments .comment .comment-extras label {
+    width: 2em;
+    height:100%;
+    display: flex;
+    align-items: center;
+}
+
+.main-container .comment-container .comments .comment .comment-extras label:hover {
+    transform: scale(1.1);
+}
+
+.main-container .comment-container .comments .comment .comment-extras .likeCount {
+    margin-right: 0.5em;
+    margin-top:0.5em;
+}
+
+.main-container .comment-container .login-button{
+    margin-top: 1em;
+    border: none;
+    padding: 1em 2em 1em 2em;
+    border: 1px solid var(--outline);
+    border-radius: 1em;
+    margin-bottom: 1em;
+    color: var(--text-title);
+}
+
+.main-container .comment-container .login-button:hover {
+    box-shadow: 0 5px 5px 0 var(--loginHover);
+    transform: scale(1.05);
+}
+
+.main-container .comment-container .comment-list {
+    margin-top: 1em;
+    display: flex;
+    justify-content: center
+}
