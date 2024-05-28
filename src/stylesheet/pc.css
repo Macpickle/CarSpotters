@@ -8,8 +8,8 @@
     z-index: 99;
     top: 0;
     width: 100%;
-    background-color: var(--navbarColour);
-    border-bottom: 1px solid var(--outline);
+    background-color: var(--standard-background);
+    border-bottom: 1px solid var(--border-standard);
     display: flex;
     position: fixed;
     justify-items: flex-end;
@@ -24,20 +24,15 @@
     right: 1em;
 }
 
-.navbar .icon {
-    height: 4em;
-    width: 4em;
-}
-
 .navbar .icon img {
     border-radius: 50%;
-    outline: 1px solid var(--outline);
+    outline: 1px solid var(--border-standard);
     object-fit: cover;
 }
 
 .navbar .icon:hover {
     transform: scale(1.1);
-    box-shadow: 1px 1px 5px 1px var(--loginHover);
+    box-shadow: 1px 1px 5px 1px var(--highlighted-hover-background);
     border-radius: 50%;
 }
 
@@ -65,7 +60,7 @@
 .navbar .dropdown-content {
     display: none;
     position: absolute;
-    background-color: var(--navbarColour);
+    background-color: var(--standard-background);
     min-width: 5em;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
@@ -75,7 +70,7 @@
 }
 
 .navbar .dropdown-content a {
-    color: var(--textColour);
+    color: var(--text-title);
     font-size: 1em;
     text-decoration: none;
     display: block;
@@ -86,7 +81,7 @@
 }
 
 .navbar .dropdown-content a:hover {
-    background-color: var(--sidenavHover);
+    background-color: var(--standard-selected-background);
 }
 
 .navbar .dropdown:hover .dropdown-content {
@@ -109,7 +104,7 @@
     justify-content: center;
     align-items: center;
     background-color: rgb(255, 255, 255);
-    border: 1px solid var(--outline);
+    border: 1px solid var(--border-standard);
     width: 25%;
     height: 5em;
     animation: fadeDownIn 1s ease-in-out forwards;
@@ -158,8 +153,8 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1;
-    background-color: var(--textColour);
-    color: var(--backgroundColour);
+    background-color: var(--text-title);
+    color: var(--standard-background);
     text-align: center;
     padding: .5em;
     border-radius: .5em;
@@ -182,14 +177,14 @@
     z-index: 1;
     top: 6.5em;
     left: 2em;
-    background: var(--sidenavBackground);
-    outline: 1px solid var(--outline);
+    background: var(--standard-background);
+    outline: 1px solid var(--border-standard);
     border-radius: 1em;
 }
 
 .sidenav a {
     text-decoration: none;
-    color: var(--textColour);
+    color: var(--text-subtitle);
     font-size: 1.5em;
     padding: 1em 1em 1em 1em;
     width: 100%;
@@ -197,29 +192,29 @@
 }
 
 .sidenav a:hover {
-    background-color: var(--sidenavHover);
+    background-color: var(--highlighted-hover-background);
 }
 
 .sidenav .selected {
-    background-color: var(--sidenavSelected);
+    background-color: var(--standard-selected-background);
 }
 
 .sidenav .selected:first-child {
     border-radius: .75em .75em 0 0;
-    background-color: var(--sidenavSelected);
+    background-color: var(--standard-selected-background);
 }
 
 .sidenav .selected:last-child {
     border-radius: 0 0 .75em .75em;
-    background-color: var(--sidenavSelected);
+    background-color: var(--standard-selected-background);
 }
 
 .sidenav a:hover:first-child {
-    border-radius: .75em .75em 0 0;
+    border-radius: .7em .7em 0 0;
 }
 
 .sidenav a:hover:last-child {
-    border-radius: 0 0 .75em .75em;
+    border-radius: 0 0 .7em .7em;
 }
 
 .sidenav a i {
@@ -235,277 +230,6 @@
     flex-direction: column;
 }
 
-
-
-
-
-
-
-
-
-.main-container .account-container {
-    margin: 2.5em;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: column;
-    height:80vh;
-    background-color: var(--sidenavBackground);
-    outline: 1px solid var(--outline);
-    border-radius: 1em;
-}
-
-.main-container .account-container .account-details {
-    margin: 1em;
-    text-align: center;
-}
-
-.main-container .account-container .account-details h3{
-    margin-top:0.5em;
-}
-
-.main-container .account-container .account-details .profile-picture-container {
-    font-size: 3em;
-    width: 100%;
-    height:0.75em;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-}
-
-.main-container .account-container .account-details .profile-picture-container .profile-picture {
-    width: 1.5em;
-    height: 1.5em;
-    margin-top: -0.5em;
-    position: relative;
-}
-
-.main-container .account-container .account-details .profile-picture-container .-label {
-    width:1.5em;
-    height:1.5em;
-    margin-top: -0.5em;
-    position: absolute;
-    z-index: 2;
-    border-radius: 50%;
-}
-
-.main-container .account-container .account-details .profile-picture-container .-label span {
-    font-size: 0.2em;
-    visibility: hidden;
-}
-
-.main-container .account-container .account-details .profile-picture-container .-label:hover {
-    background-color: rgba(0,0,0,.7);
-    transition: background-color .2s ease-in-out;
-    box-shadow: 0 0 15px 0 var(--loginHover);
-    outline: 1px solid var(--outline);
-    color: white;
-}
-
-.main-container .account-container .account-details .profile-picture-container .-label:hover span {
-    visibility: visible;
-}
-    
-.main-container .account-container .account-details .profile-picture-container input{
-    display: none;
-}
-
-
-.main-container .account-container .account-details .profile-picture-container .profile-picture img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    outline: 1px solid var(--outline);
-    object-fit: cover;
-}
-
-.main-container .account-stats-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    gap:5em;
-    margin-top:0.25em;
-    margin-left: 0;
-}
-
-.main-container .account-stats-container .account-stats button{
-    border:none;
-    background-color: transparent;
-}
-
-.main-container .account-stats-container .account-stats label {
-    cursor: pointer;
-}
-
-.main-container .account-container .settings-icon-container {
-    width:100%;
-}
-.main-container .account-container .settings-icon-container button {
-    border: none;
-    background-color: transparent;
-    margin: 1em 1em;
-}
-
-.main-container .account-container .settings-icon-container .fa-solid {
-    font-size: 2em;
-}
-
-.main-container .account-container .settings-icon-container .fa-solid:hover {
-    text-shadow: 0em 0em 1em var(--loginHover);
-    animation: rotate 2.5s infinite linear;
-}
-
-.main-container .account-container .preview-container{
-    background-color: var(--postBackground);
-    outline: 1px solid var(--outline);
-    border-radius: 0.5em;
-    width: 100%;
-}
-
-.main-container .post-preview {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 1em;
-    padding: 1em;
-    justify-content: center;
-    align-content: center;
-    position: relative;
-}
-
-.main-container .post-preview .post-item {
-    outline: 1px solid var(--outline);
-    width: 100%;
-    height: 100%;
-    border-radius: 0.5em;
-    max-height: 9.5em;
-    min-height: 9.5em;
-}
-
-.main-container .preview-container .post-preview .post-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 0.5em;
-}
-
-.main-container .preview-container .post-preview .post-item h2 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-.main-container .preview-container .hover-container {
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 0.5em;
-    transform: scale(0.99);
-}
-
-.main-container .preview-container .hover-container h3{
-    top: 75%;
-    left: 50%;
-    transform: translateX(-50%);
-    position: absolute;
-    color: rgb(255, 255, 255);
-}
-
-.main-container .preview-container .hover-container .arrow {
-    position: absolute;
-    top: 85%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(180deg);
-    width: 2em;
-    height: 1em;
-    background-color: white;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    animation: arrow-animation 2.5s infinite;
-}
-
-.main-container .preview-container .hover-container:hover {
-    z-index: 1;
-    background: linear-gradient(to bottom, #00000000 60%, #00000076 100%);
-    animation: fade-in 0.5s;
-    opacity: 0.85;
-}
-
-.main-container .post-preview:hover {
-    transform: scale(1.01);
-    border-radius: 1em;
-}
-
-.main-container #post-container .post .post-header button:hover {
-    transform: scale(1.1);
-} 
-
-.main-container .preview-container .no-post-preview  {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-
-.main-container .settings-container {
-    margin: 2.5em;
-    height: 80vh;
-    background-color: var(--sidenavBackground);
-    outline: 1px solid var(--outline);
-    border-radius: 1em;
-    display: flex;
-    justify-content: center;
-}
-
-.main-container .preview-container button{
-    border:none;
-    width: 100%;
-    height: 100%;
-}
-
-.main-container .settings-container .settings-title {
-    position: absolute;
-    left: 50%;
-    margin-top: 1em;
-    transform: translateX(-50%);
-}
-
-.main-container .settings-container .settings {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width:45%;
-    margin-left: 0.5%;
-}
-
-.main-container .settings-container .settings .settings-option {
-    padding:1em;
-    min-height: 6em;
-    width: 100%;
-    border-bottom: 1px solid var(--outline);
-}
-
-.main-container .settings-container .settings .settings-option:last-child {
-    border-bottom: none;
-}
-
-.main-container .settings-container .settings-back-button button{
-   border: none;
-   background-color: transparent;
-   margin: 1em -1.5em;
-   position: absolute;
-}
-
-.main-container .settings-container .settings-back-button button:hover {
-    animation: arrow-left 2.5s infinite;
-}
-
 .main-container .page-not-found {
     margin-top: -4em;
     display: flex;
@@ -513,30 +237,30 @@
     align-items: center;
     height: 100vh;
     flex-direction: column;
-    color: var(--textColour);
+    color: var(--text-title);
 }
 
 .main-container .page-not-found .error {
     font-size: 500%;
-    color: black;
+    color: var(--text-title);
 }
 
 .main-container .page-not-found .description {
     font-size: 200%;
     margin-bottom: 20%;
-    color: black;
+    color: var(--text-subtitle);
 }
 
 .main-container .back-home {
     margin-top: 1em;
     border-radius: 1em;
     padding: 1em;
-    border: 1px solid var(--outline);
-    color: var(--textColour);
+    border: 1px solid var(--border-standard);
+    color: var(--text-title);
 }
 
 .main-container .back-home:hover {
-    box-shadow: 0 0 10px 0 var(--loginHover);
+    box-shadow: 0 0 10px 0 var(--highlighted-hover-background);
     transform: scale(1.1);
 }
 .main-container .back {
@@ -546,20 +270,20 @@
     align-items: center;
     width:110%;
     transform: translateX(-5%);
-    background-color: var(--backgroundColour);
+    background-color: var(--standard-background);
 }
 
 .main-container .back .return {
     margin-top: 1em;
     border-radius: 1em;
     padding: 1em;
-    border: 1px solid var(--outline);
-    color: var(--textColour);
+    border: 1px solid var(--border-standard);
+    color: var(--text-title);
     width: 25%;
 }
 
 .main-container .back .return:hover {
-    box-shadow: 0 0 10px 0 var(--loginHover);
+    box-shadow: 0 0 10px 0 var(--highlighted-hover-background);
     transform: scale(1.1);
 }
 
@@ -569,7 +293,7 @@
     align-items: center;
     flex-direction: column;
     height: 100vh;
-    color: var(--textColour);
+    color: var(--text-title);
     position: absolute;
     top: 0;
     left: 0;
@@ -579,9 +303,9 @@
 .main-container .map-container {
     width: 50%;
     height: 80vh;
-    border: 1px solid var(--outline);
+    border: 1px solid var(--border-standard);
     border-radius: 1em;
-    background-color: var(--postBackground);
+    background-color: var(--standard-background);
     display:flex;
 }
 
@@ -598,13 +322,13 @@
     width: 25%;
     height: 2em;
     border-radius: 1em;
-    border: 1px solid var(--outline);
+    border: 1px solid var(--border-standard);
     padding: 0.5em;
     margin-right: 0.5em;
 }
 
 .main-container .map-container .search-container #search:focus {
-    outline: 1px solid var(--loginHover);
+    outline: 1px solid var(--highlighted-hover-background);
 }
 
 .main-container .map-container .search-container #search-button {
@@ -664,6 +388,24 @@
         width: 50%;
     }
 
+    .icon {
+        width: 4em;
+        height: 4em;
+    }
+
+}
+
+@media screen and (max-width: 786px) {
+    .icon {
+        display: none;
+    }
+
+    .icon img{
+        width: 100%;
+        height: 100%;
+    
+    }
+    
 }
 
 @keyframes loader1 {

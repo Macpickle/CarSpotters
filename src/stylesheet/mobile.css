@@ -1,22 +1,31 @@
 .mobile-container {
-    background-color: var(--backColourLight);
-    height: 3.5em;
+    background-color: rgba(255, 255, 255, 0.915);
+    height: 7.5dvh;
     width: 100%;
     bottom: 0;
     display: flex;
     position: fixed;
     z-index: 100;
-    border-top: 1px solid var(--outlineColourLight);
+    border-top: 1px solid var(--border-standard);
     align-items: center;
     justify-content: center;
-    opacity: 0.9;
+}
+
+.mobile-container i {
+    color: var(--text-title);
 }
 
 .mobile-container ul {
     list-style-type: none;
     display: flex;
     justify-content: space-between;
-    width: 80%;
+    width: 90%;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-container li:hover {
+    transform: scale(1.1);
 }
 
 .mobile-container li {
@@ -29,6 +38,7 @@
     color: var(--textColourLight);
     font-size: 1.5em;
     font-weight: bold;
+    height:fit-content;
 }
 
 .mobile-container button {
@@ -43,6 +53,16 @@
     border-radius: 10em;
     padding: 10px;
     margin: -10px;
+}
+
+.mobile-container .profile-picture {
+    width: 1.5em;
+    height: 1.5em;
+    opacity: 1;
+    border-radius: 50%;
+    border: 1px solid var(--border-standard);
+    justify-content: center;
+    align-items: center;
 }
 
 @media screen and (max-width: 768px){

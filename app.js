@@ -21,6 +21,7 @@ const { createServer } = require('node:http');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
 const errorHandler = require('./middleware/errorHandler.js');
+const message = require('./models/message.js');
 
 const app = express();
 const server = createServer(app);
@@ -123,17 +124,29 @@ io.on('connection', (socket) => {
     socket.on('chat message', async(data) => {
         //store message in database
         const chatLog = await Message.findOne({_id: data.chatID});
+        const sender = await User.findOne({username: data.sender});
+
+        const day = (new Date().getDate() + "/" + new Date().getMonth());
+        const time = new Date().toLocaleTimeString();
+
+        date = day + " " + time;
 
         const newMessage = ({
             sender: data.sender,
             message: data.message,
-            date: new Date()
+            date: date
+        });
+
+        const senderInformation = ({
+            username: sender.username,
+            photo: sender.photo,
+            _id: sender._id,
+            message: data.message  
         });
 
         chatLog.messages.push(newMessage);
         chatLog.save();
-
-        io.emit('chat message', data.message);
+        io.emit('chat message', senderInformation);
     });
 });
 

@@ -425,3 +425,19 @@
     color: var(--text-subtitle);
     font-size: 0.85em;
 }
+
+@media screen and (min-width: 786px) {
+    .main-container .message-container {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 786px) {
+    .main-container .message-container {
+        position: absolute;
+        left: 0;
+        width: 100dvw;
+        height: 100dvh;
+        top: 0;
+    }
+}

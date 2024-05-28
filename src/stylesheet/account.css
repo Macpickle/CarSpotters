@@ -1,0 +1,286 @@
+@import "colour.css";
+@import "default-text-sizing.css";
+@import "pc.css";
+
+.main-container .account-container {
+    margin: 2.5em;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    height:80vh;
+    background-color: var(--standard-background);
+    outline: 1px solid var(--border-standard);
+    border-radius: 1em;
+}
+
+.main-container .account-container .account-details {
+    margin: 1em;
+    text-align: center;
+}
+
+.main-container .account-container .account-details h3{
+    margin-top:0.5em;
+}
+
+.main-container .account-container .account-details .profile-picture-container {
+    font-size: 3em;
+    width: 100%;
+    height:0.75em;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.main-container .account-container .account-details .profile-picture-container .profile-picture {
+    width: 1.5em;
+    height: 1.5em;
+    margin-top: -0.5em;
+    position: relative;
+}
+
+.main-container .account-container .account-details .profile-picture-container .-label {
+    width:1.5em;
+    height:1.5em;
+    margin-top: -0.5em;
+    position: absolute;
+    z-index: 2;
+    border-radius: 50%;
+}
+
+.main-container .account-container .account-details .profile-picture-container .-label span {
+    font-size: 0.2em;
+    visibility: hidden;
+}
+
+.main-container .account-container .account-details .profile-picture-container .-label:hover {
+    background-color: rgba(0,0,0,.7);
+    transition: background-color .2s ease-in-out;
+    box-shadow: 0 0 15px 0 var(--highlighted-hover-background);
+    outline: 1px solid var(--border-standard);
+    color: white;
+}
+
+.main-container .account-container .account-details .profile-picture-container .-label:hover span {
+    visibility: visible;
+}
+    
+.main-container .account-container .account-details .profile-picture-container input{
+    display: none;
+}
+
+.main-container .account-container .account-details .profile-picture-container .profile-picture img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    outline: 1px solid var(--border-standard);
+    object-fit: cover;
+}
+
+.main-container .account-stats-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap:5em;
+    margin-top:0.25em;
+    margin-left: 0;
+    font-size: 1.25em;
+}
+
+.main-container .account-stats-container .account-stats {
+    font-size: 1.25em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.main-container .account-stats-container .account-stats label {
+    cursor: pointer;
+}
+
+.main-container .account-container .settings-icon-container {
+    width:100%;
+}
+.main-container .account-container .settings-icon-container button {
+    border: none;
+    background-color: transparent;
+    margin: 1em 1em;
+}
+
+.main-container .account-container .settings-icon-container .fa-solid {
+    font-size: 2em;
+}
+
+.main-container .account-container .settings-icon-container .fa-solid:hover {
+    text-shadow: 0em 0em 1em var(--highlighted-hover-background);
+    animation: rotate 2.5s infinite linear;
+}
+
+.main-container .account-container .preview-container{
+    background-color: var(--standard-secondary-background);
+    outline: 1px solid var(--border-standard);
+    border-radius: 0.5em;
+    width:95%;
+}
+
+.main-container .post-preview {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em;
+    padding: 1em;
+    justify-content: center;
+    align-content: center;
+    position: relative;
+}
+
+.main-container .post-preview .post-item {
+    outline: 1px solid var(--border-standard);
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5em;
+    max-height: 9.5em;
+    min-height: 9.5em;
+}
+
+.main-container .preview-container .post-preview .post-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5em;
+}
+
+.main-container .preview-container .post-preview .post-item h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.main-container .preview-container .hover-container {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5em;
+    transform: scale(0.99);
+}
+
+.main-container .preview-container .hover-container h3{
+    top: 75%;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    color: rgb(255, 255, 255);
+}
+
+.main-container .preview-container .hover-container .arrow {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(180deg);
+    width: 2em;
+    height: 1em;
+    background-color: white;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation: arrow-animation 2.5s infinite;
+}
+
+.main-container .preview-container .hover-container:hover {
+    z-index: 1;
+    background: linear-gradient(to bottom, #00000000 60%, #00000076 100%);
+    animation: fade-in 0.5s;
+    opacity: 0.85;
+}
+
+.main-container .post-preview:hover {
+    transform: scale(1.01);
+    border-radius: 1em;
+}
+
+.main-container #post-container .post .post-header button:hover {
+    transform: scale(1.1);
+} 
+
+.main-container .preview-container .no-post-preview  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.main-container .settings-container {
+    margin: 2.5em;
+    height: 80vh;
+    background-color: var(--standard-background);
+    outline: 1px solid var(--border-standard);
+    border-radius: 1em;
+    display: flex;
+    justify-content: center;
+}
+
+.main-container .preview-container button{
+    border:none;
+    width: 100%;
+    height: 100%;
+}
+
+.main-container .settings-container .settings-title {
+    position: absolute;
+    left: 50%;
+    margin-top: 1em;
+    transform: translateX(-50%);
+}
+
+.main-container .settings-container .settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width:45%;
+    margin-left: 0.5%;
+}
+
+.main-container .settings-container .settings .settings-option {
+    padding:1em;
+    min-height: 6em;
+    width: 100%;
+    border-bottom: 1px solid var(--border-standard);
+}
+
+.main-container .settings-container .settings .settings-option:last-child {
+    border-bottom: none;
+}
+
+.main-container .settings-container .settings-back-button button{
+   border: none;
+   background-color: transparent;
+   margin: 1em -1.5em;
+   position: absolute;
+}
+
+.main-container .settings-container .settings-back-button button:hover {
+    animation: arrow-left 2.5s infinite;
+}
+
+@media screen and (max-width: 786px) {
+    .main-container .account-container {
+        position: absolute;
+        left: 0;
+        width: 100dvw;
+        height: 100dvh;
+        top: 0;
+        margin-left: 0;
+    }
+
+    .main-container .account-container .preview-container {
+        height: 50%;
+    }
+
+}

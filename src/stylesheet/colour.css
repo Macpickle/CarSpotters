@@ -37,6 +37,6 @@
     --standard-secondary-background: rgb(235, 235, 235);
     --standard-tertiary-background: rgb(221, 221, 221);
     --standard-hover-background: rgb(248, 240, 255);
-    --standard-selected-background: rgba(220, 220, 220);
+    --standard-selected-background: rgb(202, 202, 202);
     --highlighted-hover-background: rgb(234, 211, 255);
 }

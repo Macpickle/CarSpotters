@@ -15,7 +15,7 @@
 
 .main-container #post-container .post {
     max-height: 32.5em;
-    border-bottom: 2px solid var(--outline);
+    border-bottom: 2px solid var(--border-standard);
 }
 
 .main-container #post-container .post .post-header {
@@ -32,6 +32,11 @@
     margin-left: 2%;
     display: flex;
     align-items: center;
+}
+
+.main-container #post-container .post .post-header .profile-picture:hover {
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .main-container #post-container .post .post-header .post-header-content {
@@ -52,6 +57,11 @@
 
 .main-container #post-container .post .post-header .post-header-content .profile-name {
     color: var(--text-title);
+}
+
+.main-container #post-container .post .post-header .post-header-content .profile-name:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .main-container #post-container .post .post-header .post-header-content .stack .post-information {

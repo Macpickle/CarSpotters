@@ -3,7 +3,7 @@
 <head>
     <title>CarSpotters</title>
     <meta name="theme-color" content="">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, maximum-scale=1">
     <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
     <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
     <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
@@ -69,29 +69,20 @@
     <!--mobile container-->
     <div class = "mobile-container">
         <ul>
-            <div class = "tooltip">
-                <li><a><button><i class="fa-solid fa-user"></i></button></a></li>
-                <span class = "tooltiptext">Account</span>
-            </div>
-            <div class = "tooltip">
-                <li><a href="login"><i class="fa-solid fa-user"></i></a></li>
-            </div>
-            
-            <div class = "tooltip">
-                <li><a href = "about"><i class="fa-solid fa-info"></i></a></li>
-            </div>
+            <% if (userID) { %>
+                <li><a href = "/account/<%=userID._id%>"><img class = "profile-picture" src = "<%=userID.photo%>"></a></li>
+            <% } else { %>
+                <li><a href = "/login"><img class = "profile-picture" src = "https://i.imgur.com/jNNT4LE.png" alt = ""></a></li>
+            <% } %>
+            <li><a href="/"><i class="fa-solid fa-home"></i></a></li>
+            <li><a href = "map"><i class="fa-solid fa-search"></i></a></li>
 
-            <div class = "tooltip">
-                <li><a href = "map"><i class="fa-solid fa-search"></i></a></li>
-            </div>
-
-            <div class = "tooltip">
+            <% if (userID) { %>
+                <li><a href = "notify"><i class ="fa-solid fa-bell"></i></a></li>
                 <li><a href = "messages"><i class="fa-solid fa-envelope"></i></a></li>
-            </div>
-
-            <div class = "tooltip">
-                <li><a href="index"><i class="fa-solid fa-home"></i></a></li>
-            </div>
+                <li><a href = "favourites"><i class="fa-solid fa-star"></i></a></li>
+                <li><a href="create"><i class="fa-solid fa-plus"></i></a></li>
+            <% } %>
         </ul> 
     </div>
     <script src="/javascript/script.js"></script>

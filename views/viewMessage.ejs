@@ -3,7 +3,7 @@
 <head>
     <title>CarSpotters</title>
     <meta name="theme-color" content="">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
     <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
     <link rel="stylesheet" type="text/css" href="/stylesheet/messages.css">
@@ -49,40 +49,23 @@
         <div class = "message-container">
             <div class = "message-content-container">
                 <% for (let i = 0; i < messageList.length; i++) { %>
-                    <% if (messageList[i].sender != user.username) { %>
-                        <div class = "message-content">
-                            <form action = "/account/<%=otherUser._id%>" method="GET">
-                                <button>
-                                    <img class = "message-profile" src = "<%=otherUserInformation.photo%>" alt = "">
-                                </button>
-                                <div class = "stack">
-                                    <button id = "hover-underline">
-                                    <div class = "message-username">
-                                        <p><%=otherUserInformation.username%></p>
-                                    </div>
-                                    </button>
-                                    <p class = "message-text"><%=messageList[i].message%></p>
+                    <% if (messageList[i].sender == user.username) {var sender = user} else {var sender = otherUser;} %>
+
+                    <div class = "message-content">
+                        <form action = "/account/<%=sender._id%>" method="GET">
+                            <button>
+                                <img class = "message-profile" src = "<%=sender.photo%>" alt = "">
+                            </button>
+                            <div class = "stack">
+                                <button id = "hover-underline">
+                                <div class = "message-username">
+                                    <p><%=sender.username%></p>
                                 </div>
-                            </form>
-                        </div>
-                    <% } else { %>
-                        <form action = "/account/<%=user._id%>" method="GET">
-                            <div class = "message-content-otherUser">
-                                <div class = "stack">
-                                    <button style="display: flex; justify-content: flex-end;" id = "hover-underline">
-                                        <div class = "message-username">
-                                            <p><%=user.username%></p>
-                                        </div>
-                                    </button>
-                                    <p class = "message-text"><%=messageList[i].message%></p>
-                                </div>
-                                <button>
-                                    <img class = "message-profile" src = "<%=user.photo%>" alt = "">
                                 </button>
+                                <p class = "message-text"><%=messageList[i].message%></p>
                             </div>
                         </form>
-                    <% } %>
-                    
+                    </div>
                 <% } %>
             </div>
             <div class = "message-seperator-container">
@@ -140,30 +123,29 @@
         }
     });
 
-    socket.on('chat message', function(msg) {
+    socket.on('chat message', function(data){
         const messageContainer = document.querySelector(".message-content-container");
         const messageContent = document.createElement("div");
-        
         messageContent.className = "message-content";
+         
         messageContent.innerHTML = `
-        <form action = "/account/<%=user._id%>" method="GET">
-            <div class = "message-content-otherUser" style="width:98%;">
-                <div class = "stack">
-                    <button id = "hover-underline">
-                        <div class = "message-username">
-                            <p><%=user.username%></p>
-                        </div>
-                    </button>
-                    <p class = "message-text">${msg}</p>
-                </div>
-                <button>
-                    <img class = "message-profile" src = "<%=user.photo%>" alt = "">
-                </button>
+        <form action = "/account/${data._id}" method="GET">
+            <button>
+            <img class = "message-profile" src = "${data.photo}" alt = "">
+            </button>
+            <div class = "stack">
+            <button id = "hover-underline">
+            <div class = "message-username">
+            <p>${data.username}</p>
+            </div>
+            </button>
+            <p class = "message-text">${data.message}</p>
             </div>
         </form>
         `;
         messageContainer.appendChild(messageContent);
         messageContainer.scrollTop = messageContainer.scrollHeight;
-    });
+        });
+
 </script>
 </html>

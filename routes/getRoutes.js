@@ -45,7 +45,9 @@ router.get('/create', isLoggedIn, (req,res) => {
 });
 
 router.get('/failureLogin', (req,res) => {
-    res.render('login',{"error":"Invalid username or password"});
+    const userID = req.user;
+    const theme = (userID && userID.settings && userID.settings.appearence) || "light";
+    res.render('login',{"error":"Invalid username or password", theme: theme});
 });
 
 router.get('/settings/:id', isLoggedIn, async (req,res) => {
