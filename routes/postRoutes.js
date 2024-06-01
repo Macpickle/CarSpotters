@@ -472,7 +472,7 @@ router.post('/change-account-privacy', async (req,res) => {
 
 //handle if user tries to access a page that doesnt exist
 router.get('*', (req,res) => {
-    const theme = "light";
+    const theme = req.user ? req.user.settings.appearence : "light";
     res.render('404', { theme: theme });
 });
 
@@ -480,13 +480,13 @@ router.post('/deleteComment/:id', async (req,res) => {
     try {
         const post = await Post.findOne({ _id: req.body.postID });
         for (let i = 0; i < post.comments.length; i++) {
-            if (post.comments[i].commentID == req.params.id) {
+            if (post.comments[i]._id == req.params.id) {
                 post.comments.splice(i, 1);
                 break;
             }
         }
         post.save();
-        res.redirect(`/viewPost/${post._id}`);
+        res.redirect(`/viewPost/${post._id}?success=true`);
 
     } catch (err) {
         console.log(err);

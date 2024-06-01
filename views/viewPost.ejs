@@ -12,9 +12,13 @@
 
 <body>
 <div class = "navbar">
-    <div class = "web-logo">
-        <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
-    </div>  
+  <div class = "web-logo">
+    <% if (theme == "dark") { %>
+        <img src = "/assets/LogoWHITE.png" alt = "CarSpotters">
+    <% } else { %>
+        <img src = "/assets/LogoBLACK.png" alt = "CarSpotters">
+    <% } %>
+</div>  
     <div class="search-container">
     </div>
 
@@ -50,9 +54,16 @@
   </ul>
 </div>
 
+<div class = "alert">
+  <% if (success) { %>
+    <div class = "success">
+      <p>Post was deleted.</p>
+    </div>
+  <% } %>
+</div>
 
 <div class = "main-container">
-    <div id = "post-container" style="height: 85vh; width: 75%; border: none; margin-bottom: auto;">
+    <div id = "post-container" style="height: 100%; width: 75%; border: none; margin-bottom: auto;">
             <div class = "post" style="border-bottom: none;">
               <div class = "view-post">
                 <div class = "post-header">
@@ -69,9 +80,15 @@
               
                   <div class = "post-header-content">
                     <div class = "stack">
-                      <div class = "profile-name">
-                        <h5><%=post.username%></h5>
-                      </div>
+                      <form id = "viewAccount" action = "/account/<%=post.owner._id%>" method = "GET">
+                        <button style="width: fit-content;" for = "viewAccount">
+                          <div class = "tooltip">
+                            <div class = "profile-name">
+                              <h5><%=post.username%></h5>
+                            </div>
+                          <span class = "tooltiptext">View Account</span>
+                        </button>
+                      </form>
                       <div class = "post-information">
                         <p>- <%=post.carModel%>, <%=post.carTitle%></p>
                       </div>
@@ -108,12 +125,10 @@
                 </button>
               </div>
               <div class = "item">
-                <button class = "comment-button">
-                  <label for = "comment-button">
-                    <i class="fas fa-comment"></i>
-                    <p class = "commentCount"><%=post.comments.length%></p>
-                  </label>
-                </button>
+                <label for = "comment-button">
+                  <i class="fas fa-comment"></i>
+                  <p class = "commentCount"><%=post.comments.length%></p>
+                </label>
               </div>
             </div>
           </div>
@@ -174,7 +189,7 @@
                   </button>
                 </div>
                 <% if (isOwner) { %>
-                  <form action = "/deleteComment/<%=comment.commentID%>" method = "POST">
+                  <form action = "/deleteComment/<%=comment._id%>" method = "POST">
                     <div class = "item">
                       <button class = "delete-button">
                         <label for = "delete-button">
@@ -198,7 +213,7 @@
     </div>
 </div>
 
-<script src="/javascript/script.js"></script>
+<script src="/javascript/updateExtraContent.js"></script>
 <script>
   document.getElementById('comment').addEventListener('input', function() {
       var lines = this.value.split('\n');
@@ -220,6 +235,20 @@
       likePost('<%=post._id%>', userID, '<%post%>');
     });
   }
+
+  // add event listener to the like button
+  const likeButton = post.querySelector(".like-button");
+        likeButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          console.log("like button clicked");
+          updatePost(userID, randomData, "likePost");
+      });
+      // add event listener to follow button
+      const favouriteButton = post.querySelector(".favourite-button");
+        favouriteButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          updatePost(userID, randomData, "favouritePost");
+      });
 </script>
 
 </body>

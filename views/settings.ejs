@@ -12,7 +12,11 @@
 <body style="overflow-y: hidden;">
 <div class = "navbar">
     <div class = "web-logo">
-        <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+        <% if (theme == "dark") { %>
+            <img src = "/assets/LogoWHITE.png" alt = "CarSpotters">
+        <% } else { %>
+            <img src = "/assets/LogoBLACK.png" alt = "CarSpotters">
+        <% } %>
     </div>
     <div class="search-container">
     </div>
@@ -73,7 +77,10 @@
                     </button>
                 </form>
             </div>
-            <h2 class = "settings-title">Settings</h2>
+            <div class = "settings-header">
+                <h2 class = "settings-title">Settings</h2>
+            </div>
+
             <div class = "settings">
                 <div class = "settings-option">
                     <h3>Change Bio</h3>
@@ -112,8 +119,6 @@
                         <button type="submit">Update</button>
                     </form>
                 </div>
-            </div>
-            <div class = "settings">
                 <div class = "settings-option">
                     <h3>Appearence mode</h3>
                     <form id = "change-theme" method="post" action="/change-theme">

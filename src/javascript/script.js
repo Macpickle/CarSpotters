@@ -107,7 +107,7 @@ const createCard = (index) => {
               <form action = "/viewPost/${randomData._id}" method = "GET">
                 <button class = "comment-button"'>
                   <label for = "comment-button">
-                    <i class="fas fa-comment"></i>
+                    <i class="fas fa-comment" style="color: slategrey"></i>
                     <p class = "commentCount">${randomData.comments.length}</p>
                   </label>
                 </button>
@@ -120,10 +120,14 @@ const createCard = (index) => {
     cardContainer.appendChild(post);
       if(isLiked){
         updateLikes("red", randomData, randomData.likes.length)
-      } 
+      } else {
+        updateLikes("slategrey", randomData, randomData.likes.length)
+      }
       
       if(isFavourited){
         updateFavourites("blue", randomData, randomData.favourites.length)
+      } else {
+        updateFavourites("slategrey", randomData, randomData.favourites.length)
       }
 
       // add event listener to the like button
@@ -139,6 +143,13 @@ const createCard = (index) => {
           updatePost(userID, randomData, "favouritePost");
       });
 
+      // change length of description based on size of screen
+      const description = post.querySelector(".description");
+      if (window.innerWidth < 1000 && randomData.description.length > 50) {
+        description.innerHTML = `<p>${randomData.description.substring(0, 50)}...</p>`;
+      } else {
+        description.innerHTML = `<p>${randomData.description}</p>`;
+      }
   })
   .catch(error => {
     console.error('Error:', error);
@@ -237,7 +248,7 @@ function newPostRequest(data, postURL, callback) {
       response = JSON.parse(xhr.responseText);
       callback(null, response)
     } else {
-      callback(xhr.status, null)
+      callback(xhr.status, null);
     }
   }
 } 
@@ -247,6 +258,53 @@ function validUser(user) {
   if (!user || user == "Guest") {
     window.location.href = "/login";
   }
+}
+
+//updates likes and favourites of a post
+function updatePost(user,post,POSTurl) {
+  //determines if user is logged in
+  validUser(user);
+
+  //used on the request to find the user and post
+  const parsedUser = JSON.parse(user);
+  const postID = post._id;
+  const userID = parsedUser._id;
+
+  //full URL for post request
+  const postRequestURL = "/" + POSTurl;
+
+  //body for XHR request
+  const body = {
+    postID: postID,
+    userID: userID
+  }
+  
+  //create new post request
+  newPostRequest(body, postRequestURL, function(error, response) { 
+    if (response.ok == false) {
+      console.log("Error: " + error);
+      console.log(document.getElementById("error"));
+      document.getElementById("error").innerHTML = "Error: " + error;
+    }
+
+    const isClicked = response.isClicked;
+    const value = response.value
+
+    if (POSTurl == "likePost") {
+      if (isClicked) {
+        updateLikes("red", post, value);
+      } else {
+        updateLikes("slategrey", post, value);
+      }
+    } else if (POSTurl == "favouritePost") {
+      if (isClicked) {
+        updateFavourites("blue", post, value);
+      } else {
+        updateFavourites("slategrey", post, value);
+      }
+    }
+  });
+
 }
 
 //follow user 
@@ -282,50 +340,4 @@ function followUser(sessionUser,accountUser) {
     }
 
   });
-}
-
-//updates likes and favourites of a post
-function updatePost(user,post,POSTurl) {
-  //determines if user is logged in
-  validUser(user);
-
-  //used on the request to find the user and post
-  const parsedUser = JSON.parse(user);
-  const postID = post._id;
-  const userID = parsedUser._id;
-
-  //full URL for post request
-  const postRequestURL = "/" + POSTurl;
-
-  //body for XHR request
-  const body = {
-    postID: postID,
-    userID: userID
-  }
-  
-  //create new post request
-  newPostRequest(body, postRequestURL, function(error, response) {
-    if (error) {
-      console.log("Error: " + error);
-      window.location.href = "/";
-    }
-
-    const isClicked = response.isClicked;
-    const value = response.value
-
-    if (POSTurl == "likePost") {
-      if (isClicked) {
-        updateLikes("red", post, value);
-      } else {
-        updateLikes("black", post, value);
-      }
-    } else if (POSTurl == "favouritePost") {
-      if (isClicked) {
-        updateFavourites("blue", post, value);
-      } else {
-        updateFavourites("black", post, value);
-      }
-    }
-  });
-
 }

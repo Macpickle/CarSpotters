@@ -6,7 +6,7 @@ html{
 }
 
 body {
-    background-color: var(--backgroundColour);
+    background-color: var(--standard-background);
     height: 100%;
     width: 100%;
 }
@@ -51,10 +51,22 @@ p {
 button {
     border: none;
     background-color: transparent;
+    color: var(--text-title);
 }
 
 textarea {
     resize: none;
+    border: none;
+    background-color: var(--standard-background);
+    border: 1px solid var(--border-standard);
+    padding: 0.5em;
+    border-radius: 0.5em;
+    color: var(--text-title);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
     border: none;
     background-color: var(--standard-background);
     border: 1px solid var(--border-standard);

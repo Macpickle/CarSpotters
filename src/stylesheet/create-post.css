@@ -44,8 +44,9 @@
 }
 
 .main-container .file-container button{
+    color:var(--text-title);
     border: 1px solid var(--border-standard);
-    background-color: var(--standard-background);
+    background-color: var(--standard-tertiary-background);
     padding:1em;
     border-radius: 50rem;
 }
@@ -85,7 +86,7 @@
 .main-container .text-input-container .information-container input[type="text"]{
     width: 100%;
     border-radius: 1em;
-    border: 1px solid var(--outline);
+    border: 1px solid var(--border-standard);
     padding: 1em 1em;
     margin-bottom: 0.5em;
 }
@@ -94,6 +95,6 @@
     width: 100%;
     height: calc(100% - 0.5em);
     border-radius: 1em;
-    border: 1px solid var(--outline);
+    border: 1px solid var(--border-standard);
     padding: 1em 1em;
 }

@@ -16,7 +16,7 @@ const isLoggedIn = (req, res, next) => {
 router.get('/', (req, res) => {
     const userID = req.user;
     const theme = (userID && userID.settings && userID.settings.appearence) || "light";
-    res.render('index', { userID,theme });
+    res.render('index', { userID,theme});
 });
 
 router.get('/map', (req, res) => { 
@@ -125,18 +125,19 @@ router.get('/viewPost/:id', async (req,res) => {
         const post = await Post.findOne({ _id: req.params.id });
         const error = req.query.error || "";
         const theme = (userID && userID.settings && userID.settings.appearence) || "light";
+        const success = req.query.success || false;
 
         if (userID) {
             //determines authentication of user, if post owner or server admin
             const admin = userID.admin;
             const isOwner = (JSON.stringify(userID._id) == JSON.stringify(post.owner._id));
 
-            res.render('viewPost', {post, admin, isOwner, userID, error: error, theme: theme});
+            res.render('viewPost', {post, admin, isOwner, userID, error: error, theme: theme, success: success});
         } else {
             const admin = false;
             const isOwner = false;
 
-            res.render('viewPost', {post, admin, isOwner, userID, error: error, theme: theme});
+            res.render('viewPost', {post, admin, isOwner, userID, error: error, theme: theme, success: success});
         }
     } catch {
         res.redirect('/');

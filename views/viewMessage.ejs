@@ -14,9 +14,12 @@
 <body>
     <div class = "navbar" id="navbar">
         <div class = "web-logo">
-            <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+            <% if (theme == "dark") { %>
+                <img src = "/assets/LogoWHITE.png" alt = "CarSpotters">
+            <% } else { %>
+                <img src = "/assets/LogoBLACK.png" alt = "CarSpotters">
+            <% } %>
         </div>
-    
         <ul>
             <div class = "dropdown">
                 <button class = "dropbtn">

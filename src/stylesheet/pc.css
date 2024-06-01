@@ -8,7 +8,7 @@
     z-index: 99;
     top: 0;
     width: 100%;
-    background-color: var(--standard-background);
+    background-color: var(--standard-secondary-background);
     border-bottom: 1px solid var(--border-standard);
     display: flex;
     position: fixed;
@@ -180,6 +180,7 @@
     background: var(--standard-background);
     outline: 1px solid var(--border-standard);
     border-radius: 1em;
+    overflow: hidden;
 }
 
 .sidenav a {
@@ -200,21 +201,11 @@
 }
 
 .sidenav .selected:first-child {
-    border-radius: .75em .75em 0 0;
     background-color: var(--standard-selected-background);
 }
 
 .sidenav .selected:last-child {
-    border-radius: 0 0 .75em .75em;
     background-color: var(--standard-selected-background);
-}
-
-.sidenav a:hover:first-child {
-    border-radius: .7em .7em 0 0;
-}
-
-.sidenav a:hover:last-child {
-    border-radius: 0 0 .7em .7em;
 }
 
 .sidenav a i {
@@ -278,8 +269,12 @@
     border-radius: 1em;
     padding: 1em;
     border: 1px solid var(--border-standard);
-    color: var(--text-title);
+    background-color: var(--standard-tertiary-background);
     width: 25%;
+}
+
+.main-container .back .return button {
+    color: var(--text-title);
 }
 
 .main-container .back .return:hover {

@@ -14,7 +14,11 @@
 <body>
     <div class = "navbar" id="navbar">
         <div class = "web-logo">
-            <img src = "/assets/CARSPOTTERIMG.png" alt = "CarSpotters">
+            <% if (theme == "dark") { %>
+                <img src = "/assets/LogoWHITE.png" alt = "CarSpotters">
+            <% } else { %>
+                <img src = "/assets/LogoBLACK.png" alt = "CarSpotters">
+            <% } %>
         </div>
 
         <ul>
@@ -59,6 +63,8 @@
             <a href="create"><i class="fa-solid fa-plus"></i>Create</a>
         <% } %>
     </div>
+
+    <!--need to add error showing-->
 
     <div class = "main-container">
         <div id = "post-container">
