@@ -132,12 +132,12 @@ router.get('/viewPost/:id', async (req,res) => {
             const admin = userID.admin;
             const isOwner = (JSON.stringify(userID._id) == JSON.stringify(post.owner._id));
 
-            res.render('viewPost', {post, admin, isOwner, userID, error: error, theme: theme, success: success});
+            res.render('viewPost', {post, admin, isOwner, userID, error, theme, success});
         } else {
             const admin = false;
             const isOwner = false;
 
-            res.render('viewPost', {post, admin, isOwner, userID, error: error, theme: theme, success: success});
+            res.render('viewPost', {post, admin, isOwner, userID, error: error, theme, success});
         }
     } catch {
         res.redirect('/');
@@ -166,10 +166,16 @@ router.get('/viewAllPosts/:id', async (req,res) => {
         const isFavouritePage = false;
         const theme = (userID && userID.settings && userID.settings.appearence) || "light";
 
-        res.render('viewAllPosts', {posts, userID,isFavouritePage, theme});
+        res.render('viewAllPosts', {posts, userID, isFavouritePage, theme});
     } catch {
         res.redirect('/');
     }
+});
+
+router.get('/getCarLocations', async (req,res) => {
+    const carLocations = await Post.find({location: {$exists: true}});
+    const postData = carLocations.map(post => ({username: post.username, location: post.location, photo: post.photo, _id: post._id, model: post.carModel, title: post.carTitle }));
+    res.json(postData);
 });
 
 module.exports = router;

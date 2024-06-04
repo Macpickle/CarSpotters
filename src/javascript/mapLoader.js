@@ -1,28 +1,50 @@
-function initMap() {
-    const map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 0, lng: 0},
-      zoom: 2.5,
-      //remove streetview
-      streetViewControl: false,
-      //remove map type (eg. satellite, terrain, etc.)
-      mapTypeControl: false
+const pinTemplate = 
+`
+<div class = "pin">
+  <div class = "pin-content">
+    <div class = "pin-header">
+      <h1>{username</h1>}
+      <h3>{model},{title}</h3>
+    </div>
+    <div class = "pin-body">
+      <img src = "{photo}" alt = "car image">
+    </div>
+  </div>
+</div>
+`
+
+// create pings on map for each car location
+function generatePings(data, map) {
+  for (var i = 0; i < data.length; i++) {
+    var location = new Microsoft.Maps.Location(47.60357, -122.32945);
+
+    var pin = new Microsoft.Maps.Pushpin(location, {
+      icon: 'https://www.bingmapsportal.com/Content/images/poi_custom.png',
+      anchor: new Microsoft.Maps.Point(12, 39),
+      draggable: true
     });
-  
-    var marker = new google.maps.Marker({
-      position: {lat: 37.7749, lng: -122.4194},
-      map: map,
-      title: 'San Francisco',
-    });
-  
-    var infowindow = new google.maps.InfoWindow({
-      content: '<img src="assets/Pagani Zonda F.jpg" alt="Image" style="width: 400px; height: auto;"><br>Pagani Zonda F <br> Date: 2019-07-01 <br> User: JOHN',
-    });
-  
-    marker.addListener('click', function() {
-      if (infowindow.getMap()) {
-        infowindow.close();
-      } else {
-        infowindow.open(map, marker);
-      }
-    });
+
+    map.entities.push(pin);
+  }
 }
+
+// load BING map
+function loadMap(){
+  var map = new Microsoft.Maps.Map(document.getElementById('map'));
+  map.setView({
+    center: new Microsoft.Maps.Location(47.60357, -122.32945)
+  });
+
+
+  fetch("/getCarLocations", {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => response.json())
+  .then(data => {
+    generatePings(data, map);
+  })
+}
+
+window.onload = loadMap;

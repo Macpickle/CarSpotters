@@ -28,7 +28,7 @@
               <button>
                   <div class = "tooltip">
                       <div class = "icon">
-                          <a href = "login" id="login"><img src = "https://i.imgur.com/jNNT4LE.png" alt = ""></a>
+                          <a href = "/login" id="login"><img src = "https://i.imgur.com/jNNT4LE.png" alt = ""></a>
                       </div>
                       <span class = "tooltiptext">Login</span>
                   </div>
@@ -109,7 +109,7 @@
               </div>
             <div class = "extras-content">
               <div class = "item">
-                <button class = "like-button">
+                <button class = "like-button" id = "post-like-button">
                   <label for = "like-button">
                     <i class="fas fa-heart" id = "likeIcon"></i>
                     <p class = "likeCount"><%=post.likes.length%></p>
@@ -117,9 +117,9 @@
                 </button>
               </div>
               <div class = "item">
-                <button class = "favourite-button">
+                <button class = "favourite-button" id = "post-favourite-button">
                   <label for = "favourite-button">
-                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star" id = "favouriteIcon"></i>
                     <p class = "favouriteCount"><%=post.favourites.length%></p>
                   </label>
                 </button>
@@ -212,8 +212,13 @@
 
     </div>
 </div>
-
-<script src="/javascript/updateExtraContent.js"></script>
+<script>
+  var postLikeData = "<%= post.likes %>";
+  var postFavouriteData = "<%= post.favourites %>";
+  var user = "<%= userID && userID.username ? userID.username : '' %>";
+</script>
+<script src="/javascript/script.js"></script>
+<script src="/javascript/verifyLikes.js"></script>
 <script>
   document.getElementById('comment').addEventListener('input', function() {
       var lines = this.value.split('\n');
@@ -230,25 +235,21 @@
     document.getElementById('comment').style.border = "";
   });
 
-  if (userID){
-    document.querySelector('.like-button').addEventListener('click', () => {
-      likePost('<%=post._id%>', userID, '<%post%>');
-    });
-  }
+  document.getElementById('post-like-button').addEventListener('click', function() {
+    if (!user || user == "") {
+      console.log("User not logged in");
+    } else {
+      updatePost("<%=userID._id%>", '<%=post.photo%>', '<%=post._id%>', "likePost")
+    }
+  });
 
-  // add event listener to the like button
-  const likeButton = post.querySelector(".like-button");
-        likeButton.addEventListener("click", (event) => {
-          event.preventDefault();
-          console.log("like button clicked");
-          updatePost(userID, randomData, "likePost");
-      });
-      // add event listener to follow button
-      const favouriteButton = post.querySelector(".favourite-button");
-        favouriteButton.addEventListener("click", (event) => {
-          event.preventDefault();
-          updatePost(userID, randomData, "favouritePost");
-      });
+  document.getElementById('post-favourite-button').addEventListener('click', function() {
+    if (!user || user == "") {
+      console.log("User not logged in");
+    } else {
+      updatePost("<%=userID._id%>", '<%=post.photo%>', '<%=post._id%>', "favouritePost")
+    }
+  });
 </script>
 
 </body>

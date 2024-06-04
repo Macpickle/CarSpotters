@@ -89,6 +89,7 @@
     border: 1px solid var(--border-standard);
     padding: 1em 1em;
     margin-bottom: 0.5em;
+    color: var(--text-title);
 }
 
 .main-container .text-input-container .description-container textarea{
@@ -97,4 +98,5 @@
     border-radius: 1em;
     border: 1px solid var(--border-standard);
     padding: 1em 1em;
+    color: var(--text-title);
 }

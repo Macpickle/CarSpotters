@@ -129,11 +129,12 @@
     display: flex;
     align-items: center;
     margin-left: 0.5%;
+    color: var(--icon-colour);
+
 }
 
 .main-container #post-container .post .extras-content .item p {
     margin-top: auto;
-    color: var(--text-paragragh);
     font-size: 0.7em;
 }
 
@@ -167,6 +168,7 @@
 .main-container .comment-container .new-comment .comment-title {
     display: flex;
     height:fit-content;
+    color: var(--text-title);
 }
 
 .main-container .comment-container .new-comment .comment-input {
@@ -196,12 +198,13 @@
     height:fit-content;
     border-radius: 50em;
     background-color: var(--standard-background);
+    border: 1px solid var(--border-standard);
     outline: 1px solid var(--outline);
 }
 
 .main-container .comment-container .new-comment .comment-input button:hover {
     transform: scale(1.05);
-    box-shadow: 1px 1px 1px 1px var(--highlighted-hover-background); 
+    box-shadow: 0px 0px 1px 1px var(--highlighted-hover-background); 
 }
 
 .main-container .comment-container .comments {
@@ -215,7 +218,7 @@
     width: 100%;
     height: fit-content;
     border: 2px solid var(--border-standard);
-    background-color: var(--standard-secondary-background);
+    background-color: var(--standard-background);
     border-radius: 1em;
     margin-bottom: 0.5em;
     color: var(--textColour);
@@ -241,6 +244,7 @@
     margin-left: auto;
     font-size: 0.7em;
     margin-right: 0.5em;
+    color: var(--text-subtitle);
 }
 
 .main-container .comment-container .comments .comment .profile-picture {
@@ -259,6 +263,10 @@
     align-items: center;
     margin-left: 0.5em;
     font-size: 0.85em;
+}
+
+.main-container .comment-container .comments .comment .comment-content p {
+    color: var(--text-paragraph);
 }
 
 .main-container .comment-container .comments .comment .comment-extras {

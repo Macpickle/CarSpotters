@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="eng" data-theme = <%=theme%>>  
+<html lang="eng" style = "overflow-y: hidden;" data-theme = <%=theme%>>  
 <head>
     <title>CarSpotters</title>
     <meta name="theme-color" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
     <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
-    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/map.css">
     <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
 </head>
 
 <div class = "navbar" id="navbar">
@@ -60,12 +59,16 @@
     <div class = "map-container">
         <div class = "search-container">
             <input type="text" id="search" placeholder="Search for a location">
-            <button id="search-button"><i class="fa-solid fa-search"></i></button>
+            <div class = "tooltip">
+                <button id="search-button"><i class="fa-solid fa-search"></i></button>
+                <span class = "tooltiptext">Search</span>
+            </div>
         </div>
         <div class = "map">
             <div id="map"></div>
         </div>
     </div>
 </div>
-
+<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=Ag4BXFJAwDv5amv68dj_c_1bh2UMuAdrsoyn-oiR9CBOhv5uy2oJ_Et_HnVS2Mmx'></script>
+<script src="/javascript/mapLoader.js"></script>
 </html>

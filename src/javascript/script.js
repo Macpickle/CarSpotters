@@ -88,30 +88,39 @@ const createCard = (index) => {
       </form>
         <div class = "extras-content">
             <div class = "item">
-              <button class = "like-button">
-                <label for = "like-button">
-                  <i class="fas fa-heart" id = "likeIcon"></i>
-                  <p class = "likeCount">${randomData.likes.length}</p>
-                </label>
-              </button>
-            </div>
-            <div class = "item">
-              <button class = "favourite-button">
-                <label for = "favourite-button">
-                  <i class="fas fa-star"></i>
-                  <p class = "favouriteCount">${randomData.favourites.length}</p>
-                </label>
-              </button>
-            </div>
-            <div class = "item">
-              <form action = "/viewPost/${randomData._id}" method = "GET">
-                <button class = "comment-button"'>
-                  <label for = "comment-button">
-                    <i class="fas fa-comment" style="color: slategrey"></i>
-                    <p class = "commentCount">${randomData.comments.length}</p>
+              <div class = "tooltip">
+                <button class = "like-button">
+                  <label for = "like-button">
+                    <i class="fas fa-heart" id = "likeIcon"></i>
+                    <p class = "likeCount">${randomData.likes.length}</p>
                   </label>
                 </button>
-              </form>
+                <span class = "tooltiptext">Like</span>
+              </div>
+            </div>
+            <div class = "item">
+              <div class = "tooltip">
+                <button class = "favourite-button">
+                  <label for = "favourite-button">
+                    <i class="fas fa-star"></i>
+                    <p class = "favouriteCount">${randomData.favourites.length}</p>
+                  </label>
+                </button>
+                <span class = "tooltiptext">Favourite</span>
+              </div>
+            </div>
+            <div class = "item">
+              <div class = "tooltip">
+                <form action = "/viewPost/${randomData._id}" method = "GET">
+                  <button class = "comment-button"'>
+                    <label for = "comment-button">
+                      <i class="fas fa-comment"></i>
+                      <p class = "commentCount">${randomData.comments.length}</p>
+                    </label>
+                  </button>
+                </form>
+                <span class = "tooltiptext">View Comments</span>
+              </div>
             </div>
         </div>
     </div>
@@ -119,28 +128,24 @@ const createCard = (index) => {
     //append the post to the container
     cardContainer.appendChild(post);
       if(isLiked){
-        updateLikes("red", randomData, randomData.likes.length)
-      } else {
-        updateLikes("slategrey", randomData, randomData.likes.length)
+        updateLikes("firebrick", randomData.photo, randomData.likes.length)
       }
       
       if(isFavourited){
-        updateFavourites("blue", randomData, randomData.favourites.length)
-      } else {
-        updateFavourites("slategrey", randomData, randomData.favourites.length)
+        updateFavourites("skyblue", randomData.photo, randomData.favourites.length)
       }
 
       // add event listener to the like button
       const likeButton = post.querySelector(".like-button");
         likeButton.addEventListener("click", (event) => {
           event.preventDefault();
-          updatePost(userID, randomData, "likePost");
+          updatePost(JSON.parse(userID)._id, randomData.photo, randomData._id, "likePost");
       });
       // add event listener to follow button
       const favouriteButton = post.querySelector(".favourite-button");
         favouriteButton.addEventListener("click", (event) => {
           event.preventDefault();
-          updatePost(userID, randomData, "favouritePost");
+          updatePost(JSON.parse(userID)._id, randomData.photo, randomData._id, "favouritePost");
       });
 
       // change length of description based on size of screen
@@ -217,8 +222,8 @@ var loadFile = function(event) {
 function updateLikes(colour, post, currentValue){
   for (let i = 0; i < document.getElementsByClassName("like-button").length; i++) {
     var imageSRC = document.getElementsByClassName("image-container")[i].children[0].getAttribute("src");
-
-    if (post.photo == imageSRC) {
+    
+    if (post == imageSRC) {
       document.getElementsByClassName("like-button")[i].style.color = colour;
       document.getElementsByClassName("likeCount")[i].innerHTML = currentValue;
     }
@@ -229,7 +234,7 @@ function updateFavourites(colour, post, currentValue){
   for (let i = 0; i < document.getElementsByClassName("favourite-button").length; i++) {
     var imageSRC = document.getElementsByClassName("image-container")[i].children[0].getAttribute("src");
 
-    if (post.photo == imageSRC) {
+    if (post == imageSRC) {
       document.getElementsByClassName("favourite-button")[i].style.color = colour;
       document.getElementsByClassName("favouriteCount")[i].innerHTML = currentValue;
     }
@@ -254,21 +259,16 @@ function newPostRequest(data, postURL, callback) {
 } 
 
 //checks if user is logged in
-function validUser(user) {
-  if (!user || user == "Guest") {
+function validUser(userID) {
+  if (!userID || userID == "") {
     window.location.href = "/login";
   }
 }
 
 //updates likes and favourites of a post
-function updatePost(user,post,POSTurl) {
+function updatePost(userID,postPhoto,postID, POSTurl) {
   //determines if user is logged in
-  validUser(user);
-
-  //used on the request to find the user and post
-  const parsedUser = JSON.parse(user);
-  const postID = post._id;
-  const userID = parsedUser._id;
+  validUser(userID);
 
   //full URL for post request
   const postRequestURL = "/" + POSTurl;
@@ -283,7 +283,6 @@ function updatePost(user,post,POSTurl) {
   newPostRequest(body, postRequestURL, function(error, response) { 
     if (response.ok == false) {
       console.log("Error: " + error);
-      console.log(document.getElementById("error"));
       document.getElementById("error").innerHTML = "Error: " + error;
     }
 
@@ -292,15 +291,15 @@ function updatePost(user,post,POSTurl) {
 
     if (POSTurl == "likePost") {
       if (isClicked) {
-        updateLikes("red", post, value);
+        updateLikes("firebrick", postPhoto, value);
       } else {
-        updateLikes("slategrey", post, value);
+        updateLikes("", postPhoto, value);
       }
     } else if (POSTurl == "favouritePost") {
       if (isClicked) {
-        updateFavourites("blue", post, value);
+        updateFavourites("skyblue", postPhoto, value);
       } else {
-        updateFavourites("slategrey", post, value);
+        updateFavourites("", postPhoto, value);
       }
     }
   });

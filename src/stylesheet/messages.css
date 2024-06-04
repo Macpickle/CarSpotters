@@ -161,6 +161,12 @@
     flex-direction: row;    
 }
 
+.main-container .message-container .message-header .create-new button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+
 .main-container .message-container .message-header .create-new button {
     border: none;
     background-color: transparent;

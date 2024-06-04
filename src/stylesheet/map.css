@@ -1,0 +1,58 @@
+@import "colour.css";
+@import "default-text-sizing.css";
+@import "pc.css";
+
+.main-container .map-container {
+    width: 50%;
+    height:80vh;
+    border: 1px solid var(--border-standard);
+    border-radius: 1em;
+    background-color: var(--standard-background);
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2.5em;
+}
+
+.main-container .map-container .search-container {
+    width: 100%;
+    display: flex;
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center;
+    height: 2em;
+}
+
+.main-container .map-container .search-container #search {
+    width: 50%;
+    height: 2em;
+    border-radius: 1em;
+    border: 1px solid var(--border-standard);
+    padding: 0.5em;
+    margin-right: 0.5em;
+    color: var(--text-title);
+}
+
+.main-container .map-container .search-container #search:focus {
+    outline: 1px solid var(--highlighted-hover-background);
+}
+
+.main-container .map-container .search-container #search-button {
+    margin-left:0.5em;
+    border: none;
+    background-color: transparent;
+}
+
+.main-container .map-container .search-container #search-button:hover {
+    transform: scale(1.2);
+}
+
+.main-container .map-container .map {
+    display: flex;
+    margin-top: 1rem;
+    width: 95%;
+    height: 65%;
+    background-color: var(--standard-secondary-background);
+    border-radius: 1em;
+    border: 1px solid var(--border-standard);
+}

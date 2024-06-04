@@ -4,6 +4,7 @@
     --text-subtitle: rgb(177, 177, 177);
     --text-paragraph: rgb(87, 87, 87);
     --text-body: rgb(255, 255, 255);
+    --icon-colour: rgb(255, 255, 255);
     
     /* backgrounds */
     --standard-background: rgb(19, 19, 19);
@@ -15,13 +16,13 @@
     --post-back: rgb(56, 56, 56);
 }
 
-/* new */
 [data-theme = "light"] {
     --border-standard: rgb(203, 203, 203);
     --text-title: rgb(54, 54, 54);
     --text-subtitle: rgb(82, 82, 82);
     --text-paragragh: rgb(118, 118, 118);
     --text-body: rgb(54, 54, 54);
+    --icon-colour: rgb(54, 54, 54);
     
     /* backgrounds */
     --standard-background: rgb(255, 255, 255);
@@ -31,4 +32,42 @@
     --standard-selected-background: rgb(239, 239, 239);
     --highlighted-hover-background: rgb(246, 224, 255);
     --post-back: rgb(255, 255, 255);
+}
+
+[data-theme = "system"] {
+    @media screen and (prefers-color-scheme: dark) {
+        --border-standard: rgb(94, 94, 94);
+        --text-title: rgb(255, 255, 255);
+        --text-subtitle: rgb(177, 177, 177);
+        --text-paragraph: rgb(87, 87, 87);
+        --text-body: rgb(255, 255, 255);
+        --icon-colour: rgb(255, 255, 255);
+        
+        /* backgrounds */
+        --standard-background: rgb(19, 19, 19);
+        --standard-secondary-background: rgb(10, 10, 10);
+        --standard-tertiary-background: rgb(39, 39, 39);
+        --standard-hover-background: rgb(0, 0, 0);
+        --standard-selected-background: rgb(41, 41, 41);
+        --highlighted-hover-background: rgb(66, 44, 80);
+        --post-back: rgb(56, 56, 56); 
+    }
+
+    @media screen and (prefers-color-scheme: light) {
+        --border-standard: rgb(203, 203, 203);
+        --text-title: rgb(54, 54, 54);
+        --text-subtitle: rgb(82, 82, 82);
+        --text-paragraph: rgb(118, 118, 118);
+        --text-body: rgb(54, 54, 54);
+        --icon-colour: rgb(54, 54, 54);
+        
+        /* backgrounds */
+        --standard-background: rgb(255, 255, 255);
+        --standard-secondary-background: rgb(235, 235, 235);
+        --standard-tertiary-background: rgb(247, 247, 247);
+        --standard-hover-background: rgb(248, 240, 255);
+        --standard-selected-background: rgb(239, 239, 239);
+        --highlighted-hover-background: rgb(246, 224, 255);
+        --post-back: rgb(255, 255, 255);  
+    }
 }

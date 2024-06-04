@@ -89,7 +89,7 @@
             </form>
               <div class = "extras-content">
                 <div class = "item">
-                  <button class = "like-button">
+                  <button class = "like-button" id = "post-like-button">
                     <label for = "like-button">
                       <i class="fas fa-heart" id = "likeIcon"></i>
                       <p class = "likeCount"><%=post.likes.length%></p>
@@ -97,7 +97,7 @@
                   </button>
                 </div>
                 <div class = "item">
-                  <button class = "favourite-button">
+                  <button class = "favourite-button" id = "post-favourite-button">
                     <label for = "favourite-button">
                       <i class="fas fa-star"></i>
                       <p class = "favouriteCount"><%=post.favourites.length%></p>
