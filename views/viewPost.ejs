@@ -54,13 +54,13 @@
   </ul>
 </div>
 
+<% if (error) { %>
 <div class = "alert">
-  <% if (success) { %>
-    <div class = "success">
-      <p>Post was deleted.</p>
+    <div class = "alert-container">
+      <p><%=error%></p>
     </div>
-  <% } %>
 </div>
+<% } %>
 
 <div class = "main-container">
     <div id = "post-container" style="height: 100%; width: 75%; border: none; margin-bottom: auto;">
@@ -109,27 +109,51 @@
               </div>
             <div class = "extras-content">
               <div class = "item">
-                <button class = "like-button" id = "post-like-button">
-                  <label for = "like-button">
-                    <i class="fas fa-heart" id = "likeIcon"></i>
-                    <p class = "likeCount"><%=post.likes.length%></p>
-                  </label>
-                </button>
+                <div class = "tooltip">
+                  <button class = "like-button" id = "post-like-button">
+                    <label for = "like-button">
+                      <i class="fas fa-heart" id = "likeIcon"></i>
+                      <p class = "likeCount"><%=post.likes.length%></p>
+                    </label>
+                  </button>
+                  <span class = "tooltiptext">Like</span>
+                </div>
               </div>
               <div class = "item">
-                <button class = "favourite-button" id = "post-favourite-button">
-                  <label for = "favourite-button">
-                    <i class="fas fa-star" id = "favouriteIcon"></i>
-                    <p class = "favouriteCount"><%=post.favourites.length%></p>
-                  </label>
-                </button>
+                <div class = "tooltip">
+                  <button class = "favourite-button" id = "post-favourite-button">
+                    <label for = "favourite-button">
+                      <i class="fas fa-star" id = "favouriteIcon"></i>
+                      <p class = "favouriteCount"><%=post.favourites.length%></p>
+                    </label>
+                  </button>
+                  <span class = "tooltiptext">Favourite</span>
+                </div>
               </div>
               <div class = "item">
-                <label for = "comment-button">
-                  <i class="fas fa-comment"></i>
-                  <p class = "commentCount"><%=post.comments.length%></p>
-                </label>
+                <div class = "tooltip">
+                  <label for = "comment-button">
+                    <i class="fas fa-comment"></i>
+                    <p class = "commentCount"><%=post.comments.length%></p>
+                  </label>
+                <span class = "tooltiptext">Comments</span>
+                </div>
               </div>
+              <% if (isOwner) { %>
+                <form action = "/deletePost/<%=post._id%>" method = "POST">
+                  <div class = "item">
+                    <div class = "tooltip">
+                      <button class = "delete-button">
+                        <label for = "delete-button">
+                          <i class="fas fa-trash"></i>
+                        </label>
+                      </button>
+                      <span class = "tooltiptext">Delete Post</span>
+                    </div>
+                  </div>
+                  <input type = "hidden" name = "postID" value = "<%=post._id%>">     
+                </form>   
+              <% } %>
             </div>
           </div>
     </div>
@@ -250,6 +274,10 @@
       updatePost("<%=userID._id%>", '<%=post.photo%>', '<%=post._id%>', "favouritePost")
     }
   });
+
+  setTimeout(() => {
+        document.querySelector('.alert-container').style.animation = 'fadeBack 1s ease-in-out forwards';
+    }, 2500);
 </script>
 
 </body>

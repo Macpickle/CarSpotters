@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema({
         type: Object,
         required: false,
     default: {
-        appearence: "light", 
+        appearence: "system", 
         messagePrivacy: "everyone", 
         postPrivacy: "everyone", 
         followingPrivacy: "everyone", 

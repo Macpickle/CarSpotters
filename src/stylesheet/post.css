@@ -242,7 +242,7 @@
 
 .main-container .comment-container .comments .comment .comment-header .comment-date {
     margin-left: auto;
-    font-size: 0.7em;
+    font-size: 0.85em;
     margin-right: 0.5em;
     color: var(--text-subtitle);
 }
@@ -262,11 +262,13 @@
     flex-direction: row;
     align-items: center;
     margin-left: 0.5em;
+    margin-top: 0.5em;
     font-size: 0.85em;
 }
 
 .main-container .comment-container .comments .comment .comment-content p {
     color: var(--text-paragraph);
+    font-size: 1em;
 }
 
 .main-container .comment-container .comments .comment .comment-extras {
@@ -327,4 +329,5 @@
     align-items: center;
     flex-direction: column;
     width: 100%;
+    color: var(--text-title);
 }

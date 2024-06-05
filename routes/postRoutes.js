@@ -53,11 +53,13 @@ router.post('/commentPost', tryCatch(async (req,res) => {
         ownerPhoto: sessionUser.photo,
         comment: cleanedText,
         postID: post._id,
+        commentID: new mongoose.Types.ObjectId(),
         likes: 0,
         date: res.locals.formattedDate,
     });
 
     post.comments.push(newComment);
+    newComment.save();
     post.save();
     return res.status(200).redirect(`/viewPost/${post._id}`);
 }));
@@ -87,6 +89,10 @@ router.post("/appendMessage/:id", tryCatch(async (req,res) => {
 router.post('/sendMessage', tryCatch(async (req,res) => {
     const sender =  await User.findOne({ username: req.body.sender });
     const receiver = await User.findOne({ username: req.body.receiver });
+    if (!sender || !receiver) {
+        throw new appError("User not found!", 404, MESSAGE_NOT_FOUND, "/messages");
+    }
+
     const isExistingMessage = await Message.findOne({ members: { $all: [sender.username, receiver.username] } });
     const message = req.body.message;
 
@@ -190,23 +196,6 @@ router.post('/followUser', tryCatch(async (req,res) => {
     accountUser.save();
     res.status(200).json({"followingCount": accountUser.followers.length, "isFollowing": !isFollowing});
 }));
-
-router.post('/deletePost/:id', async (req,res) => {
-    try {
-        const post = await Post.findOne({ _id: req.params.id });
-        const user = await User.findOne({ _id: post.usernameID });
-        const index = user.postIDs.indexOf(post.photo);
-        user.postIDs.splice(index, 1);
-        user.postPhotos.splice(index, 1);
-        user.postCount -= 1;
-        user.save();
-
-        await Post.deleteOne({ _id: req.params.id });
-        res.redirect('/');
-    } catch {
-        res.redirect('/');
-    }
-});
 
 //makes IMGUR post request, returns link to image
 function fetchImage(img, defaultURL) {
@@ -475,25 +464,5 @@ router.get('*', (req,res) => {
     const theme = req.user ? req.user.settings.appearence : "light";
     res.render('404', { theme: theme });
 });
-
-router.post('/deleteComment/:id', async (req,res) => {
-    try {
-        const post = await Post.findOne({ _id: req.body.postID });
-        for (let i = 0; i < post.comments.length; i++) {
-            if (post.comments[i]._id == req.params.id) {
-                post.comments.splice(i, 1);
-                break;
-            }
-        }
-        post.save();
-        res.redirect(`/viewPost/${post._id}?success=true`);
-
-    } catch (err) {
-        console.log(err);
-        res.redirect('/');
-    }
-
-});
-
 
 module.exports = router;

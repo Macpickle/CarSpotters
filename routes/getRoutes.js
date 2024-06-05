@@ -137,7 +137,7 @@ router.get('/viewPost/:id', async (req,res) => {
             const admin = false;
             const isOwner = false;
 
-            res.render('viewPost', {post, admin, isOwner, userID, error: error, theme, success});
+            res.render('viewPost', {post, admin, isOwner, userID, error, theme, success});
         }
     } catch {
         res.redirect('/');

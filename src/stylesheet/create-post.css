@@ -6,7 +6,7 @@
 }
 
 .main-container .file-container{
-    margin: 2.5em;
+    margin-top: 2.5em;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -14,7 +14,7 @@
     width: 100%;
     height:80vh;
     background-color: var(--standard-background);
-    outline: 1px solid var(--border-standard);
+    border: 1px solid var(--border-standard);
     border-radius: 1em;
 }
 
@@ -99,4 +99,34 @@
     border: 1px solid var(--border-standard);
     padding: 1em 1em;
     color: var(--text-title);
+}
+
+.main-container .text-input-container .currentLocation {
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    width: fit-content;
+}
+
+.main-container .text-input-container .currentLocation:hover {
+    color: var(--highlighted-hover-background);
+    box-shadow: none;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 786px) {
+    .main-container .file-form{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    .main-container .file-container{
+        width: 100%;
+        height: 100%;
+        margin-top: 0;
+        border: none;
+    }
 }

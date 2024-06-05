@@ -11,7 +11,7 @@
     <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
 </head>
 
-<body style="overflow-y: hidden;">
+<body style="overflow: hidden;">
 <div class = "navbar">
     <div class = "web-logo">
         <% if (theme == "dark") { %>
@@ -61,7 +61,7 @@
     </div>
 
     <div class = "main-container">
-        <form class = "file-form" action="/createNewPost" method="POST" enctype="multipart/form-data" onsubmit="submit.disabled = true">
+        <form class = "file-form" action="/createNewPost" method="POST" enctype="multipart/form-data" onsubmit="submit.disabled = true" autocomplete="off">
             <div class = "file-container">
             <div class = "image-container">
                 <input type="file" id="img" name="img" accept="image/png, image/jpg" style="display:none;" onchange="loadFile(event)">
@@ -72,8 +72,14 @@
                 <div class = "information-container">
                 <div class = "stack">
                     <input type="text" id="carModel" name="carModel" placeholder="Car Model" required>
-                    <input type="text" id="carName" name="carName" placeholder="Car Name" required>
-                    <input type="text" id="location" name="location" placeholder="Car Location">
+                    <input type="text" id="carName" name="carName" placeholder="Car Name" required>                      
+                        <button type="button" class = "currentLocation">
+                            <div class = "tooltip">  
+                                <i class="fa-solid fa-map-marker"></i>
+                                <span class = "tooltiptext">Current Location</span>
+                            </div>
+                        </button>
+                    <input type="text" id="location" name="location" placeholder="Car Location" style="padding-left: 2rem;">
                 </div>
                 </div>
                 <div class = "description-container">
@@ -94,6 +100,15 @@
             document.getElementById('information').style.display = "flex";
             document.getElementById('submit').style.display = "flex";
         };
+
+        var currentLocation = document.querySelector('.currentLocation');
+
+        currentLocation.addEventListener('click', () => {
+            navigator.geolocation.getCurrentPosition((position) => {
+                var location = document.getElementById('location');
+                location.value = position.coords.latitude + ", " + position.coords.longitude;
+            });
+        });
     </script>
 </div>
 </body>

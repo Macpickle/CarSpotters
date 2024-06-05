@@ -295,6 +295,36 @@
     width: 100%;
 }
 
+.alert {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.alert .alert-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--standard-background);
+    border: 1px solid var(--border-standard);
+    border-top: none;
+    border-radius: 0em 0em 1em 1em;
+    padding: 1em;
+    width: 25%;
+    height: 5em;
+    z-index: 99;
+    animation: fade-down 1s ease-in-out forwards;
+}
+
+.alert .alert-container p {
+    font-size: 1em;
+    color: var(--text-title);
+}
+
 @media screen and (min-width: 786px) {
     .navbar {
         display: flex;

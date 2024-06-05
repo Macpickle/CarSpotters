@@ -1,5 +1,5 @@
 .mobile-container {
-    background-color: rgba(255, 255, 255, 0.915);
+    background-color: var(--standard-background);
     height: 7.5dvh;
     width: 100%;
     bottom: 0;

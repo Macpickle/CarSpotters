@@ -7,7 +7,6 @@ const Post = require('../models/post');
 const Message = require('../models/message');
 const Comment = require('../models/comment');
 
-const mongoose = require('mongoose');
 const appError = require('../appError');
 const { tryCatch } = require('../utils/tryCatch');
 

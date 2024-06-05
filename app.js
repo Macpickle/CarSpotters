@@ -3,6 +3,7 @@ require('dotenv').config(); // for environment variables
 const getRoutes = require('./routes/getRoutes.js');
 const postRoutes = require('./routes/postRoutes.js');
 const adminRoutes = require('./routes/adminRoutes.js');
+const ownerControls = require('./routes/ownerControl.js');  
 
 const express = require('express');
 const session = require('express-session'); 
@@ -109,6 +110,7 @@ app.use((req, res, next) => {
 app.use(adminRoutes);
 app.use(getRoutes);
 app.use(postRoutes);
+app.use(ownerControls);
 
 //error handling
 app.use(errorHandler);
