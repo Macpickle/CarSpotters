@@ -66,9 +66,15 @@
                         <button type="checkbox" id="follow">
                             <label id = "followButton" for="follow">
                                 <% if (user.followers.includes(userID.username)) { %>
-                                    <i class="fa-solid fa-check"></i>
+                                    <div class = "tooltip">
+                                        <i class="fa-solid fa-check"></i>
+                                        <span class = "tooltiptext">Following</span>
+                                    </div>
                                 <% } else { %>
-                                    <i class="fa-solid fa-plus"></i>
+                                    <div class = "tooltip">
+                                        <i class="fa-solid fa-plus"></i>
+                                        <span class = "tooltiptext">Follow</span>
+                                    </div>
                                 <% } %>
                             </label>
                         </button>

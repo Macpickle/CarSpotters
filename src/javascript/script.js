@@ -54,37 +54,42 @@ const createCard = (index) => {
     post.innerHTML = `
     <div class = "post">
       <form action = "/viewPost/${randomData._id}" method = "GET">
-        <button>
-          <div class = "view-post">
-            <div class = "post-header">
-            
-              <div class = "profile-picture">
-                <img src="${randomData.owner.photo}" alt="">
-              </div>
-              <div class = "post-header-content">
-                <div class = "stack">
-                  <div class = "profile-name">
-                    <h2>${randomData.owner.username}</h2>
-                  </div>
-                  <div class = "post-information">
-                    <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
-                  </div>
-                </div>
-                <div class = "stack">
-                    <div class = "description">
-                      <p>${randomData.description}</p>
+          <button id = "post-button">
+              <div class = "view-post">
+                <div class = "post-header">
+                  <div class = "tooltip">
+                    <div class = "profile-picture">
+                      <img class="profile-clickable" src="${randomData.owner.photo}" alt="" data-form-id="${randomData.owner._id}">
                     </div>
+                    <span class = "tooltiptext">View Profile</span>
+                  </div>
+                  <div class = "post-header-content">
+                    <div class = "stack">
+                      <div class = "tooltip">
+                        <div class = "profile-name">
+                          <h2 class="profile-clickable" data-form-id="${randomData.owner._id}">${randomData.owner.username}</h2> 
+                      </div>
+                      <span class = "tooltiptext">View Profile</span>
+                    </div>
+                      <div class = "post-information">
+                        <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
+                      </div>
+                    </div>
+                    <div class = "stack">
+                        <div class = "description">
+                          <p>${randomData.description}</p>
+                        </div>
+                    </div>
+                  </div>
+                  <div class = "post-date">
+                    <p>${randomData.date}</p>
+                  </div>
                 </div>
+                  <div class = "image-container">
+                    <img src="${randomData.photo}" alt="" id = "photo">
+                  </div>
               </div>
-              <div class = "post-date">
-                <p>${randomData.date}</p>
-              </div>
-            </div>
-              <div class = "image-container">
-                <img src="${randomData.photo}" alt="" id = "photo">
-              </div>
-          </div>
-        </button>
+          </button>
       </form>
         <div class = "extras-content">
             <div class = "item">
@@ -112,7 +117,7 @@ const createCard = (index) => {
             <div class = "item">
               <div class = "tooltip">
                 <form action = "/viewPost/${randomData._id}" method = "GET">
-                  <button class = "comment-button"'>
+                  <button class = "comment-button">
                     <label for = "comment-button">
                       <i class="fas fa-comment"></i>
                       <p class = "commentCount">${randomData.comments.length}</p>
@@ -155,6 +160,22 @@ const createCard = (index) => {
       } else {
         description.innerHTML = `<p>${randomData.description}</p>`;
       }
+
+      // Get all elements with the class 'profile-name-clickable'
+      var profileNameClickable = document.querySelectorAll(".profile-clickable");
+
+      // Add click event listeners to each clickable profile name
+      profileNameClickable.forEach(function(element) {
+          element.addEventListener("click", function(event) {
+          event.preventDefault(); // Prevent form submission
+
+          // Get the form ID associated with the clicked profile name
+          var formId = element.dataset.formId;
+
+          window.location.href = "/account/" + formId;            
+          });
+      });
+
   })
   .catch(error => {
     console.error('Error:', error);
@@ -241,6 +262,22 @@ function updateFavourites(colour, post, currentValue){
   }
 }
 
+function notifyUser(postID, userID){
+  const body = {
+    uniquePostID: postID,
+    sender: userID,
+    type: "post"
+  }
+
+  fetch('/createNotification/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+}
+
 //creates a new post request to URL using XHR
 function newPostRequest(data, postURL, callback) {
   const xhr = new XMLHttpRequest();
@@ -292,6 +329,7 @@ function updatePost(userID,postPhoto,postID, POSTurl) {
     if (POSTurl == "likePost") {
       if (isClicked) {
         updateLikes("firebrick", postPhoto, value);
+        notifyUser(postID, userID);
       } else {
         updateLikes("", postPhoto, value);
       }
@@ -330,12 +368,21 @@ function followUser(sessionUser,accountUser) {
     const followingCount = response.followingCount;
     const isFollowing = response.isFollowing;
 
-    document.getElementById("followerCount").innerHTML = followingCount;
+    document.getElementById("followerCount").children[0].innerHTML = followingCount;
 
     if(isFollowing){
-      document.getElementById("followButton").innerHTML = "<i class='fa-solid fa-check'></i>"
+      document.getElementById("followButton").innerHTML =
+       `<div class = "tooltip">
+            <i class="fa-solid fa-check"></i>
+            <span class = "tooltiptext">Following</span>
+        </div>`
     } else {
-      document.getElementById("followButton").innerHTML = "<i class='fa-solid fa-plus'></i>"
+      document.getElementById("followButton").innerHTML = 
+      `
+      <div class = "tooltip">
+          <i class="fa-solid fa-plus"></i>
+          <span class = "tooltiptext">Follow</span>
+      </div>`
     }
 
   });

@@ -9,7 +9,7 @@
     flex-direction: column;
 }
 
-.main-container #post-container button {
+.main-container #post-container #post-button {
     width: 100%;
 }
 

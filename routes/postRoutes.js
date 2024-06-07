@@ -4,6 +4,7 @@ const User = require('../models/user');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
 const Message = require('../models/message');
+const Notification = require('../models/notification');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
@@ -29,6 +30,28 @@ router.post('/login', passport.authenticate('local', {
     // If the user is authenticated, redirect to the home page, session is saved
     res.redirect('/');
 });
+
+router.post('/createNotification', tryCatch(async (req,res) => {
+    if (req.body.type == "post"){
+        const post = await Post.findOne({_id: req.body.uniquePostID});
+        const sender = await User.findOne({_id: req.body.sender});
+        const postOwner = post.owner.username;
+        const message = sender.username + " has liked your post!";
+        
+        const notify = new Notification({
+            user: postOwner,
+            sender: sender.username,
+            message: message,
+            date: res.locals.formattedDate,
+            reference: '/viewPost/' + req.body.uniquePostID,
+            count: 1,
+        })
+
+        notify.save();
+        res.json({"ok": true})
+    }
+
+}));
 
 router.post('/logout', (req,res) => {
     req.logout(() => {

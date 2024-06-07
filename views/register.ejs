@@ -38,11 +38,28 @@
             document.getElementById("password").style.border = "1px solid red";
         }
         
-        document.querySelectorAll("input").forEach(function(input) {
-            input.addEventListener("input", function() {
-            input.style.border = "";
-            });
+        document.getElementById('username').addEventListener('input', function() {
+            this.style.border = '';
+            document.getElementById('password').style.border = '';
+            document.getElementById('email').style.border = '';
+            document.querySelector('.login-error').innerHTML = '';
         });
+
+        document.getElementById('email').addEventListener('input', function() {
+            this.style.border = '';
+            document.getElementById('password').style.border = '';
+            document.getElementById('username').style.border = '';
+            document.querySelector('.login-error').innerHTML = '';
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            this.style.border = '';
+            document.getElementById('username').style.border = '';
+            document.getElementById('email').style.border = '';
+            document.querySelector('.login-error').innerHTML = '';
+        });
+
+
     </script>
 </body>
 </html>

@@ -22,10 +22,10 @@
             </div>
 
             <div>
-                <input type="username" id="username" name="username" placeholder="Username..." required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
+                <input type="username" id="username" name="username" placeholder="Username..." required <% if (error) { %>style="outline: 1px solid red;"<% } %>>
             </div>
             <div>
-                <input type="password" id="password" name="password" placeholder="Password..." required <% if (error) { %>style="outline: 1px solid rgb(153, 0, 0);"<% } %>>
+                <input type="password" id="password" name="password" placeholder="Password..." required <% if (error) { %>style="outline: 1px solid red;"<% } %>>
             </div>
             <div>
                 <button type="submit">Login</button>
@@ -48,11 +48,13 @@
         document.getElementById('username').addEventListener('input', function() {
             this.style.outline = 'none';
             document.getElementById('password').style.outline = 'none';
+            document.querySelector('.login-error').innerHTML = '';
         });
 
         document.getElementById('password').addEventListener('input', function() {
             this.style.outline = 'none';
             document.getElementById('username').style.outline = 'none';
+            document.querySelector('.login-error').innerHTML = '';
         });
 
 
