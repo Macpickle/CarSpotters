@@ -37,18 +37,30 @@ router.post('/createNotification', tryCatch(async (req,res) => {
         const sender = await User.findOne({_id: req.body.sender});
         const postOwner = post.owner.username;
         const message = sender.username + " has liked your post!";
+        const originalPost = '/viewPost/' + req.body.uniquePostID;
+
+        const checkDuplicateNotification = await Notification.findOne({ reference: originalPost });
+        if (checkDuplicateNotification) {
+            checkDuplicateNotification.count += 1;
+            checkDuplicateNotification.message = "Multiple users have liked your post!";
+            checkDuplicateNotification.date = res.locals.formattedDate;
+            checkDuplicateNotification.sender = "Multiple users";
+            checkDuplicateNotification.save();
+            return res.json({"ok": true});
+        };
         
         const notify = new Notification({
             user: postOwner,
             sender: sender.username,
             message: message,
             date: res.locals.formattedDate,
-            reference: '/viewPost/' + req.body.uniquePostID,
+            reference: originalPost,
+            photo: post.photo,
             count: 1,
         })
 
         notify.save();
-        res.json({"ok": true})
+        return res.json({"ok": true})
     }
 
 }));

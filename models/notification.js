@@ -21,6 +21,10 @@ const notificationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    photo: {
+        type: String,
+        required: true
+    },
     count: {
         type: Number,
         required: true

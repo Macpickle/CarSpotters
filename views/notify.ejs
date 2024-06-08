@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="eng" data-theme = <%=theme%>>  
+<head>
+    <title>CarSpotters</title>
+    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width, maximum-scale=1">
+    <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/notification.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/loading-animation.css">
+    <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
+</head>
+
+<body style = "overflow: hidden;">
+    <div class = "navbar" id="navbar">
+        <div class = "web-logo">
+            <% if (theme == "dark") { %>
+                <img src = "/assets/LogoWHITE.png" alt = "CarSpotters">
+            <% } else { %>
+                <img src = "/assets/LogoBLACK.png" alt = "CarSpotters">
+            <% } %>
+        </div>
+
+        <ul>
+            <% if (!userID) { %>
+                <div class = "dropdown">
+                    <button>
+                        <div class = "tooltip">
+                            <div class = "icon">
+                                <a href = "login" id="login"><img src = "https://i.imgur.com/jNNT4LE.png" alt = ""></a>
+                            </div>
+                            <span class = "tooltiptext">Login</span>
+                        </div>
+                    </button>
+                </div>
+            <% } else { %>
+                <div class = "dropdown">
+                    <button class = "dropbtn">
+                        <div class = "icon">
+                            <img src = "<%=userID.photo%>" alt = "">
+                        </div>
+                    </button>
+                    <div class = "dropdown-content">
+                        <a href = "/account/<%=userID._id%>" method="GET" id="account">Account</a>
+                        <a href = "/settings/<%=userID._id%>" method="GET" id="settings">Settings</a>
+                        <a href = "/" method="GET" id="home">Home</a>
+                        <a href = "/logout" method="POST" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                        
+                        <form id="logout-form" action="/logout" method="POST"></form>
+                    </div>
+                </div>
+            <% } %>
+        </ul>
+    </div>
+
+    <div class = "sidenav">
+        <a href = "/"><i class="fa-solid fa-home"></i>Home</a>
+        <a href = "map" ><i class="fa-solid fa-map"></i>Explore</a>
+        <a href = "notify" class = "selected"><i class ="fa-solid fa-bell"></i>Notifications</a>
+        <a href = "messages"><i class="fa-solid fa-envelope"></i>Messages</a>
+        <a href = "favourites"><i class="fa-solid fa-star"></i>Favourites</a>
+        <a href="create"><i class="fa-solid fa-plus"></i>Create</a>
+    </div>
+
+    <!--need to add error showing-->
+
+    <div class = "main-container">
+        <div class = "notification-container">
+            <div class = "notification-header">
+
+            </div>
+
+            <% notifications.forEach(notification => { %>
+                <button onclick="window.location.href = '<%=notification.reference%>'">
+                    <div class = "notification">
+                        <div class = "notification-photo-container">
+                            <div class = "notification-photo">
+                                <img src = "<%=notification.photo%>" alt = "">
+                            </div>
+                        </div>
+                        <div class = "notification-content">
+                            <div class = "notification-text">
+                                <p><%=notification.message%></p>
+                            </div>
+                            <div class = "notification-time">
+                                <p><%=notification.date%></p>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            <% }); %>
+        </div>
+    </div>
+
+    <!--mobile container-->
+    <div class = "mobile-container">
+        <ul>
+            <% if (userID) { %>
+                <li><a href = "/account/<%=userID._id%>"><img class = "profile-picture" src = "<%=userID.photo%>"></a></li>
+            <% } else { %>
+                <li><a href = "/login"><img class = "profile-picture" src = "https://i.imgur.com/jNNT4LE.png" alt = ""></a></li>
+            <% } %>
+            <li><a href="/"><i class="fa-solid fa-home"></i></a></li>
+            <li><a href = "map"><i class="fa-solid fa-search"></i></a></li>
+
+            <% if (userID) { %>
+                <li><a href = "notify"><i class ="fa-solid fa-bell"></i></a></li>
+                <li><a href = "messages"><i class="fa-solid fa-envelope"></i></a></li>
+                <li><a href = "favourites"><i class="fa-solid fa-star"></i></a></li>
+                <li><a href="create"><i class="fa-solid fa-plus"></i></a></li>
+            <% } %>
+        </ul> 
+    </div>
+    <script>
+        var screenWidth = window.innerWidth;
+        if (screenWidth < 768) {
+            var prevScrollpos = window.scrollY;
+            window.onscroll = function() {
+            var currentScrollPos = window.scrollY;
+              if (prevScrollpos > currentScrollPos) {
+                document.getElementById("navbar").style.top = "0";
+              } else {
+                document.getElementById("navbar").style.top = "-10em";
+              }
+              prevScrollpos = currentScrollPos;
+            }
+        }
+    </script>
+</body>
+
+</html>

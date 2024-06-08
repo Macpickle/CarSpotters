@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('../models/user');
 const Post = require('../models/post');
 const Message = require('../models/message');
+const Notification = require('../models/notification');
 const user = require('../models/user');
 
 //function to determine if the session has a logged in account
@@ -23,6 +24,17 @@ router.get('/map', (req, res) => {
     const userID = req.user;
     const theme = (userID && userID.settings && userID.settings.appearence) || "light";
     res.render('map', { userID, theme });
+});
+
+router.get('/notify', isLoggedIn, async (req,res) => {
+    try {
+        const userID = req.user;
+        const theme = (userID && userID.settings && userID.settings.appearence) || "light";
+        const notifications = await Notification.find({user: userID.username});
+        res.render('notify', {userID, theme, notifications});
+    } catch {
+        res.redirect('/');
+    }
 });
 
 router.get('/login', (req,res) => {
