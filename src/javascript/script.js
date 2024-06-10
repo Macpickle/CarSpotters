@@ -336,6 +336,7 @@ function updatePost(userID,postPhoto,postID, POSTurl) {
     } else if (POSTurl == "favouritePost") {
       if (isClicked) {
         updateFavourites("skyblue", postPhoto, value);
+        notifyUser(postID, userID);
       } else {
         updateFavourites("", postPhoto, value);
       }

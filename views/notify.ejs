@@ -68,14 +68,19 @@
     <div class = "main-container">
         <div class = "notification-container">
             <div class = "notification-header">
-
+                <h1 class = "notification-title">Notifications</h1>
             </div>
 
             <% notifications.forEach(notification => { %>
-                <button onclick="window.location.href = '<%=notification.reference%>'">
+                <button onclick="submitNotification('<%=notification.reference%>', '<%=notification._id%>')">
                     <div class = "notification">
                         <div class = "notification-photo-container">
                             <div class = "notification-photo">
+                                <div class = "notification-icon">
+                                    <div class = "icon">
+                                        <p><%=notification.count%></p>
+                                    </div>
+                                </div>
                                 <img src = "<%=notification.photo%>" alt = "">
                             </div>
                         </div>
@@ -90,6 +95,11 @@
                     </div>
                 </button>
             <% }); %>
+            <% if (notifications.length == 0) { %>
+                <div class = "no-notifications">
+                    <p>No notifications!</p>
+                </div>
+            <% } %>
         </div>
     </div>
 
@@ -113,18 +123,19 @@
         </ul> 
     </div>
     <script>
-        var screenWidth = window.innerWidth;
-        if (screenWidth < 768) {
-            var prevScrollpos = window.scrollY;
-            window.onscroll = function() {
-            var currentScrollPos = window.scrollY;
-              if (prevScrollpos > currentScrollPos) {
-                document.getElementById("navbar").style.top = "0";
-              } else {
-                document.getElementById("navbar").style.top = "-10em";
-              }
-              prevScrollpos = currentScrollPos;
-            }
+        function submitNotification(reference, id) {
+            //delete from database
+            fetch('/deleteNotification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ID: id
+                })
+            }).then(response => {
+                window.location.href = reference;
+            });
         }
     </script>
 </body>

@@ -271,6 +271,9 @@
     border: 1px solid var(--border-standard);
     background-color: var(--standard-tertiary-background);
     width: 25%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .main-container .back .return button {

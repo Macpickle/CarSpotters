@@ -90,17 +90,17 @@
         document.getElementById("message").style.border = "";
     });
 
-        document.getElementById('message').addEventListener('input', function() {
-            var lines = this.value.split('\n');
-            if (lines.length > 2) {
-                this.value = lines.slice(0, 2).join('\n');
-            }
-        });
+    document.getElementById('message').addEventListener('input', function() {
+        var lines = this.value.split('\n');
+        if (lines.length > 2) {
+            this.value = lines.slice(0, 2).join('\n');
+        }
+    });
 
-        document.addEventListener("DOMContentLoaded", function() {
-            var messageContainer = document.querySelector(".message-content-container");
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-        });
+    document.addEventListener("DOMContentLoaded", function() {
+        var messageContainer = document.querySelector(".message-content-container");
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    });
 
 </script>
 <script src="/socket.io/socket.io.js"></script>
@@ -112,6 +112,21 @@
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+
+        fetch("/createNotification", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                message: "sent you a message",
+                chatID: "<%=message._id%>",
+                type: "message",
+                sender: "<%=user._id%>",
+                receiver: "<%=otherUser._id%>",
+            }),
+        })
+
         if (message.value.trim() === "") {
             message.style.border = "1px solid red";
         } else {

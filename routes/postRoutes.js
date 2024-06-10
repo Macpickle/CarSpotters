@@ -36,13 +36,13 @@ router.post('/createNotification', tryCatch(async (req,res) => {
         const post = await Post.findOne({_id: req.body.uniquePostID});
         const sender = await User.findOne({_id: req.body.sender});
         const postOwner = post.owner.username;
-        const message = sender.username + " has liked your post!";
+        const message = sender.username + " has liked or favourited your post!";
         const originalPost = '/viewPost/' + req.body.uniquePostID;
 
-        const checkDuplicateNotification = await Notification.findOne({ reference: originalPost });
+        const checkDuplicateNotification = await Notification.findOne({ reference: originalPost, type: "like/favourite"});
         if (checkDuplicateNotification) {
             checkDuplicateNotification.count += 1;
-            checkDuplicateNotification.message = "Multiple users have liked your post!";
+            checkDuplicateNotification.message = "Multiple users have liked or favourited your post!";
             checkDuplicateNotification.date = res.locals.formattedDate;
             checkDuplicateNotification.sender = "Multiple users";
             checkDuplicateNotification.save();
@@ -57,12 +57,84 @@ router.post('/createNotification', tryCatch(async (req,res) => {
             reference: originalPost,
             photo: post.photo,
             count: 1,
+            type: "like/favourite",
         })
 
         notify.save();
         return res.json({"ok": true})
     }
 
+    if (req.body.type == "comment") {
+        const post = await Post.findOne({_id: req.body.uniquePostID});
+        const sender = await User.findOne({_id: req.body.sender});
+        const postOwner = post.owner.username;
+        const originalPost = '/viewPost/' + req.body.uniquePostID;
+
+        const checkDuplicateNotification = await Notification.findOne({ reference: originalPost, type: "comment" });
+
+        if (checkDuplicateNotification) {
+            checkDuplicateNotification.count += 1;
+            checkDuplicateNotification.message = "Multiple Users have commented on your post!";
+            checkDuplicateNotification.date = res.locals.formattedDate;
+            checkDuplicateNotification.save();
+            return res.json({"ok": true});
+        } else {
+            const notify = new Notification({
+                user: postOwner,
+                sender: sender.username,
+                message: sender.username + " has commented on your post!",
+                date: res.locals.formattedDate,
+                reference: originalPost,
+                photo: post.photo,
+                count: 1,
+                type: "comment",
+            });
+
+            notify.save();
+            return res.json({"ok": true});
+        }
+    }
+
+    if (req.body.type == "message") {
+        const message = await Message.findOne({_id: req.body.chatID });
+        const sender = await User.findOne({ _id: req.body.sender });
+        const receiver = await User.findOne({ _id: req.body.receiver });
+        const originalMessage = '/viewMessage/' + req.body.chatID;
+
+        const checkDuplicateNotification = await Notification.findOne({ reference: originalMessage, type: "message"});
+
+        if (checkDuplicateNotification) {
+            checkDuplicateNotification.count += 1;
+            checkDuplicateNotification.message = sender.username + " has sent you multiple messages!";
+            checkDuplicateNotification.date = res.locals.formattedDate;
+            checkDuplicateNotification.save();
+            return res.json({"ok": true});
+        } else {
+            const notify = new Notification({
+                user: receiver.username,
+                sender: sender.username,
+                message: sender.username + " has sent you a message!",
+                date: res.locals.formattedDate,
+                reference: originalMessage,
+                photo: sender.photo,
+                count: 1,
+                type: "message",
+            });
+
+            notify.save();
+            return res.json({"ok": true});
+        }
+    };
+
+}));
+
+router.post('/deleteNotification', tryCatch(async (req,res) => {
+    const notification = await Notification.deleteOne({ _id: req.body.ID });
+    if (!notification) {
+        throw new appError("Notification not found!", 404, MESSAGE_NOT_FOUND, "/notify");
+    }
+
+    return res.json({"ok": true});
 }));
 
 router.post('/logout', (req,res) => {

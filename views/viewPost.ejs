@@ -167,7 +167,7 @@
         <form id = "newComment" action = "/commentPost" method = "POST">
           <div class = "comment-input">
             <textarea id = "comment" name = "comment" placeholder = "Enter your comment here"  rows="3" cols="3" wrap="hard" minlength="1" maxlength="150" style="resize: none;"></textarea>
-            <button type = "submit">Comment</button>
+            <button type = "submit" id = "comment-button">Comment</button>
           </div>
           <input type = "hidden" name = "postID" value = "<%=post._id%>">
       </div>
@@ -249,6 +249,39 @@
       if (lines.length > 3) {
           this.value = lines.slice(0, 3).join('\n');
       }
+  });
+
+  document.getElementById('comment-button').addEventListener('click', function() {
+    
+    if (document.getElementById('comment').value != "") {
+
+      fetch('/createNotification', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          uniquePostID: '<%=post._id%>',
+          sender: '<%=userID._id%>',
+          type: "comment"
+        })
+      })
+
+
+      fetch('/commentPost', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          comment: document.getElementById('comment').value,
+          postID: '<%=post._id%>',
+          username: '<%=userID.username%>',
+          usernameID: '<%=userID._id%>',
+          ownerPhoto: '<%=userID.photo%>'
+        })
+      })
+    }
   });
 
   if ("<%=error%>" != "") {

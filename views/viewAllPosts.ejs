@@ -7,6 +7,7 @@
     <link rel="icon" type="image/x-icon" href="/assets/CARSPOTTERIMGLOGO.png">
     <link rel="stylesheet" type="text/css" href="/stylesheet/mobile.css">
     <link rel="stylesheet" type="text/css" href="/stylesheet/pc.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/post.css">
     <script src="https://kit.fontawesome.com/a74a21bfbd.js" crossorigin="anonymous"></script>
 </head>
 
@@ -56,36 +57,42 @@
         <% posts.forEach(function(post){ %>
           <div class = "post">
             <form action = "/viewPost/<%=post._id%>" method = "GET">
-              <button>
-                <div class = "view-post">
-                  <div class = "post-header">    
-                    <div class = "profile-picture">
-                      <img src="<%=post.owner.photo%>" alt="">
-                    </div>
-                    <div class = "post-header-content">
-                      <div class = "stack">
-                        <div class = "profile-name">
-                          <h5><%=post.username%></h5>
-                        </div>
-                        <div class = "post-information">
-                          <p>- <%=post.carModel%>, <%=post.carTitle%></p>
-                        </div>
-                      </div>
-                      <div class = "stack">
-                          <div class = "description">
-                            <p><%=post.description%></p>
+              <button id = "post-button">
+                    <div class = "view-post">
+                      <div class = "post-header">
+                        <div class = "tooltip">
+                          <div class = "profile-picture">                      
+                            <img class="profile-clickable" src="<%=post.owner.photo%>" alt="" data-form-id="${randomData.owner._id}">
                           </div>
+                          <span class = "tooltiptext">View Profile</span>
+                        </div>
+                        <div class = "post-header-content">
+                          <div class = "stack">
+                            <div class = "tooltip">
+                              <div class = "profile-name">
+                                <h2 class="profile-clickable" data-form-id="${randomData.owner._id}"><%=post.username%></h2> 
+                            </div>
+                            <span class = "tooltiptext">View Profile</span>
+                          </div>
+                            <div class = "post-information">
+                              <p>- <%=post.carModel%>, <%=post.carTitle%></p>
+                            </div>
+                          </div>
+                          <div class = "stack">
+                              <div class = "description">
+                                <p><%=post.description%></p>
+                              </div>
+                          </div>
+                        </div>
+                        <div class = "post-date">
+                          <p><%=post.date%></p>
+                        </div>
                       </div>
+                        <div class = "image-container">
+                          <img src="<%=post.photo%>" alt="" id = "photo">
+                        </div>
                     </div>
-                    <div class = "post-date">
-                      <p><%=post.date%></p>
-                    </div>
-                  </div>
-                    <div class = "image-container">
-                      <img src="<%=post.photo%>" alt="" id = "photo">
-                    </div>
-                </div>
-              </button>
+                </button>
             </form>
               <div class = "extras-content">
                 <div class = "item">

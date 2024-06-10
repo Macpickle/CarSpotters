@@ -28,6 +28,10 @@ const notificationSchema = new mongoose.Schema({
     count: {
         type: Number,
         required: true
+    },
+    type: {
+        type: String,
+        required: true
     }
 });
 
