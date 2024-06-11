@@ -124,8 +124,39 @@ router.post('/createNotification', tryCatch(async (req,res) => {
             notify.save();
             return res.json({"ok": true});
         }
-    };
+    } 
 
+    if (req.body.type == "follow") {
+        const accountUser = await User.findOne({ _id: req.body.ownerID });
+        const sender = await User.findOne({ _id: req.body.sender });
+        const originalFollow = '/account/' + req.body.ownerID;
+
+        const checkDuplicateNotification = await Notification.findOne({ reference: originalFollow, type: "follow" });
+
+        if (checkDuplicateNotification) {
+            checkDuplicateNotification.count += 1;
+            checkDuplicateNotification.message = "Multiple users have followed you!";
+            checkDuplicateNotification.date = res.locals.formattedDate;
+            checkDuplicateNotification.save();
+            return res.json({"ok": true});
+        }
+
+        else {
+            const notify = new Notification({
+                user: accountUser.username,
+                sender: sender.username,
+                message: sender.username + " has followed you!",
+                date: res.locals.formattedDate,
+                reference: originalFollow,
+                photo: accountUser.photo,
+                count: 1,
+                type: "follow",
+            });
+
+            notify.save();
+            return res.json({"ok": true});
+        }
+    }
 }));
 
 router.post('/deleteNotification', tryCatch(async (req,res) => {

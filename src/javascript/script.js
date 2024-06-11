@@ -377,6 +377,19 @@ function followUser(sessionUser,accountUser) {
             <i class="fa-solid fa-check"></i>
             <span class = "tooltiptext">Following</span>
         </div>`
+
+        fetch('/createNotification', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              type: "follow",
+              sender: sessionUser,
+              ownerID: accountUser
+          })
+          });
+          
     } else {
       document.getElementById("followButton").innerHTML = 
       `
@@ -385,6 +398,8 @@ function followUser(sessionUser,accountUser) {
           <span class = "tooltiptext">Follow</span>
       </div>`
     }
+
+    
 
   });
 }
