@@ -24,7 +24,7 @@ router.post('/deleteComment/:id', async (req,res) => {
         await Comment.deleteOne({ _id: req.params.id });
 
         post.save();
-        res.redirect(`/viewPost/${post._id}?success=true`);
+        res.status(200).redirect(`/viewPost/${post._id}?alert=Comment was successfully deleted`);
 
     } catch (err) {
         console.log(err);

@@ -54,10 +54,10 @@
   </ul>
 </div>
 
-<% if (error) { %>
+<% if (alert) { %>
 <div class = "alert">
     <div class = "alert-container">
-      <p><%=error%></p>
+      <p><%=alert%></p>
     </div>
 </div>
 <% } %>
@@ -132,10 +132,10 @@
               </div>
               <div class = "item">
                 <div class = "tooltip">
-                  <label for = "comment-button">
-                    <i class="fas fa-comment"></i>
-                    <p class = "commentCount"><%=post.comments.length%></p>
-                  </label>
+                    <label>
+                      <i class="fas fa-comment"></i>
+                      <p class="commentCount"><%=post.comments.length%></p>
+                    </label>
                 <span class = "tooltiptext">Comments</span>
                 </div>
               </div>
@@ -170,6 +170,7 @@
             <button type = "submit" id = "comment-button">Comment</button>
           </div>
           <input type = "hidden" name = "postID" value = "<%=post._id%>">
+          </form>
       </div>
       <% } %>
       <% if (!userID) { %>
@@ -206,24 +207,29 @@
               <div class = "comment-extras">
                 <div class = "item">
                   <button class = "like-button">
+                    <div class = "tooltip">                        
                     <label for = "like-button">
-                      <i class="fas fa-heart" id = "likeIcon"></i>
-                      <p class = "likeCount"><%=comment.likes%></p>
+                        <i class="fas fa-heart" id = "likeIcon"></i>
+                        <p class = "likeCount"><%=comment.likes%></p>
                     </label>
+                    <span class = "tooltiptext">Like</span>
+                      </div>
                   </button>
                 </div>
-                <% if (isOwner) { %>
-                  <form action = "/deleteComment/<%=comment._id%>" method = "POST">
-                    <div class = "item">
-                      <button class = "delete-button">
-                        <label for = "delete-button">
-                          <i class="fas fa-trash" style="margin-top: 0.25em"></i>
-                        </label>
-                      </button>
-                    </div>
-                    <input type = "hidden" name = "postID" value = "<%=post._id%>">
-                    
-                  </div>
+                <% if (isOwner || userID.username == comment.username) { %>
+                    <form action="/deleteComment/<%=comment._id%>" method="POST">
+                      <div class="item">
+                        <button class="delete-button">
+                          <label for="delete-button">
+                            <div class="tooltip">
+                              <i class="fas fa-trash" style="margin-top: 0.25em"></i>
+                              <span class="tooltiptext">Delete</span>
+                            </div>
+                          </label>
+                        </button>
+                      </div>
+                      <input type="hidden" name="postID" value="<%=post._id%>">
+                    </form>
                 <% } %>
             </div>
           </div>
@@ -266,25 +272,10 @@
           type: "comment"
         })
       })
-
-
-      fetch('/commentPost', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          comment: document.getElementById('comment').value,
-          postID: '<%=post._id%>',
-          username: '<%=userID.username%>',
-          usernameID: '<%=userID._id%>',
-          ownerPhoto: '<%=userID.photo%>'
-        })
-      })
     }
   });
 
-  if ("<%=error%>" != "") {
+  if ("<%=alert%>" != "" && "<%=alert%>" != "Comment was successfully deleted") {
     document.getElementById('comment').style.border = "1px solid red";
   }
 

@@ -31,136 +31,89 @@ router.post('/login', passport.authenticate('local', {
     res.redirect('/');
 });
 
+async function checkDuplicateNotification(originalPost, type) {
+    const isNotificationFound = await Notification.findOne({ reference: originalPost, type: type }) !== null;
+    return isNotificationFound;
+}
+
 router.post('/createNotification', tryCatch(async (req,res) => {
-    if (req.body.type == "post"){
-        const post = await Post.findOne({_id: req.body.uniquePostID});
-        const sender = await User.findOne({_id: req.body.sender});
-        const postOwner = post.owner.username;
-        const message = sender.username + " has liked or favourited your post!";
-        const originalPost = '/viewPost/' + req.body.uniquePostID;
+    const post = await Post.findOne({_id: req.body.uniquePostID});
+    const sender = await User.findOne({_id: req.body.sender});
+    var postOwner = ""
+    var previewPhoto = ""
+    var message = ""
+    var duplicate = false;
+    var link = ""
 
-        const checkDuplicateNotification = await Notification.findOne({ reference: originalPost, type: "like/favourite"});
-        if (checkDuplicateNotification) {
-            checkDuplicateNotification.count += 1;
-            checkDuplicateNotification.message = "Multiple users have liked or favourited your post!";
-            checkDuplicateNotification.date = res.locals.formattedDate;
-            checkDuplicateNotification.sender = "Multiple users";
-            checkDuplicateNotification.save();
-            return res.json({"ok": true});
-        };
-        
-        const notify = new Notification({
-            user: postOwner,
-            sender: sender.username,
-            message: message,
-            date: res.locals.formattedDate,
-            reference: originalPost,
-            photo: post.photo,
-            count: 1,
-            type: "like/favourite",
-        })
-
-        notify.save();
-        return res.json({"ok": true})
+    //change message based on type of notification
+    if (req.body.type == "post") {
+        message = sender.username + " has liked or favourited your post!";
+        link = `/viewPost/${post._id}`;
+        duplicate = await checkDuplicateNotification(link, "post");
+        postOwner = post.owner.username;
+        previewPhoto = post.photo;
     }
 
-    if (req.body.type == "comment") {
-        const post = await Post.findOne({_id: req.body.uniquePostID});
-        const sender = await User.findOne({_id: req.body.sender});
-        const postOwner = post.owner.username;
-        const originalPost = '/viewPost/' + req.body.uniquePostID;
+    else if (req.body.type == "comment") {
+        message = sender.username + " has commented on your post!";
+        link = `/viewPost/${post._id}`;
+        duplicate = await checkDuplicateNotification(link, "comment");
+        postOwner = post.owner.username;
+        previewPhoto = post.photo;
+    }
 
-        const checkDuplicateNotification = await Notification.findOne({ reference: originalPost, type: "comment" });
+    else if (req.body.type == "message") {
+        message = sender.username + " has sent you a message!";
+        link = `/viewMessage/${req.body.chatID}`;
+        duplicate = await checkDuplicateNotification(link, "message");
+        postOwner = req.body.receiver;
+        previewPhoto = sender.photo;
+    }
 
-        if (checkDuplicateNotification) {
-            checkDuplicateNotification.count += 1;
-            checkDuplicateNotification.message = "Multiple Users have commented on your post!";
-            checkDuplicateNotification.date = res.locals.formattedDate;
-            checkDuplicateNotification.save();
-            return res.json({"ok": true});
+    else if (req.body.type == "follow") {
+        message = sender.username + " has followed you!";
+        link = `/account/${req.body.ownerID}`;
+        duplicate = await checkDuplicateNotification(link, "follow");
+        postOwner = sender.username;
+        previewPhoto = sender.photo;
+    }
+
+    //create new notification if no duplicates
+    if (duplicate) {
+        const notification = await Notification.findOne({ reference: link, type: req.body.type });
+        notification.count += 1;
+        if (req.body.type != "message") {
+            notification.message = "Multiple users have interacted with your account/post!";
+            notification.sender = "Multiple users";
         } else {
-            const notify = new Notification({
-                user: postOwner,
-                sender: sender.username,
-                message: sender.username + " has commented on your post!",
-                date: res.locals.formattedDate,
-                reference: originalPost,
-                photo: post.photo,
-                count: 1,
-                type: "comment",
-            });
-
-            notify.save();
-            return res.json({"ok": true});
+            notification.message = sender.username + " has sent multiple messages!";
+            notification.sender = sender.username;
         }
+        notification.date = res.locals.formattedDate;
+        notification.save();
+        return res.json({"ok": true});
     }
 
-    if (req.body.type == "message") {
-        const message = await Message.findOne({_id: req.body.chatID });
-        const sender = await User.findOne({ _id: req.body.sender });
-        const receiver = await User.findOne({ _id: req.body.receiver });
-        const originalMessage = '/viewMessage/' + req.body.chatID;
+    //else, create new notification
+    const notify = new Notification({
+        user: postOwner,
+        sender: sender.username,
+        message: message,
+        date: res.locals.formattedDate,
+        reference: link,
+        photo: previewPhoto,
+        count: 1,
+        type: req.body.type,
+    })
 
-        const checkDuplicateNotification = await Notification.findOne({ reference: originalMessage, type: "message"});
+    notify.save();
+    return res.json({"ok": true})
 
-        if (checkDuplicateNotification) {
-            checkDuplicateNotification.count += 1;
-            checkDuplicateNotification.message = sender.username + " has sent you multiple messages!";
-            checkDuplicateNotification.date = res.locals.formattedDate;
-            checkDuplicateNotification.save();
-            return res.json({"ok": true});
-        } else {
-            const notify = new Notification({
-                user: receiver.username,
-                sender: sender.username,
-                message: sender.username + " has sent you a message!",
-                date: res.locals.formattedDate,
-                reference: originalMessage,
-                photo: sender.photo,
-                count: 1,
-                type: "message",
-            });
-
-            notify.save();
-            return res.json({"ok": true});
-        }
-    } 
-
-    if (req.body.type == "follow") {
-        const accountUser = await User.findOne({ _id: req.body.ownerID });
-        const sender = await User.findOne({ _id: req.body.sender });
-        const originalFollow = '/account/' + req.body.ownerID;
-
-        const checkDuplicateNotification = await Notification.findOne({ reference: originalFollow, type: "follow" });
-
-        if (checkDuplicateNotification) {
-            checkDuplicateNotification.count += 1;
-            checkDuplicateNotification.message = "Multiple users have followed you!";
-            checkDuplicateNotification.date = res.locals.formattedDate;
-            checkDuplicateNotification.save();
-            return res.json({"ok": true});
-        }
-
-        else {
-            const notify = new Notification({
-                user: accountUser.username,
-                sender: sender.username,
-                message: sender.username + " has followed you!",
-                date: res.locals.formattedDate,
-                reference: originalFollow,
-                photo: accountUser.photo,
-                count: 1,
-                type: "follow",
-            });
-
-            notify.save();
-            return res.json({"ok": true});
-        }
-    }
 }));
 
 router.post('/deleteNotification', tryCatch(async (req,res) => {
     const notification = await Notification.deleteOne({ _id: req.body.ID });
+    // for unexpected errors
     if (!notification) {
         throw new appError("Notification not found!", 404, MESSAGE_NOT_FOUND, "/notify");
     }

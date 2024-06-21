@@ -119,11 +119,10 @@
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                message: "sent you a message",
                 chatID: "<%=message._id%>",
                 type: "message",
                 sender: "<%=user._id%>",
-                receiver: "<%=otherUser._id%>",
+                receiver: "<%=otherUser.username%>",
             }),
         })
 

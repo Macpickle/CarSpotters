@@ -135,21 +135,29 @@ router.get('/viewPost/:id', async (req,res) => {
     try {
         const userID = req.user;
         const post = await Post.findOne({ _id: req.params.id });
-        const error = req.query.error || "";
+        const alert = req.query.alert || "";
         const theme = (userID && userID.settings && userID.settings.appearence) || "light";
         const success = req.query.success || false;
+        const commentPermission = userID.settings.postPrivacy
+        var allowedUsers = "all";
+
+        if (commentPermission == "friends") {
+            allowedUsers = await User.find({username: {$in: userID.following}});
+        } else if (commentPermission == "noone") {
+            allowedUsers = [];
+        }
 
         if (userID) {
             //determines authentication of user, if post owner or server admin
             const admin = userID.admin;
             const isOwner = (JSON.stringify(userID._id) == JSON.stringify(post.owner._id));
 
-            res.render('viewPost', {post, admin, isOwner, userID, error, theme, success});
+            res.render('viewPost', {post, admin, isOwner, userID, alert, theme, success, allowedUsers});
         } else {
             const admin = false;
             const isOwner = false;
 
-            res.render('viewPost', {post, admin, isOwner, userID, error, theme, success});
+            res.render('viewPost', {post, admin, isOwner, userID, alert, theme, success, allowedUsers});
         }
     } catch {
         res.redirect('/');
