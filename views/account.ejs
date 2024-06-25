@@ -84,7 +84,7 @@
                     
                 </div>
                 <div class = "account-stats">
-                    <p>Posts<br><%=user.postIDs.length%></p>
+                    <p>Posts<br><%=posts.length%></p>
                 </div>
                 <div class = "account-stats">
                     <p>Following<br><%=user.following.length%></p>
@@ -93,15 +93,15 @@
         </div>
         <form action = "/viewAllPosts/<%=user.username%>" method = "GET" id = "viewPosts" ></form>
         <div class = "preview-container">
-            <% if (user.postIDs.length > 0) { %>
+            <% if (posts.length > 0) { %>
             <button form="viewPosts">
             <% } %>
-            <% if (user.postPhotos.length > 0) { %>
+            <% if (posts.length > 0) { %>
                 <div class = "post-preview">
                     <% for (let i = 0; i <= 3; i++) { %>
-                        <% if (user.postPhotos[i] != undefined) { %>
+                        <% if (posts[i] != undefined) { %>
                             <div class = "post-item">
-                                <img class = "img-preview"src = "<%=user.postPhotos[i]%>" alt = "Post">
+                                <img class = "img-preview"src = "<%=posts[i].photo%>" alt = "Post">
                             </div>
                         <% } else { %>
                             <div class = "post-item">

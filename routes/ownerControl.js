@@ -35,9 +35,12 @@ router.post('/deleteComment/:id', async (req,res) => {
 
 router.post('/deletePost/:id', tryCatch(async (req, res) => {
     const post = await Post.findOne({ _id: req.params.id });
+    const postOwner = await User.findOne({ _id: post.owner._id });
     if (!post) {
         throw new appError("Post not found", 404, POST_NOT_FOUND, "/");
     }
+
+    
 
     await Post.deleteOne({ _id: req.params.id });
     res.status(200).redirect('/?alert=Post was successfully deleted');

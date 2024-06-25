@@ -6,7 +6,6 @@ const Comment = require('../models/comment');
 const Message = require('../models/message');
 const Notification = require('../models/notification');
 const bcrypt = require('bcrypt');
-const NodeGeocoder = require('node-geocoder');
 const mongoose = require('mongoose');
 
 const appError = require('../appError');
@@ -75,7 +74,8 @@ router.post('/createNotification', tryCatch(async (req,res) => {
         message = sender.username + " has followed you!";
         link = `/account/${req.body.ownerID}`;
         duplicate = await checkDuplicateNotification(link, "follow");
-        postOwner = sender.username;
+        const owner = await User.findOne({ _id: req.body.ownerID });
+        postOwner = owner.username;
         previewPhoto = sender.photo;
     }
 
@@ -197,6 +197,15 @@ router.post('/sendMessage', tryCatch(async (req,res) => {
     if (message.length <= 0 || message == null) {
         throw new appError("Message cannot be empty!", 404, MESSAGE_NOT_FOUND, "/messages");
     }
+
+    //checks recipient's message privacy settings
+    if (receiver.settings.messagePrivacy == "noone") {
+        throw new appError("User has disabled messages!", 400, "MESSAGES_DISABLED", "/messages");
+    } else if (receiver.settings.messagePrivacy == "friends") {
+        if (!receiver.following.includes(sender.username)) {
+            throw new appError("User has disabled messages!", 400, "MESSAGES_DISABLED", "/messages");
+        }
+    }
     
     const newMessage = new Message({
         members: [sender.username, receiver.username],
@@ -225,6 +234,7 @@ router.post('/favouritePost', tryCatch(async (req,res) => {
 }));
 
 router.post('/favouritePost', async (req,res) => {
+    console.log("Favourite post");
     try {
         const post = await Post.findOne({_id: req.body.postID});
         const sessionUser = req.user;
@@ -249,6 +259,7 @@ router.post('/favouritePost', async (req,res) => {
         }
 
     } catch (error) {
+        console.log(error);
         res.json({"ok":false});
     }
 });
@@ -353,26 +364,39 @@ router.post('/changeProfilePicture', tryCatch(async (req,res) => {
 }));
 
 async function geoCode(location) {
-    const baseURL = 'https://maps.googleapis.com/maps/api/geocode/json?'
-    const body = {
-        address: location,
-        key: process.env.GOOGLE_API_KEY
-    }
+    const baseURL = 'https://geocode.maps.co/search?q=' + location + '&api_key=' + process.env.API_KEY;
 
-    const url = new URLSearchParams(body);
-    const fullURL = baseURL + url;
-
-    return await fetch(fullURL)
+    return await fetch(baseURL)
         .then(response => {
             return response.json();
         })
         .then(data => {
-            return data.results[0].geometry.location;
+            const lon = data[0].lon;
+            const lat = data[0].lat;
+            return { lat: lat, lng: lon };
         })
         .catch(err => {
             return null;
         });
 }
+
+async function reverseGeoCode(location) {
+    var [lat, lng] = location.split(",");
+    lng = lng.trim();
+    const baseURL = 'https://geocode.maps.co/reverse?lat=' + lat + '&lon=' + lng + '&api_key=' + process.env.API_KEY;
+    
+    return await fetch(baseURL)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            const location = data.address.city + ", " + data.address.state + ", " + data.address.country;
+            return location;
+        })
+        .catch(err => {
+            return null;
+        });
+};
 
 router.post('/createNewPost', tryCatch(async (req,res) => {
     const img = req.files.img;
@@ -390,16 +414,21 @@ router.post('/createNewPost', tryCatch(async (req,res) => {
     }
 
     //geocode user's location, if possible
-    const location = await geoCode(req.body.location);
+    var location = await geoCode(req.body.location);
     if (!location) {
         throw new appError("Invalid location!", 400, "INVALID_LOCATION", "/create");
     }
+    
+    //if location is a number, reverse geocode it
+    if (/\d/.test(req.body.location)) {
+        req.body.location = await reverseGeoCode(req.body.location);
+    }
+
+    if (!req.body.location) {
+        throw new appError("Location cannot be empty!", 404, MESSAGE_NOT_FOUND, "/create");
+    }
 
     const formattedLocation = location.lat + "," + location.lng;
-    
-    if (/\d/.test(req.body.location)) {
-        req.body.location = "";
-    }
 
     const newPost = new Post({
         username: req.user.username,
@@ -417,8 +446,6 @@ router.post('/createNewPost', tryCatch(async (req,res) => {
         carTitle: req.body.carName,
     }); 
 
-    req.user.postPhotos.push(imageLink);
-    req.user.postIDs.push(newPost._id);
     req.user.postCount += 1;
     req.user.save();
     newPost.save();

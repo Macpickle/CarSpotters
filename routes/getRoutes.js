@@ -110,13 +110,14 @@ router.get('/viewMessage/:id', async (req,res) => {
 router.get('/account/:id', async (req,res) => {
     try {
         const user = await User.findOne({ _id: req.params.id });
+        const posts = await Post.find({ username: user.username });
         var userID = req.user;
         const theme = (userID && userID.settings && userID.settings.appearence) || "light";
 
         if (userID){
             //determines if the user is viewing their own account
             const isAccountOwner = (JSON.stringify(userID._id) == JSON.stringify(user._id));
-            res.render('account', {user, userID, isAccountOwner, theme});
+            res.render('account', {user, userID, isAccountOwner, theme, posts});
 
         } else {
             userID = {
@@ -124,7 +125,7 @@ router.get('/account/:id', async (req,res) => {
                 username: "Guest",
             }
 
-            res.render('account', {user, userID, isAccountOwner: false, theme});
+            res.render('account', {user, userID, isAccountOwner: false, theme, posts});
         }
     } catch {
         res.redirect('/');

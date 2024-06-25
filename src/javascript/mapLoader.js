@@ -1,18 +1,3 @@
-const pinTemplate = 
-`
-<div class = "pin">
-  <div class = "pin-content">
-    <div class = "pin-header">
-      <h1>{username</h1>}
-      <h3>{model},{title}</h3>
-    </div>
-    <div class = "pin-body">
-      <img src = "{photo}" alt = "car image">
-    </div>
-  </div>
-</div>
-`
-
 // create pings on map for each car location
 function generatePings(data, map) {
   for (var i = 0; i < data.length; i++) {
@@ -28,8 +13,7 @@ function generatePings(data, map) {
     });
 
     var infobox = new Microsoft.Maps.Infobox(map.getCenter(), {
-      title: data[i].username,
-      description: data[i].model + " " + data[i].title,
+      description: `<div class = "test"><img style= "object-fix: cover;src="${data[i].photo}" alt="car image">` + data[i].model + " " + data[i].title + "</div>",
       visible: false,
     });
 
@@ -46,8 +30,12 @@ function generatePings(data, map) {
       infobox.setOptions({
         location: e.target.getLocation(),
         title: e.target.metadata.title,
-        description: e.target.metadata.model + " " + e.target.metadata.title,
-        visible: true
+        description: `<img src="${e.target.metadata.photo}" alt="car image">` + e.target.metadata.model + " " + e.target.metadata.title,
+        visible: true,
+      }),
+      map.setView({
+        center: e.target.getLocation(),
+        zoom: 15
       });
     });
 
@@ -67,6 +55,10 @@ function loadMap(){
   map.setView({
     center: new Microsoft.Maps.Location(0, 0),
     zoom: 1
+  });
+
+  map.setOptions({
+    showMapTypeSelector:false
   });
 
 
