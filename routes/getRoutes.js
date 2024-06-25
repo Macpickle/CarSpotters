@@ -82,10 +82,10 @@ router.get('/messages', isLoggedIn, async (req,res) => {
         const usernames = allUsers.map(user => ({ username: user.username, photo: user.photo }));
         const otherUsers = usernames.filter(username => username.username !== user.username);
         const messageList = await Message.find({ members: { $in: [user.username] } });
-        const error = req.query.error || false;
+        const alert = req.query.alert || false;
         const theme = user.settings.appearence || "light";
 
-        res.render('messages', {user , usernames, otherUsers, messageList, error: error, theme: theme});
+        res.render('messages', {user , usernames, otherUsers, messageList, alert, theme: theme});
     } catch {
         res.redirect('/');
     }

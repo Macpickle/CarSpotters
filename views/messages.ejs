@@ -38,10 +38,10 @@
                 </div>
             </div>
         </ul>
-        <% if (error.length > 0) { %>
-        <div class = "error-container">
-            <div class = "error-alert">
-                <p><%=error%></p>
+        <% if (alert.length > 0) { %>
+        <div class = "alert">
+            <div class = "alert-container">
+                <p><%=alert%></p>
             </div>
         </div>
         <% } %>
@@ -158,7 +158,7 @@
     }
 
     setTimeout(() => {
-        document.querySelector('.navbar .error-alert').style.animation = 'fadeBack 1s ease-in-out forwards';
+        document.querySelector('.navbar .alert').style.animation = 'fadeBack 1s ease-in-out forwards';
     }, 2500);
 
 </script>

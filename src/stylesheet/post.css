@@ -76,6 +76,11 @@
     color: var(--text-paragragh);
 }
 
+.main-container #post-container .post .post-header .post-header-content .stack .location {
+    margin-left: 2.5%;
+    color: var(--text-paragragh);
+}
+
 .main-container #post-container .post .post-header .post-date {
     width: 50%;
     display: flex;
@@ -255,6 +260,11 @@
     margin-left: 2%;
     width: 1.5em;
     height: 1.5em;
+}
+
+.main-container .comment-container .comments .comment .profile-picture:hover {
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .main-container .comment-container .comments .comment .comment-content {

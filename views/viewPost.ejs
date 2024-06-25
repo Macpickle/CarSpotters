@@ -186,10 +186,13 @@
             <div class = "comment-list">
             <div class = "comment">
               <div class = "comment-header">
-                <form id = "viewAccount" action = "/account/<%=comment.usernameID%>" method = "GET">
+                <form id = "viewAccount" action = "/account/<%=comment.ownerID%>" method = "GET">
                   <button style="width: fit-content;" for = "viewAccount">
-                    <div class = "profile-picture">
-                      <img src="<%=comment.ownerPhoto%>" alt="">
+                    <div class = "tooltip">
+                      <div class = "profile-picture">
+                          <img src="<%=comment.ownerPhoto%>" alt="">
+                      </div>
+                    <span class = "tooltiptext">View Account</span>
                     </div>
                   </button>
                 </form>

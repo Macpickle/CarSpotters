@@ -9,6 +9,10 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    ownerID: {
+        type: String,
+        required: true
+    },
     comment: {
         type: String,
         required: true

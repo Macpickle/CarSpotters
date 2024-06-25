@@ -74,6 +74,7 @@ const createCard = (index) => {
                       <div class = "post-information">
                         <p>- ${randomData.carModel}, ${randomData.carTitle}</p>
                       </div>
+                      <p class = "location"> Found in ${randomData.locationName}</p>
                     </div>
                     <div class = "stack">
                         <div class = "description">

@@ -6,6 +6,7 @@ const Comment = require('../models/comment');
 const Message = require('../models/message');
 const Notification = require('../models/notification');
 const bcrypt = require('bcrypt');
+const NodeGeocoder = require('node-geocoder');
 const mongoose = require('mongoose');
 
 const appError = require('../appError');
@@ -142,9 +143,9 @@ router.post('/commentPost', tryCatch(async (req,res) => {
     const newComment = new Comment({
         username: sessionUser.username,
         ownerPhoto: sessionUser.photo,
+        ownerID: sessionUser._id,
         comment: cleanedText,
         postID: post._id,
-        commentID: new mongoose.Types.ObjectId(),
         likes: 0,
         date: res.locals.formattedDate,
     });
@@ -210,6 +211,17 @@ router.post('/sendMessage', tryCatch(async (req,res) => {
 
     newMessage.save();
     return res.status(200).redirect('/messages');
+}));
+
+router.post('/favouritePost', tryCatch(async (req,res) => {
+    const post = await Post.findOne({ _id: req.body.postID });
+    const sessionUser = req.user;
+
+    if (post.username == sessionUser.username) {
+        //if user tries to favourite their own post
+        return res.json({"ok":false, "isClicked": false, "value": post.favourites.length});
+    }
+
 }));
 
 router.post('/favouritePost', async (req,res) => {
@@ -340,6 +352,28 @@ router.post('/changeProfilePicture', tryCatch(async (req,res) => {
     res.status(200).json({"ok":true});
 }));
 
+async function geoCode(location) {
+    const baseURL = 'https://maps.googleapis.com/maps/api/geocode/json?'
+    const body = {
+        address: location,
+        key: process.env.GOOGLE_API_KEY
+    }
+
+    const url = new URLSearchParams(body);
+    const fullURL = baseURL + url;
+
+    return await fetch(fullURL)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            return data.results[0].geometry.location;
+        })
+        .catch(err => {
+            return null;
+        });
+}
+
 router.post('/createNewPost', tryCatch(async (req,res) => {
     const img = req.files.img;
     //post image required, default URL to be redirected to if image upload fails
@@ -355,10 +389,23 @@ router.post('/createNewPost', tryCatch(async (req,res) => {
         photo: req.user.photo,
     }
 
+    //geocode user's location, if possible
+    const location = await geoCode(req.body.location);
+    if (!location) {
+        throw new appError("Invalid location!", 400, "INVALID_LOCATION", "/create");
+    }
+
+    const formattedLocation = location.lat + "," + location.lng;
+    
+    if (/\d/.test(req.body.location)) {
+        req.body.location = "";
+    }
+
     const newPost = new Post({
         username: req.user.username,
         owner: postOwner,
-        location: req.body.location,
+        locationName: req.body.location,
+        location: formattedLocation,
         description: req.body.description,
         photo: imageLink,
         allowComments: true,

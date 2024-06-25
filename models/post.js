@@ -9,6 +9,10 @@ const postSchema = new mongoose.Schema({
         type: Object,
         required: true
     },
+    locationName: {
+        type: String,
+        required: false
+    },
     location: {
         type: String,
         required: false
