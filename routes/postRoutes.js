@@ -380,6 +380,13 @@ async function geoCode(location) {
         });
 }
 
+router.post('/geoCode', tryCatch(async (req,res) => {
+    geoCode(req.body.location)
+        .then(data => {
+            res.json(data);
+        });
+}));
+
 async function reverseGeoCode(location) {
     var [lat, lng] = location.split(",");
     lng = lng.trim();

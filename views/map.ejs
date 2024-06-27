@@ -57,10 +57,16 @@
 </div>
 <div class = "main-container">
     <div class = "map-container">
-        <div class = "search-container">
-            <input type="text" id="search" placeholder="Search for a location">
+        <div class = "reset-map">
             <div class = "tooltip">
-                <button id="search-button"><i class="fa-solid fa-search"></i></button>
+                <button id="reset-button" onclick="resetZoom()"><i class="fa-solid fa-rotate-right"></i></button>
+                <span class = "tooltiptext">Reset Map</span>
+            </div>
+        </div>
+        <div class = "search-container">
+            <input type="text" id="search" placeholder="Search for a location (city for more accurate result)" onkeydown="if(event.keyCode === 13) changeLocation()">
+            <div class = "tooltip">
+                <button id="search-button" onclick = "changeLocation()"><i class="fa-solid fa-search"></i></button>
                 <span class = "tooltiptext">Search</span>
             </div>
         </div>

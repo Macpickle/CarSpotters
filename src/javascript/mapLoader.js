@@ -1,3 +1,31 @@
+//map reset zoom
+function resetZoom(){
+  map.setView({
+    center: 0,
+    zoom: 1
+  });
+}
+
+function changeLocation() {
+  var location = document.getElementById("search").value;
+  console.log(location);
+  
+  fetch("/geoCode", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({location: location})
+  }).then(response => response.json())
+  .then(data => {
+    map.setView({
+      center: new Microsoft.Maps.Location(data.lat, data.lng),
+      zoom: 15
+    });
+  })
+
+}
+
 // create pings on map for each car location
 function generatePings(data, map) {
   for (var i = 0; i < data.length; i++) {
@@ -50,15 +78,14 @@ function generatePings(data, map) {
 }
 
 // load BING map
-function loadMap(){
-  var map = new Microsoft.Maps.Map(document.getElementById('map'));
+function loadMap(map){
   map.setView({
     center: new Microsoft.Maps.Location(0, 0),
-    zoom: 1
+    zoom: 1,
   });
 
   map.setOptions({
-    showMapTypeSelector:false
+    showMapTypeSelector:false,
   });
 
 
@@ -73,4 +100,5 @@ function loadMap(){
   })
 }
 
-window.onload = loadMap;
+var map = new Microsoft.Maps.Map(document.getElementById('map'));
+window.onload = loadMap(map);

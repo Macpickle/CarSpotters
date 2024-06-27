@@ -52,7 +52,22 @@
     margin-top: 1rem;
     width: 95%;
     height: 65%;
+    overflow: hidden;
     background-color: var(--standard-secondary-background);
     border-radius: 1em;
     border: 1px solid var(--border-standard);
+}
+.main-container .map-container .reset-map {
+    position: relative;
+    right: -47.5%;
+    top: .5em;
+}
+
+.main-container .map-container .reset-map i {
+    font-size: 1.5em;
+}
+
+.main-container .map-container .reset-map i:hover {
+    transform: scale(1.2);
+    animation: rotate 1.5s infinite;
 }
