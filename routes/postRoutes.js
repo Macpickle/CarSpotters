@@ -112,16 +112,6 @@ router.post('/createNotification', tryCatch(async (req,res) => {
 
 }));
 
-router.post('/deleteNotification', tryCatch(async (req,res) => {
-    const notification = await Notification.deleteOne({ _id: req.body.ID });
-    // for unexpected errors
-    if (!notification) {
-        throw new appError("Notification not found!", 404, MESSAGE_NOT_FOUND, "/notify");
-    }
-
-    return res.json({"ok": true});
-}));
-
 router.post('/logout', (req,res) => {
     req.logout(() => {
         req.session.destroy();
@@ -153,7 +143,8 @@ router.post('/commentPost', tryCatch(async (req,res) => {
     post.comments.push(newComment);
     newComment.save();
     post.save();
-    return res.status(200).redirect(`/viewPost/${post._id}`);
+    
+    return res.json({"ok": true});
 }));
 
 router.post("/appendMessage/:id", tryCatch(async (req,res) => {
@@ -222,19 +213,7 @@ router.post('/sendMessage', tryCatch(async (req,res) => {
     return res.status(200).redirect('/messages');
 }));
 
-router.post('/favouritePost', tryCatch(async (req,res) => {
-    const post = await Post.findOne({ _id: req.body.postID });
-    const sessionUser = req.user;
-
-    if (post.username == sessionUser.username) {
-        //if user tries to favourite their own post
-        return res.json({"ok":false, "isClicked": false, "value": post.favourites.length});
-    }
-
-}));
-
 router.post('/favouritePost', async (req,res) => {
-    console.log("Favourite post");
     try {
         const post = await Post.findOne({_id: req.body.postID});
         const sessionUser = req.user;

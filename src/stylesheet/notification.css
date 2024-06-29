@@ -18,6 +18,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .notification-container .notification-header .notification-title {
@@ -113,4 +114,16 @@
 .notification-container .no-notifications p {
     color: var(--text-title);
     font-size: 1rem;
+}
+
+.notification-container .notification-header .delete-all button{
+    border: 1px solid var(--border-standard);
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;   
+}
+
+.notification-container .notification-header .delete-all button:hover {
+    background-color: var(--standard-secondary-background);
+    cursor: pointer;
+    transform: scale(1.1);
 }

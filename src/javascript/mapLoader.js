@@ -18,11 +18,15 @@ function changeLocation() {
     body: JSON.stringify({location: location})
   }).then(response => response.json())
   .then(data => {
-    map.setView({
-      center: new Microsoft.Maps.Location(data.lat, data.lng),
-      zoom: 15
-    });
-  })
+    if (data == null) {
+      document.getElementById("search").style.color = "red";
+    } else {
+      map.setView({
+        center: new Microsoft.Maps.Location(data.lat, data.lng),
+        zoom: 15
+      });
+    }
+  });
 
 }
 
@@ -41,30 +45,36 @@ function generatePings(data, map) {
     });
 
     var infobox = new Microsoft.Maps.Infobox(map.getCenter(), {
-      description: `<div class = "test"><img style= "object-fix: cover;src="${data[i].photo}" alt="car image">` + data[i].model + " " + data[i].title + "</div>",
       visible: false,
     });
 
     infobox.setMap(map);
-
     pin.metadata = {
       title: data[i].username,
       model: data[i].model,
       title: data[i].title,
-      photo: data[i].photo
+      photo: data[i].photo,
+      _id: data[i]._id
     };
 
     Microsoft.Maps.Events.addHandler(pin, 'click', function(e) {
       infobox.setOptions({
-        location: e.target.getLocation(),
-        title: e.target.metadata.title,
-        description: `<img src="${e.target.metadata.photo}" alt="car image">` + e.target.metadata.model + " " + e.target.metadata.title,
-        visible: true,
-      }),
+      location: e.target.getLocation(),
+      description: `<div class="infobox-content" style="display:flex; flex-direction: column; justify-content: flex-start; align-items: center; height: 6.5rem; overflow: hidden;">
+      <img style="width: 70%; object-fit: cover; max-height: 7rem;" src="${e.target.metadata.photo}" alt="car image"> 
+      ${e.target.metadata.model} ${e.target.metadata.title}
+      </div>`,
+      visible: true,
+      });
       map.setView({
         center: e.target.getLocation(),
         zoom: 15
       });
+    });
+
+    // if infobox is clicked, redirect to car page
+    Microsoft.Maps.Events.addHandler(infobox, 'click', function(e) {
+        window.location.href = `/viewPost/${e.target.metadata._id}`;
     });
 
     Microsoft.Maps.Events.addHandler(pin, 'mouseout', function(e) {

@@ -190,7 +190,7 @@
     border: 1px solid var(--border-standard);
     background-color: var(--standard-tertiary-background);
     padding: 1em 1em;
-    margin-top:0.5em;
+    margin-top:0.25em;
     resize: none;
     max-height: 130px;
     max-width: 100%;

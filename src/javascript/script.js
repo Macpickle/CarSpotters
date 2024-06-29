@@ -281,7 +281,6 @@ function notifyUser(postID, userID){
 
 //creates a new post request to URL using XHR
 function newPostRequest(data, postURL, callback) {
-  console.log(data, postURL)
   const xhr = new XMLHttpRequest();
   xhr.open("POST", postURL, true);
   xhr.setRequestHeader("Content-Type", "application/json");
@@ -317,6 +316,7 @@ function updatePost(userID, postPhoto, postID, POSTurl) {
     postID: postID,
     userID: userID
   }
+
   //create new post request
   newPostRequest(body, postRequestURL, function(error, response) { 
     if (response.ok == false) {
@@ -334,7 +334,6 @@ function updatePost(userID, postPhoto, postID, POSTurl) {
         updateLikes("", postPhoto, value);
       }
     } else if (POSTurl == "favouritePost") {
-      console.log("Favourite Post");
       if (isClicked) {
         updateFavourites("skyblue", postPhoto, value);
         notifyUser(postID, userID);
